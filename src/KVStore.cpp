@@ -3,24 +3,30 @@
 #include "Option.h"
 #include <string>
 
-KVStore::KVStore(const std::string &dir) : KVStoreAPI(dir), disk(dir) {}
+KVStore::KVStore(const std::string &dir) : KVStoreAPI(dir), disk(dir) {
+    sequenceNumber = new SequenceNumber();
+}
 
 KVStore::~KVStore() {
-    if (!mem.empty())
+    if (!mem.empty()) {
         disk.add(mem);
+    }
 }
 
 void KVStore::put(uint64_t key, const std::string &value) {
-    mem.put(key, value);
+    uint64_t seqNum = sequenceNumber->getUpdatedSeqNum();
+    mem.put(key, value, seqNum);
     if (mem.space() > Option::SST_SPACE) {
         disk.add(mem);
         mem.clear();
     }
 }
 
-std::string KVStore::get(uint64_t key) {
-    if (mem.contains(key))
+string KVStore::get(uint64_t key) {
+    uint64_t seqNum = sequenceNumber->getSeqNum();
+    if (mem.contains(key)) {
         return mem.get(key);
+    }
     SearchResult result = disk.search(key, true);
     return result.value;
 }

@@ -2,11 +2,14 @@
 #define SKIP_LIST_H
 
 #include "Entry.h"
+
 #include <cstdint>
 #include <cstddef>
 #include <string>
 #include <random>
 #include <utility>
+
+using namespace std;
 
 class SkipList {
 public:
@@ -16,9 +19,9 @@ public:
 
     ~SkipList();
 
-    std::string get(uint64_t key) const;
+    string get(uint64_t key) const;
 
-    void put(uint64_t key, const std::string &value);
+    void put(uint64_t key, const string &value, uint64_t seqNum);
 
 //    bool del(uint64_t key);
 
@@ -51,12 +54,13 @@ private:
 
 struct SkipList::Tower {
     uint64_t key;
-    std::string value;
+    string value;
+    uint64_t seqNum;
     Tower **prevs;
     Tower **nexts;
     size_t height;
 
-    explicit Tower(uint64_t key, const std::string &value, size_t height);
+    explicit Tower(uint64_t key, string value, uint64_t seqNum, size_t height);
 
     Tower() = delete;
 

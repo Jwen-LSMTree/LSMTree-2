@@ -1,6 +1,8 @@
 #include "SkipList.h"
 #include "Option.h"
-#include <cstring>
+
+#include <iostream>
+#include <utility>
 
 SkipList::SkipList() : dist(0, 1) {
     init();
@@ -21,23 +23,26 @@ void SkipList::clear() {
     init();
 }
 
-std::string SkipList::get(uint64_t key) const {
+string SkipList::get(uint64_t key) const {
     Tower *tower = find(key);
     return tower != head && tower->key == key ? tower->value : "";
 }
 
-void SkipList::put(uint64_t key, const std::string &value) {
+void SkipList::put(uint64_t key, const string &value, uint64_t seqNum) {
+//    cout << "SkipList.put | key: " << key << ", seqNum: " << seqNum << endl;
     Tower *prev = find(key);
-    if (prev != head && prev->key == key) {
-        prev->value = value;
-        return;
-    }
+
+    // TODO: 같은 key가 있다면 덮어 씌워버리는 부분 삭제 (후에 seqNum으로 필터링)
+//    if (prev != head && prev->key == key) {
+//        prev->value = value;
+//        return;
+//    }
+
     size_t height = 1;
-    while (dist(engine))
-        ++height;
-    if (head->height < height + 1)
-        enlargeHeight(height + 1);
-    Tower *tower = new Tower(key, value, height);
+    while (dist(engine)) ++height;
+    if (head->height < height + 1) enlargeHeight(height + 1);
+
+    Tower *tower = new Tower(key, value, seqNum, height);
     for (size_t lvl = 0; lvl < height; ++lvl) {
         tower->prevs[lvl] = prev;
         tower->nexts[lvl] = prev->nexts[lvl];
@@ -87,8 +92,8 @@ uint64_t SkipList::space() const {
 }
 
 void SkipList::init() {
-    head = new Tower(0, "", 1);
-    tail = new Tower(UINT64_MAX, "", 1);
+    head = new Tower(0, "", 0, 1);
+    tail = new Tower(UINT64_MAX, "", 0, 1);
     head->prevs[0] = nullptr;
     head->nexts[0] = tail;
     tail->prevs[0] = head;
@@ -136,8 +141,8 @@ void SkipList::enlargeHeight(size_t height) {
     delete[] oldTailNexts;
 }
 
-SkipList::Tower::Tower(uint64_t key, const std::string &value, size_t height)
-        : key(key), value(value), height(height) {
+SkipList::Tower::Tower(uint64_t key, string value, uint64_t seqNum, size_t height)
+        : key(key), value(std::move(value)), seqNum(seqNum), height(height) {
     prevs = new Tower *[height];
     nexts = new Tower *[height];
 }
@@ -150,7 +155,7 @@ SkipList::Tower::~Tower() {
 SkipList::Iterator::Iterator(Tower *tower) : tower(tower) {}
 
 Entry SkipList::Iterator::next() {
-    Entry entry(tower->key, tower->value);
+    Entry entry(tower->key, tower->value, tower->seqNum);
     if (tower->nexts[0] != nullptr)
         tower = tower->nexts[0];
     return entry;

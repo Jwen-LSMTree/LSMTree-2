@@ -18,7 +18,7 @@ const uint64_t Option::TABLE_CACHE_SIZE = 5;
 
 const uint64_t Option::NZ_NUM = 6;
 
-const uint64_t Option::Z_SPACE = (uint64_t) 8 * 1024 * 1024;
+const uint64_t Option::Z_SPACE = (uint64_t) 9 * 1024 * 1024;
 
 const uint64_t Option::NZ_SPACES[] = {
         (uint64_t) 64 * 1024 * 1024,

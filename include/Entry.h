@@ -4,10 +4,16 @@
 #include <cstdint>
 #include <string>
 
+using namespace std;
+
 struct Entry {
     uint64_t key;
-    std::string value;
-    Entry(uint64_t key, const std::string &value);
+    string value;
+    uint64_t seqNum = 0;
+
+    Entry(uint64_t key, string value);
+
+    Entry(uint64_t key, string value, uint64_t seqNum);
 };
 
 #endif

@@ -2,13 +2,18 @@
 #define SEARCH_RESULT_H
 
 #include "Location.h"
+
 #include <string>
+
+using namespace std;
 
 struct SearchResult {
     bool success;
     Location location;
-    std::string value;
+    string value;
+
     SearchResult(bool success);
+
     SearchResult(bool success, Location location);
 };
 
