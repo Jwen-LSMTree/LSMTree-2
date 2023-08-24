@@ -20,3 +20,6 @@ add_executable(throughput ./test/throughput.cpp ${SRC_DIR})
 # target_link_libraries(persistence snappy)
 # target_link_libraries(latency snappy)
 # target_link_libraries(throughput snappy)
+
+add_subdirectory(test)
+add_subdirectory(test/lib/googletest-1.14.0)

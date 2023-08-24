@@ -251,10 +251,24 @@ CMakeFiles/latency.dir/src/SearchResult.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/latency.dir/src/SearchResult.cpp.s"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/gimjeong-u/CLionProjects/LSMTree-2/src/SearchResult.cpp -o CMakeFiles/latency.dir/src/SearchResult.cpp.s
 
+CMakeFiles/latency.dir/src/SequenceNumber.cpp.o: CMakeFiles/latency.dir/flags.make
+CMakeFiles/latency.dir/src/SequenceNumber.cpp.o: /Users/gimjeong-u/CLionProjects/LSMTree-2/src/SequenceNumber.cpp
+CMakeFiles/latency.dir/src/SequenceNumber.cpp.o: CMakeFiles/latency.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/gimjeong-u/CLionProjects/LSMTree-2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/latency.dir/src/SequenceNumber.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/latency.dir/src/SequenceNumber.cpp.o -MF CMakeFiles/latency.dir/src/SequenceNumber.cpp.o.d -o CMakeFiles/latency.dir/src/SequenceNumber.cpp.o -c /Users/gimjeong-u/CLionProjects/LSMTree-2/src/SequenceNumber.cpp
+
+CMakeFiles/latency.dir/src/SequenceNumber.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/latency.dir/src/SequenceNumber.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/gimjeong-u/CLionProjects/LSMTree-2/src/SequenceNumber.cpp > CMakeFiles/latency.dir/src/SequenceNumber.cpp.i
+
+CMakeFiles/latency.dir/src/SequenceNumber.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/latency.dir/src/SequenceNumber.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/gimjeong-u/CLionProjects/LSMTree-2/src/SequenceNumber.cpp -o CMakeFiles/latency.dir/src/SequenceNumber.cpp.s
+
 CMakeFiles/latency.dir/src/SkipList.cpp.o: CMakeFiles/latency.dir/flags.make
 CMakeFiles/latency.dir/src/SkipList.cpp.o: /Users/gimjeong-u/CLionProjects/LSMTree-2/src/SkipList.cpp
 CMakeFiles/latency.dir/src/SkipList.cpp.o: CMakeFiles/latency.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/gimjeong-u/CLionProjects/LSMTree-2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/latency.dir/src/SkipList.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/gimjeong-u/CLionProjects/LSMTree-2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/latency.dir/src/SkipList.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/latency.dir/src/SkipList.cpp.o -MF CMakeFiles/latency.dir/src/SkipList.cpp.o.d -o CMakeFiles/latency.dir/src/SkipList.cpp.o -c /Users/gimjeong-u/CLionProjects/LSMTree-2/src/SkipList.cpp
 
 CMakeFiles/latency.dir/src/SkipList.cpp.i: cmake_force
@@ -268,7 +282,7 @@ CMakeFiles/latency.dir/src/SkipList.cpp.s: cmake_force
 CMakeFiles/latency.dir/src/TableCache.cpp.o: CMakeFiles/latency.dir/flags.make
 CMakeFiles/latency.dir/src/TableCache.cpp.o: /Users/gimjeong-u/CLionProjects/LSMTree-2/src/TableCache.cpp
 CMakeFiles/latency.dir/src/TableCache.cpp.o: CMakeFiles/latency.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/gimjeong-u/CLionProjects/LSMTree-2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/latency.dir/src/TableCache.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/gimjeong-u/CLionProjects/LSMTree-2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/latency.dir/src/TableCache.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/latency.dir/src/TableCache.cpp.o -MF CMakeFiles/latency.dir/src/TableCache.cpp.o.d -o CMakeFiles/latency.dir/src/TableCache.cpp.o -c /Users/gimjeong-u/CLionProjects/LSMTree-2/src/TableCache.cpp
 
 CMakeFiles/latency.dir/src/TableCache.cpp.i: cmake_force
@@ -282,7 +296,7 @@ CMakeFiles/latency.dir/src/TableCache.cpp.s: cmake_force
 CMakeFiles/latency.dir/src/Util.cpp.o: CMakeFiles/latency.dir/flags.make
 CMakeFiles/latency.dir/src/Util.cpp.o: /Users/gimjeong-u/CLionProjects/LSMTree-2/src/Util.cpp
 CMakeFiles/latency.dir/src/Util.cpp.o: CMakeFiles/latency.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/gimjeong-u/CLionProjects/LSMTree-2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/latency.dir/src/Util.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/gimjeong-u/CLionProjects/LSMTree-2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/latency.dir/src/Util.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/latency.dir/src/Util.cpp.o -MF CMakeFiles/latency.dir/src/Util.cpp.o.d -o CMakeFiles/latency.dir/src/Util.cpp.o -c /Users/gimjeong-u/CLionProjects/LSMTree-2/src/Util.cpp
 
 CMakeFiles/latency.dir/src/Util.cpp.i: cmake_force
@@ -308,6 +322,7 @@ latency_OBJECTS = \
 "CMakeFiles/latency.dir/src/SSTableDataLocation.cpp.o" \
 "CMakeFiles/latency.dir/src/SSTableId.cpp.o" \
 "CMakeFiles/latency.dir/src/SearchResult.cpp.o" \
+"CMakeFiles/latency.dir/src/SequenceNumber.cpp.o" \
 "CMakeFiles/latency.dir/src/SkipList.cpp.o" \
 "CMakeFiles/latency.dir/src/TableCache.cpp.o" \
 "CMakeFiles/latency.dir/src/Util.cpp.o"
@@ -328,12 +343,13 @@ latency: CMakeFiles/latency.dir/src/SSTable.cpp.o
 latency: CMakeFiles/latency.dir/src/SSTableDataLocation.cpp.o
 latency: CMakeFiles/latency.dir/src/SSTableId.cpp.o
 latency: CMakeFiles/latency.dir/src/SearchResult.cpp.o
+latency: CMakeFiles/latency.dir/src/SequenceNumber.cpp.o
 latency: CMakeFiles/latency.dir/src/SkipList.cpp.o
 latency: CMakeFiles/latency.dir/src/TableCache.cpp.o
 latency: CMakeFiles/latency.dir/src/Util.cpp.o
 latency: CMakeFiles/latency.dir/build.make
 latency: CMakeFiles/latency.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/gimjeong-u/CLionProjects/LSMTree-2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Linking CXX executable latency"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/gimjeong-u/CLionProjects/LSMTree-2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Linking CXX executable latency"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/latency.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

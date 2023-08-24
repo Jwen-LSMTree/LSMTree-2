@@ -23,6 +23,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/latency.dir/src/SSTableId.cpp.o.d"
   "CMakeFiles/latency.dir/src/SearchResult.cpp.o"
   "CMakeFiles/latency.dir/src/SearchResult.cpp.o.d"
+  "CMakeFiles/latency.dir/src/SequenceNumber.cpp.o"
+  "CMakeFiles/latency.dir/src/SequenceNumber.cpp.o.d"
   "CMakeFiles/latency.dir/src/SkipList.cpp.o"
   "CMakeFiles/latency.dir/src/SkipList.cpp.o.d"
   "CMakeFiles/latency.dir/src/TableCache.cpp.o"

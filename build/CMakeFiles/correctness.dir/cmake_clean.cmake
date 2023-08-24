@@ -23,6 +23,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/correctness.dir/src/SSTableId.cpp.o.d"
   "CMakeFiles/correctness.dir/src/SearchResult.cpp.o"
   "CMakeFiles/correctness.dir/src/SearchResult.cpp.o.d"
+  "CMakeFiles/correctness.dir/src/SequenceNumber.cpp.o"
+  "CMakeFiles/correctness.dir/src/SequenceNumber.cpp.o.d"
   "CMakeFiles/correctness.dir/src/SkipList.cpp.o"
   "CMakeFiles/correctness.dir/src/SkipList.cpp.o.d"
   "CMakeFiles/correctness.dir/src/TableCache.cpp.o"

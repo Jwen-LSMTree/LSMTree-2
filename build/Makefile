@@ -85,6 +85,51 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 .PHONY : rebuild_cache/fast
 
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Available install components are: \"gmock\" \"gtest\""
+.PHONY : list_install_components
+
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+.PHONY : list_install_components/fast
+
+# Special rule for the target install
+install: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Install the project..."
+	/opt/homebrew/Cellar/cmake/3.27.3/bin/cmake -P cmake_install.cmake
+.PHONY : install
+
+# Special rule for the target install
+install/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Install the project..."
+	/opt/homebrew/Cellar/cmake/3.27.3/bin/cmake -P cmake_install.cmake
+.PHONY : install/fast
+
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing only the local directory..."
+	/opt/homebrew/Cellar/cmake/3.27.3/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
+
+# Special rule for the target install/local
+install/local/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing only the local directory..."
+	/opt/homebrew/Cellar/cmake/3.27.3/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local/fast
+
+# Special rule for the target install/strip
+install/strip: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing the project stripped..."
+	/opt/homebrew/Cellar/cmake/3.27.3/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip
+
+# Special rule for the target install/strip
+install/strip/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing the project stripped..."
+	/opt/homebrew/Cellar/cmake/3.27.3/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip/fast
+
 # The main all target
 all: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/gimjeong-u/CLionProjects/LSMTree-2/build/CMakeFiles /Users/gimjeong-u/CLionProjects/LSMTree-2/build//CMakeFiles/progress.marks
@@ -167,6 +212,71 @@ throughput: cmake_check_build_system
 throughput/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/throughput.dir/build.make CMakeFiles/throughput.dir/build
 .PHONY : throughput/fast
+
+#=============================================================================
+# Target rules for targets named sequence_number_tests
+
+# Build rule for target.
+sequence_number_tests: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 sequence_number_tests
+.PHONY : sequence_number_tests
+
+# fast build rule for target.
+sequence_number_tests/fast:
+	$(MAKE) $(MAKESILENT) -f test/CMakeFiles/sequence_number_tests.dir/build.make test/CMakeFiles/sequence_number_tests.dir/build
+.PHONY : sequence_number_tests/fast
+
+#=============================================================================
+# Target rules for targets named gmock
+
+# Build rule for target.
+gmock: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gmock
+.PHONY : gmock
+
+# fast build rule for target.
+gmock/fast:
+	$(MAKE) $(MAKESILENT) -f test/lib/googletest-1.14.0/googlemock/CMakeFiles/gmock.dir/build.make test/lib/googletest-1.14.0/googlemock/CMakeFiles/gmock.dir/build
+.PHONY : gmock/fast
+
+#=============================================================================
+# Target rules for targets named gmock_main
+
+# Build rule for target.
+gmock_main: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gmock_main
+.PHONY : gmock_main
+
+# fast build rule for target.
+gmock_main/fast:
+	$(MAKE) $(MAKESILENT) -f test/lib/googletest-1.14.0/googlemock/CMakeFiles/gmock_main.dir/build.make test/lib/googletest-1.14.0/googlemock/CMakeFiles/gmock_main.dir/build
+.PHONY : gmock_main/fast
+
+#=============================================================================
+# Target rules for targets named gtest
+
+# Build rule for target.
+gtest: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gtest
+.PHONY : gtest
+
+# fast build rule for target.
+gtest/fast:
+	$(MAKE) $(MAKESILENT) -f test/lib/googletest-1.14.0/googletest/CMakeFiles/gtest.dir/build.make test/lib/googletest-1.14.0/googletest/CMakeFiles/gtest.dir/build
+.PHONY : gtest/fast
+
+#=============================================================================
+# Target rules for targets named gtest_main
+
+# Build rule for target.
+gtest_main: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gtest_main
+.PHONY : gtest_main
+
+# fast build rule for target.
+gtest_main/fast:
+	$(MAKE) $(MAKESILENT) -f test/lib/googletest-1.14.0/googletest/CMakeFiles/gtest_main.dir/build.make test/lib/googletest-1.14.0/googletest/CMakeFiles/gtest_main.dir/build
+.PHONY : gtest_main/fast
 
 src/BlockCache.o: src/BlockCache.cpp.o
 .PHONY : src/BlockCache.o
@@ -564,6 +674,39 @@ src/SearchResult.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/throughput.dir/build.make CMakeFiles/throughput.dir/src/SearchResult.cpp.s
 .PHONY : src/SearchResult.cpp.s
 
+src/SequenceNumber.o: src/SequenceNumber.cpp.o
+.PHONY : src/SequenceNumber.o
+
+# target to build an object file
+src/SequenceNumber.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/correctness.dir/build.make CMakeFiles/correctness.dir/src/SequenceNumber.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/persistence.dir/build.make CMakeFiles/persistence.dir/src/SequenceNumber.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/latency.dir/build.make CMakeFiles/latency.dir/src/SequenceNumber.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/throughput.dir/build.make CMakeFiles/throughput.dir/src/SequenceNumber.cpp.o
+.PHONY : src/SequenceNumber.cpp.o
+
+src/SequenceNumber.i: src/SequenceNumber.cpp.i
+.PHONY : src/SequenceNumber.i
+
+# target to preprocess a source file
+src/SequenceNumber.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/correctness.dir/build.make CMakeFiles/correctness.dir/src/SequenceNumber.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/persistence.dir/build.make CMakeFiles/persistence.dir/src/SequenceNumber.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/latency.dir/build.make CMakeFiles/latency.dir/src/SequenceNumber.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/throughput.dir/build.make CMakeFiles/throughput.dir/src/SequenceNumber.cpp.i
+.PHONY : src/SequenceNumber.cpp.i
+
+src/SequenceNumber.s: src/SequenceNumber.cpp.s
+.PHONY : src/SequenceNumber.s
+
+# target to generate assembly for a file
+src/SequenceNumber.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/correctness.dir/build.make CMakeFiles/correctness.dir/src/SequenceNumber.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/persistence.dir/build.make CMakeFiles/persistence.dir/src/SequenceNumber.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/latency.dir/build.make CMakeFiles/latency.dir/src/SequenceNumber.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/throughput.dir/build.make CMakeFiles/throughput.dir/src/SequenceNumber.cpp.s
+.PHONY : src/SequenceNumber.cpp.s
+
 src/SkipList.o: src/SkipList.cpp.o
 .PHONY : src/SkipList.o
 
@@ -766,10 +909,19 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
+	@echo "... install"
+	@echo "... install/local"
+	@echo "... install/strip"
+	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... correctness"
+	@echo "... gmock"
+	@echo "... gmock_main"
+	@echo "... gtest"
+	@echo "... gtest_main"
 	@echo "... latency"
 	@echo "... persistence"
+	@echo "... sequence_number_tests"
 	@echo "... throughput"
 	@echo "... src/BlockCache.o"
 	@echo "... src/BlockCache.i"
@@ -807,6 +959,9 @@ help:
 	@echo "... src/SearchResult.o"
 	@echo "... src/SearchResult.i"
 	@echo "... src/SearchResult.s"
+	@echo "... src/SequenceNumber.o"
+	@echo "... src/SequenceNumber.i"
+	@echo "... src/SequenceNumber.s"
 	@echo "... src/SkipList.o"
 	@echo "... src/SkipList.i"
 	@echo "... src/SkipList.s"

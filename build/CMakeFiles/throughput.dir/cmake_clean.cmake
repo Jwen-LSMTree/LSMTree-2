@@ -23,6 +23,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/throughput.dir/src/SSTableId.cpp.o.d"
   "CMakeFiles/throughput.dir/src/SearchResult.cpp.o"
   "CMakeFiles/throughput.dir/src/SearchResult.cpp.o.d"
+  "CMakeFiles/throughput.dir/src/SequenceNumber.cpp.o"
+  "CMakeFiles/throughput.dir/src/SequenceNumber.cpp.o.d"
   "CMakeFiles/throughput.dir/src/SkipList.cpp.o"
   "CMakeFiles/throughput.dir/src/SkipList.cpp.o.d"
   "CMakeFiles/throughput.dir/src/TableCache.cpp.o"

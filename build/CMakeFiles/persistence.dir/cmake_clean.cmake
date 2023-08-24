@@ -23,6 +23,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/persistence.dir/src/SSTableId.cpp.o.d"
   "CMakeFiles/persistence.dir/src/SearchResult.cpp.o"
   "CMakeFiles/persistence.dir/src/SearchResult.cpp.o.d"
+  "CMakeFiles/persistence.dir/src/SequenceNumber.cpp.o"
+  "CMakeFiles/persistence.dir/src/SequenceNumber.cpp.o.d"
   "CMakeFiles/persistence.dir/src/SkipList.cpp.o"
   "CMakeFiles/persistence.dir/src/SkipList.cpp.o.d"
   "CMakeFiles/persistence.dir/src/TableCache.cpp.o"

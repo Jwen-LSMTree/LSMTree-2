@@ -251,10 +251,24 @@ CMakeFiles/persistence.dir/src/SearchResult.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/persistence.dir/src/SearchResult.cpp.s"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/gimjeong-u/CLionProjects/LSMTree-2/src/SearchResult.cpp -o CMakeFiles/persistence.dir/src/SearchResult.cpp.s
 
+CMakeFiles/persistence.dir/src/SequenceNumber.cpp.o: CMakeFiles/persistence.dir/flags.make
+CMakeFiles/persistence.dir/src/SequenceNumber.cpp.o: /Users/gimjeong-u/CLionProjects/LSMTree-2/src/SequenceNumber.cpp
+CMakeFiles/persistence.dir/src/SequenceNumber.cpp.o: CMakeFiles/persistence.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/gimjeong-u/CLionProjects/LSMTree-2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/persistence.dir/src/SequenceNumber.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/persistence.dir/src/SequenceNumber.cpp.o -MF CMakeFiles/persistence.dir/src/SequenceNumber.cpp.o.d -o CMakeFiles/persistence.dir/src/SequenceNumber.cpp.o -c /Users/gimjeong-u/CLionProjects/LSMTree-2/src/SequenceNumber.cpp
+
+CMakeFiles/persistence.dir/src/SequenceNumber.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/persistence.dir/src/SequenceNumber.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/gimjeong-u/CLionProjects/LSMTree-2/src/SequenceNumber.cpp > CMakeFiles/persistence.dir/src/SequenceNumber.cpp.i
+
+CMakeFiles/persistence.dir/src/SequenceNumber.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/persistence.dir/src/SequenceNumber.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/gimjeong-u/CLionProjects/LSMTree-2/src/SequenceNumber.cpp -o CMakeFiles/persistence.dir/src/SequenceNumber.cpp.s
+
 CMakeFiles/persistence.dir/src/SkipList.cpp.o: CMakeFiles/persistence.dir/flags.make
 CMakeFiles/persistence.dir/src/SkipList.cpp.o: /Users/gimjeong-u/CLionProjects/LSMTree-2/src/SkipList.cpp
 CMakeFiles/persistence.dir/src/SkipList.cpp.o: CMakeFiles/persistence.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/gimjeong-u/CLionProjects/LSMTree-2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/persistence.dir/src/SkipList.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/gimjeong-u/CLionProjects/LSMTree-2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/persistence.dir/src/SkipList.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/persistence.dir/src/SkipList.cpp.o -MF CMakeFiles/persistence.dir/src/SkipList.cpp.o.d -o CMakeFiles/persistence.dir/src/SkipList.cpp.o -c /Users/gimjeong-u/CLionProjects/LSMTree-2/src/SkipList.cpp
 
 CMakeFiles/persistence.dir/src/SkipList.cpp.i: cmake_force
@@ -268,7 +282,7 @@ CMakeFiles/persistence.dir/src/SkipList.cpp.s: cmake_force
 CMakeFiles/persistence.dir/src/TableCache.cpp.o: CMakeFiles/persistence.dir/flags.make
 CMakeFiles/persistence.dir/src/TableCache.cpp.o: /Users/gimjeong-u/CLionProjects/LSMTree-2/src/TableCache.cpp
 CMakeFiles/persistence.dir/src/TableCache.cpp.o: CMakeFiles/persistence.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/gimjeong-u/CLionProjects/LSMTree-2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/persistence.dir/src/TableCache.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/gimjeong-u/CLionProjects/LSMTree-2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/persistence.dir/src/TableCache.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/persistence.dir/src/TableCache.cpp.o -MF CMakeFiles/persistence.dir/src/TableCache.cpp.o.d -o CMakeFiles/persistence.dir/src/TableCache.cpp.o -c /Users/gimjeong-u/CLionProjects/LSMTree-2/src/TableCache.cpp
 
 CMakeFiles/persistence.dir/src/TableCache.cpp.i: cmake_force
@@ -282,7 +296,7 @@ CMakeFiles/persistence.dir/src/TableCache.cpp.s: cmake_force
 CMakeFiles/persistence.dir/src/Util.cpp.o: CMakeFiles/persistence.dir/flags.make
 CMakeFiles/persistence.dir/src/Util.cpp.o: /Users/gimjeong-u/CLionProjects/LSMTree-2/src/Util.cpp
 CMakeFiles/persistence.dir/src/Util.cpp.o: CMakeFiles/persistence.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/gimjeong-u/CLionProjects/LSMTree-2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/persistence.dir/src/Util.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/gimjeong-u/CLionProjects/LSMTree-2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/persistence.dir/src/Util.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/persistence.dir/src/Util.cpp.o -MF CMakeFiles/persistence.dir/src/Util.cpp.o.d -o CMakeFiles/persistence.dir/src/Util.cpp.o -c /Users/gimjeong-u/CLionProjects/LSMTree-2/src/Util.cpp
 
 CMakeFiles/persistence.dir/src/Util.cpp.i: cmake_force
@@ -308,6 +322,7 @@ persistence_OBJECTS = \
 "CMakeFiles/persistence.dir/src/SSTableDataLocation.cpp.o" \
 "CMakeFiles/persistence.dir/src/SSTableId.cpp.o" \
 "CMakeFiles/persistence.dir/src/SearchResult.cpp.o" \
+"CMakeFiles/persistence.dir/src/SequenceNumber.cpp.o" \
 "CMakeFiles/persistence.dir/src/SkipList.cpp.o" \
 "CMakeFiles/persistence.dir/src/TableCache.cpp.o" \
 "CMakeFiles/persistence.dir/src/Util.cpp.o"
@@ -328,12 +343,13 @@ persistence: CMakeFiles/persistence.dir/src/SSTable.cpp.o
 persistence: CMakeFiles/persistence.dir/src/SSTableDataLocation.cpp.o
 persistence: CMakeFiles/persistence.dir/src/SSTableId.cpp.o
 persistence: CMakeFiles/persistence.dir/src/SearchResult.cpp.o
+persistence: CMakeFiles/persistence.dir/src/SequenceNumber.cpp.o
 persistence: CMakeFiles/persistence.dir/src/SkipList.cpp.o
 persistence: CMakeFiles/persistence.dir/src/TableCache.cpp.o
 persistence: CMakeFiles/persistence.dir/src/Util.cpp.o
 persistence: CMakeFiles/persistence.dir/build.make
 persistence: CMakeFiles/persistence.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/gimjeong-u/CLionProjects/LSMTree-2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Linking CXX executable persistence"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/gimjeong-u/CLionProjects/LSMTree-2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Linking CXX executable persistence"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/persistence.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

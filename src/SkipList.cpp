@@ -2,7 +2,7 @@
 #include "Option.h"
 #include <cstring>
 
-SkipList::SkipList(): dist(0, 1) {
+SkipList::SkipList() : dist(0, 1) {
     init();
 }
 
@@ -50,20 +50,20 @@ void SkipList::put(uint64_t key, const std::string &value) {
     totalBytes += value.size();
 }
 
-bool SkipList::del(uint64_t key) {
-    Tower *tower = find(key);
-    if (tower == head || tower->key != key)
-        return false;
-    size_t height = tower->height;
-    for (size_t lvl = 0; lvl < height; ++lvl) {
-        tower->prevs[lvl]->nexts[lvl] = tower->nexts[lvl];
-        tower->nexts[lvl]->prevs[lvl] = tower->prevs[lvl];
-    }
-    --totalEntries;
-    totalBytes -= tower->value.size();
-    delete tower;
-    return true;
-}
+//bool SkipList::del(uint64_t key) {
+//    Tower *tower = find(key);
+//    if (tower == head || tower->key != key)
+//        return false;
+//    size_t height = tower->height;
+//    for (size_t lvl = 0; lvl < height; ++lvl) {
+//        tower->prevs[lvl]->nexts[lvl] = tower->nexts[lvl];
+//        tower->nexts[lvl]->prevs[lvl] = tower->prevs[lvl];
+//    }
+//    --totalEntries;
+//    totalBytes -= tower->value.size();
+//    delete tower;
+//    return true;
+//}
 
 bool SkipList::contains(uint64_t key) const {
     Tower *tower = find(key);
@@ -116,10 +116,10 @@ void SkipList::enlargeHeight(size_t height) {
     Tower **oldHeadNexts = head->nexts;
     Tower **oldTailPrevs = tail->prevs;
     Tower **oldTailNexts = tail->nexts;
-    head->prevs = new Tower*[height];
-    head->nexts = new Tower*[height];
-    tail->prevs = new Tower*[height];
-    tail->nexts = new Tower*[height];
+    head->prevs = new Tower *[height];
+    head->nexts = new Tower *[height];
+    tail->prevs = new Tower *[height];
+    tail->nexts = new Tower *[height];
     for (size_t lvl = 0; lvl < height; ++lvl)
         head->prevs[lvl] = tail->nexts[lvl] = nullptr;
     for (size_t lvl = 0; lvl < oldHeight; ++lvl) {
@@ -137,9 +137,9 @@ void SkipList::enlargeHeight(size_t height) {
 }
 
 SkipList::Tower::Tower(uint64_t key, const std::string &value, size_t height)
-    : key(key), value(value), height(height) {
-    prevs = new Tower*[height];
-    nexts = new Tower*[height];
+        : key(key), value(value), height(height) {
+    prevs = new Tower *[height];
+    nexts = new Tower *[height];
 }
 
 SkipList::Tower::~Tower() {
@@ -147,7 +147,7 @@ SkipList::Tower::~Tower() {
     delete[] nexts;
 }
 
-SkipList::Iterator::Iterator(Tower *tower): tower(tower) {}
+SkipList::Iterator::Iterator(Tower *tower) : tower(tower) {}
 
 Entry SkipList::Iterator::next() {
     Entry entry(tower->key, tower->value);

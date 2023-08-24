@@ -251,10 +251,24 @@ CMakeFiles/correctness.dir/src/SearchResult.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/correctness.dir/src/SearchResult.cpp.s"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/gimjeong-u/CLionProjects/LSMTree-2/src/SearchResult.cpp -o CMakeFiles/correctness.dir/src/SearchResult.cpp.s
 
+CMakeFiles/correctness.dir/src/SequenceNumber.cpp.o: CMakeFiles/correctness.dir/flags.make
+CMakeFiles/correctness.dir/src/SequenceNumber.cpp.o: /Users/gimjeong-u/CLionProjects/LSMTree-2/src/SequenceNumber.cpp
+CMakeFiles/correctness.dir/src/SequenceNumber.cpp.o: CMakeFiles/correctness.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/gimjeong-u/CLionProjects/LSMTree-2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/correctness.dir/src/SequenceNumber.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/correctness.dir/src/SequenceNumber.cpp.o -MF CMakeFiles/correctness.dir/src/SequenceNumber.cpp.o.d -o CMakeFiles/correctness.dir/src/SequenceNumber.cpp.o -c /Users/gimjeong-u/CLionProjects/LSMTree-2/src/SequenceNumber.cpp
+
+CMakeFiles/correctness.dir/src/SequenceNumber.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/correctness.dir/src/SequenceNumber.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/gimjeong-u/CLionProjects/LSMTree-2/src/SequenceNumber.cpp > CMakeFiles/correctness.dir/src/SequenceNumber.cpp.i
+
+CMakeFiles/correctness.dir/src/SequenceNumber.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/correctness.dir/src/SequenceNumber.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/gimjeong-u/CLionProjects/LSMTree-2/src/SequenceNumber.cpp -o CMakeFiles/correctness.dir/src/SequenceNumber.cpp.s
+
 CMakeFiles/correctness.dir/src/SkipList.cpp.o: CMakeFiles/correctness.dir/flags.make
 CMakeFiles/correctness.dir/src/SkipList.cpp.o: /Users/gimjeong-u/CLionProjects/LSMTree-2/src/SkipList.cpp
 CMakeFiles/correctness.dir/src/SkipList.cpp.o: CMakeFiles/correctness.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/gimjeong-u/CLionProjects/LSMTree-2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/correctness.dir/src/SkipList.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/gimjeong-u/CLionProjects/LSMTree-2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/correctness.dir/src/SkipList.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/correctness.dir/src/SkipList.cpp.o -MF CMakeFiles/correctness.dir/src/SkipList.cpp.o.d -o CMakeFiles/correctness.dir/src/SkipList.cpp.o -c /Users/gimjeong-u/CLionProjects/LSMTree-2/src/SkipList.cpp
 
 CMakeFiles/correctness.dir/src/SkipList.cpp.i: cmake_force
@@ -268,7 +282,7 @@ CMakeFiles/correctness.dir/src/SkipList.cpp.s: cmake_force
 CMakeFiles/correctness.dir/src/TableCache.cpp.o: CMakeFiles/correctness.dir/flags.make
 CMakeFiles/correctness.dir/src/TableCache.cpp.o: /Users/gimjeong-u/CLionProjects/LSMTree-2/src/TableCache.cpp
 CMakeFiles/correctness.dir/src/TableCache.cpp.o: CMakeFiles/correctness.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/gimjeong-u/CLionProjects/LSMTree-2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/correctness.dir/src/TableCache.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/gimjeong-u/CLionProjects/LSMTree-2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/correctness.dir/src/TableCache.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/correctness.dir/src/TableCache.cpp.o -MF CMakeFiles/correctness.dir/src/TableCache.cpp.o.d -o CMakeFiles/correctness.dir/src/TableCache.cpp.o -c /Users/gimjeong-u/CLionProjects/LSMTree-2/src/TableCache.cpp
 
 CMakeFiles/correctness.dir/src/TableCache.cpp.i: cmake_force
@@ -282,7 +296,7 @@ CMakeFiles/correctness.dir/src/TableCache.cpp.s: cmake_force
 CMakeFiles/correctness.dir/src/Util.cpp.o: CMakeFiles/correctness.dir/flags.make
 CMakeFiles/correctness.dir/src/Util.cpp.o: /Users/gimjeong-u/CLionProjects/LSMTree-2/src/Util.cpp
 CMakeFiles/correctness.dir/src/Util.cpp.o: CMakeFiles/correctness.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/gimjeong-u/CLionProjects/LSMTree-2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/correctness.dir/src/Util.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/gimjeong-u/CLionProjects/LSMTree-2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/correctness.dir/src/Util.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/correctness.dir/src/Util.cpp.o -MF CMakeFiles/correctness.dir/src/Util.cpp.o.d -o CMakeFiles/correctness.dir/src/Util.cpp.o -c /Users/gimjeong-u/CLionProjects/LSMTree-2/src/Util.cpp
 
 CMakeFiles/correctness.dir/src/Util.cpp.i: cmake_force
@@ -308,6 +322,7 @@ correctness_OBJECTS = \
 "CMakeFiles/correctness.dir/src/SSTableDataLocation.cpp.o" \
 "CMakeFiles/correctness.dir/src/SSTableId.cpp.o" \
 "CMakeFiles/correctness.dir/src/SearchResult.cpp.o" \
+"CMakeFiles/correctness.dir/src/SequenceNumber.cpp.o" \
 "CMakeFiles/correctness.dir/src/SkipList.cpp.o" \
 "CMakeFiles/correctness.dir/src/TableCache.cpp.o" \
 "CMakeFiles/correctness.dir/src/Util.cpp.o"
@@ -328,12 +343,13 @@ correctness: CMakeFiles/correctness.dir/src/SSTable.cpp.o
 correctness: CMakeFiles/correctness.dir/src/SSTableDataLocation.cpp.o
 correctness: CMakeFiles/correctness.dir/src/SSTableId.cpp.o
 correctness: CMakeFiles/correctness.dir/src/SearchResult.cpp.o
+correctness: CMakeFiles/correctness.dir/src/SequenceNumber.cpp.o
 correctness: CMakeFiles/correctness.dir/src/SkipList.cpp.o
 correctness: CMakeFiles/correctness.dir/src/TableCache.cpp.o
 correctness: CMakeFiles/correctness.dir/src/Util.cpp.o
 correctness: CMakeFiles/correctness.dir/build.make
 correctness: CMakeFiles/correctness.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/gimjeong-u/CLionProjects/LSMTree-2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Linking CXX executable correctness"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/gimjeong-u/CLionProjects/LSMTree-2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Linking CXX executable correctness"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/correctness.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
