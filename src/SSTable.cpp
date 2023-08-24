@@ -246,7 +246,7 @@ string SSTable::loadBlock(uint64_t pos) const {
 }
 
 uint64_t SSTable::indexSpace() const {
-    return (entryCnt * 2 + blockCnt * 2 + 6) * sizeof(uint64_t);
+    return (entryCnt * 3 + blockCnt * 2 + 7) * sizeof(uint64_t);
 }
 
 uint64_t SSTable::blockSpace() const {
