@@ -29,7 +29,6 @@ string SkipList::get(uint64_t key) const {
 }
 
 void SkipList::put(uint64_t key, const string &value, uint64_t seqNum) {
-//    cout << "SkipList.put | key: " << key << ", seqNum: " << seqNum << endl;
     Tower *prev = find(key);
 
     // TODO: 같은 key가 있다면 덮어 씌워버리는 부분 삭제 (후에 seqNum으로 필터링)
@@ -37,6 +36,9 @@ void SkipList::put(uint64_t key, const string &value, uint64_t seqNum) {
 //        prev->value = value;
 //        return;
 //    }
+
+    // 블룸필터에 키 표시
+    bloomfilter.insert(key);
 
     size_t height = 1;
     while (dist(engine)) ++height;
@@ -55,22 +57,26 @@ void SkipList::put(uint64_t key, const string &value, uint64_t seqNum) {
     totalBytes += value.size();
 }
 
-//bool SkipList::del(uint64_t key) {
-//    Tower *tower = find(key);
-//    if (tower == head || tower->key != key)
-//        return false;
-//    size_t height = tower->height;
-//    for (size_t lvl = 0; lvl < height; ++lvl) {
-//        tower->prevs[lvl]->nexts[lvl] = tower->nexts[lvl];
-//        tower->nexts[lvl]->prevs[lvl] = tower->prevs[lvl];
-//    }
-//    --totalEntries;
-//    totalBytes -= tower->value.size();
-//    delete tower;
-//    return true;
-//}
+// bool SkipList::del(uint64_t key) {
+//     Tower *tower = find(key);
+//     if (tower == head || tower->key != key)
+//         return false;
+//     size_t height = tower->height;
+//     for (size_t lvl = 0; lvl < height; ++lvl) {
+//         tower->prevs[lvl]->nexts[lvl] = tower->nexts[lvl];
+//         tower->nexts[lvl]->prevs[lvl] = tower->prevs[lvl];
+//     }
+//     --totalEntries;
+//     totalBytes -= tower->value.size();
+//     delete tower;
+//     return true;
+// }
 
 bool SkipList::contains(uint64_t key) const {
+    if (!bloomfilter.hasKey(key)) {
+        // bloomfilter에 없는 경우 바로 false 반환
+        return false;
+    }
     Tower *tower = find(key);
     return tower != head && tower->key == key;
 }
@@ -88,7 +94,7 @@ bool SkipList::empty() const {
 }
 
 uint64_t SkipList::space() const {
-    return (totalEntries * 2 + totalBytes / Option::BLOCK_SPACE * 2 + 6) * sizeof(uint64_t) + totalBytes;
+    return (totalEntries * 3 + totalBytes / Option::BLOCK_SPACE * 2 + 7) * sizeof(uint64_t) + totalBytes;
 }
 
 void SkipList::init() {

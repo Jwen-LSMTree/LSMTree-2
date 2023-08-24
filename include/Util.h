@@ -2,10 +2,13 @@
 #define UTIL_H
 
 #include "Entry.h"
+
 #include <vector>
 
+using namespace std;
+
 namespace Util {
-    std::vector<Entry> compact(const std::vector<std::vector<Entry>> &inputs);
+    vector<Entry> compact(const vector<vector<Entry>> &inputs);
 }
 
 #endif

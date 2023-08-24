@@ -2,13 +2,13 @@
 #include "Option.h"
 
 TableCache::~TableCache() {
-    for (auto node : linkedList) {
+    for (auto node: linkedList) {
         node.second->close();
         delete node.second;
     }
 }
 
-std::ifstream *TableCache::open(SSTableId id) {
+ifstream *TableCache::open(SSTableId id) {
     if (hashMap.count(id.no)) {
         linkedList.push_front(*hashMap[id.no]);
         linkedList.erase(hashMap[id.no]);
@@ -21,7 +21,7 @@ std::ifstream *TableCache::open(SSTableId id) {
             delete linkedList.back().second;
             linkedList.pop_back();
         }
-        std::ifstream *ifs = new std::ifstream(id.name(), std::ios::binary);
+        ifstream *ifs = new ifstream(id.name(), ios::binary);
         linkedList.emplace_front(id.no, ifs);
         hashMap[id.no] = linkedList.begin();
         return ifs;

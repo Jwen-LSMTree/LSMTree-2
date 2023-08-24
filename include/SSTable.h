@@ -7,6 +7,8 @@
 #include "SSTableId.h"
 #include "Location.h"
 #include "TableCache.h"
+#include "SSTableDataLocation.h"
+#include "BloomFilter.h"
 
 #include <string>
 #include <vector>
@@ -21,13 +23,13 @@ public:
 
     explicit SSTable(const SkipList &mem, const SSTableId &id, TableCache *tableCache);
 
-    explicit SSTable(const vector<Entry> &entries, size_t &pos, const SSTableId &id, TableCache *tableCache);
+    explicit SSTable(const std::vector<Entry> &entries, size_t &pos, const SSTableId &id, TableCache *tableCache);
 
     SearchResult search(uint64_t key) const;
 
     vector<Entry> load() const;
 
-    string loadBlock(uint64_t pos) const;
+    string loadBlock(vector<uint64_t> cmps, uint64_t pos) const;
 
     void remove() const;
 
@@ -42,22 +44,30 @@ public:
 private:
     SSTableId id;
     uint64_t entryCnt;
+
     vector<uint64_t> keys;
     vector<uint64_t> offsets;
     vector<uint64_t> seqNums;
 
     uint64_t blockCnt;
-    vector<uint64_t> oris;
-    vector<uint64_t> cmps;
+    uint64_t min;
+    uint64_t max;
+    uint64_t size;
+
     TableCache *tableCache;
 
-    void save(const string &blockSeg);
+    void save(vector<uint64_t> keys, vector<uint64_t> offsets, vector<uint64_t> seqNums,
+              vector<uint64_t> oris, vector<uint64_t> cmps, const string &blockSeg);
 
-    Location locate(uint64_t pos) const;
+    Location locate(SSTableDataLocation loc, uint64_t pos) const;
 
     uint64_t indexSpace() const;
 
     uint64_t blockSpace() const;
+
+    SSTableDataLocation loadAll() const;
+
+    BloomFilter bloomfilter;
 };
 
 #endif

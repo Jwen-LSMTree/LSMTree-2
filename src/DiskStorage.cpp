@@ -6,9 +6,9 @@
 #include <fstream>
 #include <iostream>
 
-DiskStorage::DiskStorage(const std::string &dir) : dir(dir), level0(dir + Option::Z_NAME, &tableCache) {
-    if (std::filesystem::exists(std::filesystem::path(dir + "/meta"))) {
-        std::ifstream ifs(dir + "/meta", std::ios::binary);
+DiskStorage::DiskStorage(const string &dir) : dir(dir), level0(dir + Option::Z_NAME, &tableCache) {
+    if (filesystem::exists(filesystem::path(dir + "/meta"))) {
+        ifstream ifs(dir + "/meta", ios::binary);
         ifs.read((char *) &no, sizeof(uint64_t));
         ifs.close();
     } else {
@@ -34,12 +34,10 @@ void DiskStorage::add(const SkipList &mem) {
     save();
 }
 
-SearchResult DiskStorage::search(uint64_t key, bool needValue) {
+SearchResult DiskStorage::search(uint64_t key) {
     SearchResult result = level0.search(key);
     for (uint64_t i = 0; !result.success && i < Option::NZ_NUM; ++i)
         result = levels[i].search(key);
-    if (needValue)
-        blockCache.complete(result);
     return result;
 }
 
@@ -52,7 +50,7 @@ void DiskStorage::clear() {
 }
 
 void DiskStorage::save() const {
-    std::ofstream ofs(dir + "/meta", std::ios::binary);
+    ofstream ofs(dir + "/meta", ios::binary);
     ofs.write((char *) &no, sizeof(uint64_t));
     ofs.close();
 }

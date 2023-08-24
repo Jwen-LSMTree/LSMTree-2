@@ -2,20 +2,26 @@
 #define TABLE_CACHE_H
 
 #include "SSTableId.h"
+
 #include <fstream>
 #include <list>
 #include <unordered_map>
 #include <utility>
 #include <cstdint>
 
+using namespace std;
+
 class TableCache {
 public:
     ~TableCache();
-    std::ifstream *open(SSTableId id);
+
+    ifstream *open(SSTableId id);
+
     void close(SSTableId id);
+
 private:
-    std::list<std::pair<uint64_t, std::ifstream*>> linkedList;
-    std::unordered_map<uint64_t, std::list<std::pair<uint64_t, std::ifstream*>>::iterator> hashMap;
+    list<pair<uint64_t, ifstream *>> linkedList;
+    unordered_map<uint64_t, list<pair<uint64_t, ifstream *>>::iterator> hashMap;
 };
 
 #endif

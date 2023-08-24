@@ -5,6 +5,8 @@
 
 #include <string>
 
+using namespace std;
+
 class KVStore : public KVStoreAPI {
 private:
     SequenceNumber *sequenceNumber;
@@ -12,11 +14,11 @@ private:
     DiskStorage disk;
 
 public:
-    explicit KVStore(const std::string &dir);
+    explicit KVStore(const string &dir);
 
     ~KVStore();
 
-    void put(uint64_t key, const std::string &value) override;
+    void put(uint64_t key, const string &value) override;
 
     string get(uint64_t key) override;
 

@@ -1,9 +1,11 @@
+#include "Test.h"
+
 #include <iostream>
-#include <cstdint>
 #include <string>
 #include <ctime>
+#include <filesystem>
 
-#include "Test.h"
+using namespace std;
 
 class CorrectnessTest : public Test {
 private:
@@ -17,34 +19,34 @@ private:
         EXPECT(not_found, store.get(1));
         store.put(1, "SE");
         EXPECT("SE", store.get(1));
-//		EXPECT(true, store.del(1));
+//        EXPECT(true, store.del(1));
         EXPECT(not_found, store.get(1));
-//		EXPECT(false, store.del(1));
+//        EXPECT(false, store.del(1));
 
         phase();
 
         // Test multiple key-value pairs
         for (i = 0; i < max; ++i) {
-            store.put(i, std::string(i + 1, 's'));
-            EXPECT(std::string(i + 1, 's'), store.get(i));
+            store.put(i, string(i + 1, 's'));
+            EXPECT(string(i + 1, 's'), store.get(i));
         }
         phase();
 
         // Test after all insertions
         for (i = 0; i < max; ++i)
-            EXPECT(std::string(i + 1, 's'), store.get(i));
+            EXPECT(string(i + 1, 's'), store.get(i));
         phase();
 
         // Test deletions
-//		for (i = 0; i < max; i+=2)
-//			EXPECT(true, store.del(i));
+//        for (i = 0; i < max; i += 2)
+//            EXPECT(true, store.del(i));
 
         for (i = 0; i < max; ++i)
-            EXPECT((i & 1) ? std::string(i + 1, 's') : not_found,
+            EXPECT((i & 1) ? string(i + 1, 's') : not_found,
                    store.get(i));
 
-//		for (i = 1; i < max; ++i)
-//			EXPECT(i & 1, store.del(i));
+//        for (i = 1; i < max; ++i)
+//            EXPECT(i & 1, store.del(i));
 
         phase();
 
@@ -52,35 +54,39 @@ private:
     }
 
 public:
-    CorrectnessTest(const std::string &dir, bool v = true) : Test(dir, v) {
+    CorrectnessTest(const string &dir, bool v = true) : Test(dir, v) {
     }
 
     void start_test(void *args = NULL) override {
-        std::cout << "KVStore Correctness Test" << std::endl;
+        cout << "KVStore Correctness Test" << endl;
 
-        std::cout << "[Simple Test]" << std::endl;
+        cout << "[Simple Test]" << endl;
         regular_test(SIMPLE_TEST_MAX);
 
-        std::cout << "[Large Test]" << std::endl;
+        cout << "[Large Test]" << endl;
         regular_test(LARGE_TEST_MAX);
     }
 };
 
 int main(int argc, char *argv[]) {
-    bool verbose = (argc == 2 && std::string(argv[1]) == "-v");
+    if (filesystem::exists(filesystem::path("./data"))) {
+        filesystem::remove_all(filesystem::path("./data"));
+    }
 
-    std::cout << "Usage: " << argv[0] << " [-v]" << std::endl;
-    std::cout << "  -v: print extra info for failed tests [currently ";
-    std::cout << (verbose ? "ON" : "OFF") << "]" << std::endl;
-    std::cout << std::endl;
-    std::cout.flush();
+    bool verbose = (argc == 2 && string(argv[1]) == "-v");
+
+    cout << "Usage: " << argv[0] << " [-v]" << endl;
+    cout << "  -v: print extra info for failed tests [currently ";
+    cout << (verbose ? "ON" : "OFF") << "]" << endl;
+    cout << endl;
+    cout.flush();
 
     CorrectnessTest test("./data", verbose);
 
     clock_t a = clock();
     test.start_test();
     clock_t b = clock();
-    std::cout << "Total time: " << (b - a) << "ms" << std::endl;
+    cout << "Total time: " << (b - a) << "ms" << endl;
 
     return 0;
 }

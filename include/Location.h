@@ -3,6 +3,8 @@
 
 #include <cstdint>
 
+using namespace std;
+
 class SSTable;
 
 struct Location {
@@ -10,7 +12,9 @@ struct Location {
     uint64_t pos;
     uint64_t offset;
     uint64_t len;
+
     Location() = default;
+
     Location(const SSTable *sst, uint64_t pos, uint64_t offset, uint64_t len);
 };
 

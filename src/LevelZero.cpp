@@ -6,8 +6,6 @@
 #include <fstream>
 #include <iostream>
 
-using namespace std;
-
 LevelZero::LevelZero(const string &dir, TableCache *tableCache) : dir(dir), tableCache(tableCache) {
     if (!filesystem::exists(filesystem::path(dir))) {
         filesystem::create_directories(filesystem::path(dir));

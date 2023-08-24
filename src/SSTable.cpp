@@ -5,42 +5,36 @@
 
 #include <fstream>
 #include <filesystem>
+#include <iostream>
 
 SSTable::SSTable(const SSTableId &id, TableCache *tableCache)
         : id(id), tableCache(tableCache) {
-    ifstream ifs(id.name(), ios::binary);
-
-    // EntryIndex
-    ifs.read((char *) &entryCnt, sizeof(uint64_t)); // n
-    for (uint64_t i = 0; i <= entryCnt; ++i) {
-        uint64_t key, offset, seqNum;
-        ifs.read((char *) &key, sizeof(uint64_t));
-        ifs.read((char *) &offset, sizeof(uint64_t));
-        ifs.read((char *) &seqNum, sizeof(uint64_t));
-        keys.push_back(key);
-        offsets.push_back(offset);
-        seqNums.push_back(seqNum);
+    SSTableDataLocation loc = loadAll();
+    min = loc.keys[0];
+    max = loc.keys[entryCnt - 1];
+    for (uint64_t i = 0; i <= entryCnt; i++) {
+        bloomfilter.insert(loc.keys[i]);
     }
-
-    // BlockIndex
-    ifs.read((char *) &blockCnt, sizeof(uint64_t)); // m
-    for (uint64_t i = 0; i <= blockCnt; ++i) {
-        uint64_t ori, cmp;
-        ifs.read((char *) &ori, sizeof(uint64_t));
-        ifs.read((char *) &cmp, sizeof(uint64_t));
-        oris.push_back(ori);
-        cmps.push_back(cmp);
-    }
-    ifs.close();
+    size = loc.cmps.back();
 }
 
 SSTable::SSTable(const SkipList &mem, const SSTableId &id, TableCache *tableCache)
         : id(id), tableCache(tableCache) {
+    // 기존 skiplist 블룸필터
+    bloomfilter = mem.bloomfilter;
+
+    vector<uint64_t> keys;
+    vector<uint64_t> offsets;
+    vector<uint64_t> seqNums;
+    vector<uint64_t> oris;
+    vector<uint64_t> cmps;
+
     entryCnt = mem.size();
     blockCnt = 0;
     uint64_t offset = 0;
     uint64_t ori = 0;
     uint64_t cmp = 0;
+
     string block;
     block.reserve(Option::BLOCK_SPACE);
     string blockSeg;
@@ -82,36 +76,56 @@ SSTable::SSTable(const SkipList &mem, const SSTableId &id, TableCache *tableCach
         block.clear();
         ++blockCnt;
     }
+
     keys.push_back(0);
     offsets.push_back(offset);
-    seqNums.push_back(0); // ??
+    seqNums.push_back(0);
     oris.push_back(ori);
     cmps.push_back(cmp);
-    save(blockSeg);
+
+    min = keys[0];
+    max = keys[entryCnt - 1];
+    size = cmps.back();
+
+    save(keys, offsets, seqNums, oris, cmps, blockSeg);
 }
 
-SSTable::SSTable(const vector<Entry> &entries, size_t &pos, const SSTableId &id, TableCache *tableCache)
+SSTable::SSTable(const std::vector<Entry> &entries, size_t &pos, const SSTableId &id, TableCache *tableCache)
         : id(id), tableCache(tableCache) {
+    vector<uint64_t> keys;
+    vector<uint64_t> offsets;
+    vector<uint64_t> seqNums;
+    vector<uint64_t> oris;
+    vector<uint64_t> cmps;
+
     size_t n = entries.size();
     entryCnt = 0;
     blockCnt = 0;
     uint64_t offset = 0;
     uint64_t ori = 0;
     uint64_t cmp = 0;
+
     string block;
     block.reserve(Option::BLOCK_SPACE);
     string blockSeg;
     blockSeg.reserve(Option::SST_SPACE);
     uint64_t entryInBlockCnt = 0;
+
     while (pos < n) {
         Entry entry = entries[pos++];
         keys.push_back(entry.key);
+
+        // 블룸필터에 추가
+        bloomfilter.insert(entry.key);
+
         offsets.push_back(offset);
         seqNums.push_back(entry.seqNum);
+
         offset += entry.value.size();
         ++entryCnt;
         block += entry.value;
         ++entryInBlockCnt;
+
         if (block.size() >= Option::BLOCK_SPACE) {
             string compressed;
             compressed = block;
@@ -138,44 +152,101 @@ SSTable::SSTable(const vector<Entry> &entries, size_t &pos, const SSTableId &id,
         block.clear();
         ++blockCnt;
     }
+
     keys.push_back(0);
     offsets.push_back(offset);
-    seqNums.push_back(0); // ??
     oris.push_back(ori);
     cmps.push_back(cmp);
-    save(blockSeg);
+
+    min = keys[0];
+    max = keys[entryCnt - 1];
+    size = cmps.back();
+
+    save(keys, offsets, seqNums, oris, cmps, blockSeg);
 }
 
 SearchResult SSTable::search(uint64_t key) const {
+    // 현재는 무조건 Disk I/O
+    // 먼저 SkipList의 블룸 필터를 이용하여 key가 존재하지 않는지 확인
+    if (!bloomfilter.hasKey(key)) {
+        return false; // 블룸 필터에 없으면 키가 없다고 판단
+    }
+    SSTableDataLocation loc = loadAll();
+
     uint64_t left = 0;
     uint64_t right = entryCnt;
     while (right - left > 2) {
         uint64_t mid = left + (right - left) / 2;
-        if (keys[mid] < key)
+        if (loc.keys[mid] < key)
             left = mid;
-        else if (keys[mid] > key)
+        else if (loc.keys[mid] > key)
             right = mid;
-        else
-            return {true, locate(mid)};
+        else {
+            Location location = locate(loc, mid);
+            string value = loadBlock(loc.cmps, location.pos).substr(location.offset, location.len);
+            return {true, locate(loc, mid), value};
+        }
     }
-    if (keys[left] == key)
-        return {true, locate(left)};
-    else if (keys[right - 1] == key)
-        return {true, locate(right - 1)};
-    else
-        return false;
+    if (loc.keys[left] == key) {
+        Location location = locate(loc, left);
+        string value = loadBlock(loc.cmps, location.pos).substr(location.offset, location.len);
+        return {true, location, value};
+    }
+    if (loc.keys[right - 1] == key) {
+        Location location = locate(loc, right - 1);
+        string value = loadBlock(loc.cmps, location.pos).substr(location.offset, location.len);
+        return {true, location, value};
+    }
+    return false;
+}
+
+SSTableDataLocation SSTable::loadAll() const {
+    vector<uint64_t> keys;
+    vector<uint64_t> offsets;
+    vector<uint64_t> seqNums;
+    vector<uint64_t> oris;
+    vector<uint64_t> cmps;
+
+    ifstream ifs(id.name(), ios::binary);
+
+    // EntryIndex
+    ifs.read((char *) &entryCnt, sizeof(uint64_t)); // n
+    for (uint64_t i = 0; i <= entryCnt; ++i) {
+        uint64_t key, offset, seqNum;
+        ifs.read((char *) &key, sizeof(uint64_t));
+        ifs.read((char *) &offset, sizeof(uint64_t));
+        ifs.read((char *) &seqNum, sizeof(uint64_t));
+        keys.push_back(key);
+        offsets.push_back(offset);
+        seqNums.push_back(seqNum);
+    }
+
+    // BlockIndex
+    ifs.read((char *) &blockCnt, sizeof(uint64_t)); // m
+    for (uint64_t i = 0; i <= blockCnt; ++i) {
+        uint64_t ori, cmp;
+        ifs.read((char *) &ori, sizeof(uint64_t));
+        ifs.read((char *) &cmp, sizeof(uint64_t));
+        oris.push_back(ori);
+        cmps.push_back(cmp);
+    }
+    ifs.close();
+
+    return {keys, offsets, seqNums, oris, cmps};
 }
 
 vector<Entry> SSTable::load() const {
+    SSTableDataLocation loc = loadAll();
     vector<Entry> entries;
     uint64_t k = 0;
-    string block = loadBlock(0);
+    string block = loadBlock(loc.cmps, 0);
     for (uint64_t i = 0; i < entryCnt; ++i) {
-        if (offsets[i + 1] > oris[k + 1])
-            block = loadBlock(++k);
-        uint64_t key = keys[i];
-        string value = block.substr(offsets[i] - oris[k], offsets[i + 1] - offsets[i]);
-        uint64_t seqNum = seqNums[i];
+        if (loc.offsets[i + 1] > loc.oris[k + 1]) {
+            block = loadBlock(loc.cmps, ++k);
+        }
+        uint64_t key = loc.keys[i];
+        string value = block.substr(loc.offsets[i] - loc.oris[k], loc.offsets[i + 1] - loc.offsets[i]);
+        uint64_t seqNum = loc.seqNums[i];
         entries.emplace_back(key, value, seqNum);
     }
     return entries;
@@ -192,18 +263,19 @@ uint64_t SSTable::number() const {
 }
 
 uint64_t SSTable::lower() const {
-    return keys[0];
+    return min;
 }
 
 uint64_t SSTable::upper() const {
-    return keys[entryCnt - 1];
+    return max;
 }
 
 uint64_t SSTable::space() const {
     return indexSpace() + blockSpace();
 }
 
-void SSTable::save(const string &blockSeg) {
+void SSTable::save(vector<uint64_t> keys, vector<uint64_t> offsets, vector<uint64_t> seqNums,
+                   vector<uint64_t> oris, vector<uint64_t> cmps, const string &blockSeg) {
     ofstream ofs(id.name(), ios::binary);
     ofs.write((char *) &entryCnt, sizeof(uint64_t));
     for (uint64_t i = 0; i <= entryCnt; ++i) {
@@ -220,14 +292,15 @@ void SSTable::save(const string &blockSeg) {
     ofs.close();
 }
 
-Location SSTable::locate(uint64_t pos) const {
+Location SSTable::locate(SSTableDataLocation loc, uint64_t pos) const {
     uint64_t k = 0;
-    while (offsets[pos + 1] > oris[k + 1])
+    while (loc.offsets[pos + 1] > loc.oris[k + 1])
         ++k;
-    return {this, k, offsets[pos] - oris[k], offsets[pos + 1] - offsets[pos]};
+    // sst pos offset len
+    return {this, k, loc.offsets[pos] - loc.oris[k], loc.offsets[pos + 1] - loc.offsets[pos]};
 }
 
-string SSTable::loadBlock(uint64_t pos) const {
+string SSTable::loadBlock(vector<uint64_t> cmps, uint64_t pos) const {
     string block;
     char *buf = new char[cmps[pos + 1] - cmps[pos]];
     if (Option::TABLE_CACHE) {
@@ -250,5 +323,5 @@ uint64_t SSTable::indexSpace() const {
 }
 
 uint64_t SSTable::blockSpace() const {
-    return cmps.back();
+    return size;
 }

@@ -15,6 +15,8 @@ struct SearchResult {
     SearchResult(bool success);
 
     SearchResult(bool success, Location location);
+
+    SearchResult(bool success, Location location, std::string value);
 };
 
 #endif

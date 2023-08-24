@@ -1,9 +1,10 @@
 #include "KVStore.h"
 #include "SearchResult.h"
 #include "Option.h"
+
 #include <string>
 
-KVStore::KVStore(const std::string &dir) : KVStoreAPI(dir), disk(dir) {
+KVStore::KVStore(const string &dir) : KVStoreAPI(dir), disk(dir) {
     sequenceNumber = new SequenceNumber();
 }
 
@@ -13,7 +14,7 @@ KVStore::~KVStore() {
     }
 }
 
-void KVStore::put(uint64_t key, const std::string &value) {
+void KVStore::put(uint64_t key, const string &value) {
     uint64_t seqNum = sequenceNumber->getUpdatedSeqNum();
     mem.put(key, value, seqNum);
     if (mem.space() > Option::SST_SPACE) {
@@ -27,7 +28,7 @@ string KVStore::get(uint64_t key) {
     if (mem.contains(key)) {
         return mem.get(key);
     }
-    SearchResult result = disk.search(key, true);
+    SearchResult result = disk.search(key);
     return result.value;
 }
 

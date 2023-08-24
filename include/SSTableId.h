@@ -4,12 +4,17 @@
 #include <string>
 #include <cstdint>
 
+using namespace std;
+
 struct SSTableId {
-    std::string dir;
+    string dir;
     uint64_t no;
+
     SSTableId() = default;
-    SSTableId(const std::string &dir, uint64_t no);
-    std::string name() const;
+
+    SSTableId(const string &dir, uint64_t no);
+
+    string name() const;
 };
 
 #endif

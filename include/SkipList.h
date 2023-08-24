@@ -2,6 +2,7 @@
 #define SKIP_LIST_H
 
 #include "Entry.h"
+#include "BloomFilter.h"
 
 #include <cstdint>
 #include <cstddef>
@@ -36,6 +37,8 @@ public:
     void clear();
 
     uint64_t space() const;
+
+    BloomFilter bloomfilter;
 
 private:
     struct Tower;

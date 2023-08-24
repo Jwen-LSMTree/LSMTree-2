@@ -38,8 +38,10 @@ int main() {
 
     KVStore store("./data");
 
-    cout << "Generating data ... " << endl;
-    vector<Entry> entries = generate_entries(32 * 1024, 10000, 20000);
+    cout << "Generating data ... ";
+
+    vector<Entry> entries = generate_entries(128 * 1024, 10000, 20000);
+
     size_t n = entries.size();
     vector<uint64_t> keys;
     for (const Entry &entry: entries) {

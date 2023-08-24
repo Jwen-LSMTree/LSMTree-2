@@ -2,8 +2,6 @@
 
 #include <algorithm>
 
-using namespace std;
-
 bool compareKey(Entry &e1, Entry &e2);
 
 vector<Entry> Util::compact(const vector<vector<Entry>> &inputs) {
