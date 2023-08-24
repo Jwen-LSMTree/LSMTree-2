@@ -2,29 +2,33 @@
 #include <cstdint>
 #include <string>
 #include <ctime>
+#include <filesystem>
 
 #include "Test.h"
 
-class CorrectnessTest : public Test {
+class CorrectnessTest : public Test
+{
 private:
     const uint64_t SIMPLE_TEST_MAX = 512;
     const uint64_t LARGE_TEST_MAX = 1024 * 64;
 
-    void regular_test(uint64_t max) {
+    void regular_test(uint64_t max)
+    {
         uint64_t i;
 
         // Test a single key
         EXPECT(not_found, store.get(1));
         store.put(1, "SE");
         EXPECT("SE", store.get(1));
-//		EXPECT(true, store.del(1));
+        //		EXPECT(true, store.del(1));
         EXPECT(not_found, store.get(1));
-//		EXPECT(false, store.del(1));
+        //		EXPECT(false, store.del(1));
 
         phase();
 
         // Test multiple key-value pairs
-        for (i = 0; i < max; ++i) {
+        for (i = 0; i < max; ++i)
+        {
             store.put(i, std::string(i + 1, 's'));
             EXPECT(std::string(i + 1, 's'), store.get(i));
         }
@@ -36,15 +40,15 @@ private:
         phase();
 
         // Test deletions
-//		for (i = 0; i < max; i+=2)
-//			EXPECT(true, store.del(i));
+        //		for (i = 0; i < max; i+=2)
+        //			EXPECT(true, store.del(i));
 
         for (i = 0; i < max; ++i)
             EXPECT((i & 1) ? std::string(i + 1, 's') : not_found,
                    store.get(i));
 
-//		for (i = 1; i < max; ++i)
-//			EXPECT(i & 1, store.del(i));
+        //		for (i = 1; i < max; ++i)
+        //			EXPECT(i & 1, store.del(i));
 
         phase();
 
@@ -52,10 +56,12 @@ private:
     }
 
 public:
-    CorrectnessTest(const std::string &dir, bool v = true) : Test(dir, v) {
+    CorrectnessTest(const std::string &dir, bool v = true) : Test(dir, v)
+    {
     }
 
-    void start_test(void *args = NULL) override {
+    void start_test(void *args = NULL) override
+    {
         std::cout << "KVStore Correctness Test" << std::endl;
 
         std::cout << "[Simple Test]" << std::endl;
@@ -66,7 +72,13 @@ public:
     }
 };
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
+    if (std::filesystem::exists(std::filesystem::path("./data")))
+    {
+        std::filesystem::remove_all(std::filesystem::path("./data"));
+    }
+
     bool verbose = (argc == 2 && std::string(argv[1]) == "-v");
 
     std::cout << "Usage: " << argv[0] << " [-v]" << std::endl;

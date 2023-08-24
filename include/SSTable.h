@@ -8,12 +8,14 @@
 #include "Location.h"
 #include "TableCache.h"
 #include "SSTableDataLocation.h"
+#include "BloomFilter.h"
 #include <string>
 #include <vector>
 #include <cstdint>
 #include <cstddef>
 
-class SSTable {
+class SSTable
+{
 public:
     explicit SSTable(const SSTableId &id, TableCache *tableCache);
     explicit SSTable(const SkipList &mem, const SSTableId &id, TableCache *tableCache);
@@ -26,6 +28,7 @@ public:
     uint64_t lower() const;
     uint64_t upper() const;
     uint64_t space() const;
+
 private:
     SSTableId id;
     uint64_t entryCnt;
@@ -35,11 +38,12 @@ private:
     uint64_t size;
 
     TableCache *tableCache;
-    void save(std::vector<uint64_t> keys, std::vector<uint64_t> offsets, std::vector<uint64_t> oris ,std::vector<uint64_t> cmps, const std::string &blockSeg);
+    void save(std::vector<uint64_t> keys, std::vector<uint64_t> offsets, std::vector<uint64_t> oris, std::vector<uint64_t> cmps, const std::string &blockSeg);
     Location locate(SSTableDataLocation loc, uint64_t pos) const;
     uint64_t indexSpace() const;
     uint64_t blockSpace() const;
     SSTableDataLocation loadAll() const;
+    BloomFilter bloomfilter;
 };
 
 #endif

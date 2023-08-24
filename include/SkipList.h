@@ -2,13 +2,15 @@
 #define SKIP_LIST_H
 
 #include "Entry.h"
+#include "BloomFilter.h"
 #include <cstdint>
 #include <cstddef>
 #include <string>
 #include <random>
 #include <utility>
 
-class SkipList {
+class SkipList
+{
 public:
     class Iterator;
 
@@ -20,7 +22,7 @@ public:
 
     void put(uint64_t key, const std::string &value);
 
-//    bool del(uint64_t key);
+    //    bool del(uint64_t key);
 
     bool contains(uint64_t key) const;
 
@@ -33,6 +35,8 @@ public:
     void clear();
 
     uint64_t space() const;
+
+    BloomFilter bloomfilter;
 
 private:
     struct Tower;
@@ -49,7 +53,8 @@ private:
     void enlargeHeight(size_t height);
 };
 
-struct SkipList::Tower {
+struct SkipList::Tower
+{
     uint64_t key;
     std::string value;
     Tower **prevs;
@@ -63,7 +68,8 @@ struct SkipList::Tower {
     ~Tower();
 };
 
-class SkipList::Iterator {
+class SkipList::Iterator
+{
 public:
     Entry next();
 

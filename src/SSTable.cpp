@@ -11,13 +11,20 @@ SSTable::SSTable(const SSTableId &id, TableCache *tableCache)
 {
     SSTableDataLocation loc = loadAll();
     min = loc.keys[0];
-    max = loc.keys[entryCnt-1];
+    max = loc.keys[entryCnt - 1];
+    for (uint64_t i = 0; i <= entryCnt; i++)
+    {
+        bloomfilter.insert(loc.keys[i]);
+    }
     size = loc.cmps.back();
 }
 
 SSTable::SSTable(const SkipList &mem, const SSTableId &id, TableCache *tableCache)
     : id(id), tableCache(tableCache)
 {
+    // 기존 skiplist 블룸필터
+    bloomfilter = mem.bloomfilter;
+
     std::vector<uint64_t> keys;
     std::vector<uint64_t> offsets;
     std::vector<uint64_t> oris;
@@ -73,9 +80,9 @@ SSTable::SSTable(const SkipList &mem, const SSTableId &id, TableCache *tableCach
     oris.push_back(ori);
     cmps.push_back(cmp);
     min = keys[0];
-    max = keys[entryCnt-1];
+    max = keys[entryCnt - 1];
     size = cmps.back();
-    save(keys, offsets, oris ,cmps, blockSeg);
+    save(keys, offsets, oris, cmps, blockSeg);
 }
 
 SSTable::SSTable(const std::vector<Entry> &entries, size_t &pos, const SSTableId &id, TableCache *tableCache)
@@ -100,11 +107,16 @@ SSTable::SSTable(const std::vector<Entry> &entries, size_t &pos, const SSTableId
     {
         Entry entry = entries[pos++];
         keys.push_back(entry.key);
+
+        // 블룸필터에 추가
+        bloomfilter.insert(entry.key);
+
         offsets.push_back(offset);
         offset += entry.value.size();
         ++entryCnt;
         block += entry.value;
         ++entryInBlockCnt;
+
         if (block.size() >= Option::BLOCK_SPACE)
         {
             std::string compressed;
@@ -138,15 +150,20 @@ SSTable::SSTable(const std::vector<Entry> &entries, size_t &pos, const SSTableId
     oris.push_back(ori);
     cmps.push_back(cmp);
     min = keys[0];
-    max = keys[entryCnt-1];
+    max = keys[entryCnt - 1];
     size = cmps.back();
-    save(keys, offsets, oris ,cmps, blockSeg);
+    save(keys, offsets, oris, cmps, blockSeg);
 }
 
 SearchResult SSTable::search(uint64_t key) const
 {
     // 현재는 무조건 Disk I/O
-    // 이 앞단에 Filter 추가 필요함
+    // 먼저 SkipList의 블룸 필터를 이용하여 key가 존재하지 않는지 확인
+    if (!bloomfilter.hasKey(key))
+    {
+        return false; // 블룸 필터에 없으면 키가 없다고 판단
+    }
+
     SSTableDataLocation loc = loadAll();
 
     uint64_t left = 0;
@@ -158,29 +175,32 @@ SearchResult SSTable::search(uint64_t key) const
             left = mid;
         else if (loc.keys[mid] > key)
             right = mid;
-        else{
+        else
+        {
             Location location = locate(loc, mid);
-            std::string value = loadBlock(loc.cmps,location.pos).substr(location.offset, location.len);
+            std::string value = loadBlock(loc.cmps, location.pos).substr(location.offset, location.len);
 
             return {true, locate(loc, mid), value};
         }
-            
     }
-    if (loc.keys[left] == key){
+    if (loc.keys[left] == key)
+    {
         Location location = locate(loc, left);
-        std::string value = loadBlock(loc.cmps,location.pos).substr(location.offset, location.len);
+        std::string value = loadBlock(loc.cmps, location.pos).substr(location.offset, location.len);
         return {true, location, value};
     }
-    else if (loc.keys[right - 1] == key){
+    else if (loc.keys[right - 1] == key)
+    {
         Location location = locate(loc, right - 1);
-        std::string value = loadBlock(loc.cmps,location.pos).substr(location.offset, location.len);
+        std::string value = loadBlock(loc.cmps, location.pos).substr(location.offset, location.len);
         return {true, location, value};
     }
     else
         return false;
 }
 
-SSTableDataLocation SSTable::loadAll() const {
+SSTableDataLocation SSTable::loadAll() const
+{
     std::vector<uint64_t> keys;
     std::vector<uint64_t> offsets;
     std::vector<uint64_t> oris;
@@ -207,7 +227,7 @@ SSTableDataLocation SSTable::loadAll() const {
     }
     ifs.close();
 
-    return {keys, offsets, oris ,cmps};
+    return {keys, offsets, oris, cmps};
 }
 
 std::vector<Entry> SSTable::load() const
@@ -254,7 +274,7 @@ uint64_t SSTable::space() const
     return indexSpace() + blockSpace();
 }
 
-void SSTable::save(std::vector<uint64_t> keys, std::vector<uint64_t> offsets, std::vector<uint64_t> oris ,std::vector<uint64_t> cmps, const std::string &blockSeg)
+void SSTable::save(std::vector<uint64_t> keys, std::vector<uint64_t> offsets, std::vector<uint64_t> oris, std::vector<uint64_t> cmps, const std::string &blockSeg)
 {
     std::ofstream ofs(id.name(), std::ios::binary);
     ofs.write((char *)&entryCnt, sizeof(uint64_t));
@@ -278,7 +298,7 @@ Location SSTable::locate(SSTableDataLocation loc, uint64_t pos) const
     uint64_t k = 0;
     while (loc.offsets[pos + 1] > loc.oris[k + 1])
         ++k;
-        // sst pos offset len
+    // sst pos offset len
     return {this, k, loc.offsets[pos] - loc.oris[k], loc.offsets[pos + 1] - loc.offsets[pos]};
 }
 
