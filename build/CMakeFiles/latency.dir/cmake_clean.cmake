@@ -1,0 +1,41 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/latency.dir/src/BlockCache.cpp.o"
+  "CMakeFiles/latency.dir/src/BlockCache.cpp.o.d"
+  "CMakeFiles/latency.dir/src/DiskStorage.cpp.o"
+  "CMakeFiles/latency.dir/src/DiskStorage.cpp.o.d"
+  "CMakeFiles/latency.dir/src/Entry.cpp.o"
+  "CMakeFiles/latency.dir/src/Entry.cpp.o.d"
+  "CMakeFiles/latency.dir/src/KVStore.cpp.o"
+  "CMakeFiles/latency.dir/src/KVStore.cpp.o.d"
+  "CMakeFiles/latency.dir/src/LevelNonZero.cpp.o"
+  "CMakeFiles/latency.dir/src/LevelNonZero.cpp.o.d"
+  "CMakeFiles/latency.dir/src/LevelZero.cpp.o"
+  "CMakeFiles/latency.dir/src/LevelZero.cpp.o.d"
+  "CMakeFiles/latency.dir/src/Location.cpp.o"
+  "CMakeFiles/latency.dir/src/Location.cpp.o.d"
+  "CMakeFiles/latency.dir/src/Option.cpp.o"
+  "CMakeFiles/latency.dir/src/Option.cpp.o.d"
+  "CMakeFiles/latency.dir/src/SSTable.cpp.o"
+  "CMakeFiles/latency.dir/src/SSTable.cpp.o.d"
+  "CMakeFiles/latency.dir/src/SSTableDataLocation.cpp.o"
+  "CMakeFiles/latency.dir/src/SSTableDataLocation.cpp.o.d"
+  "CMakeFiles/latency.dir/src/SSTableId.cpp.o"
+  "CMakeFiles/latency.dir/src/SSTableId.cpp.o.d"
+  "CMakeFiles/latency.dir/src/SearchResult.cpp.o"
+  "CMakeFiles/latency.dir/src/SearchResult.cpp.o.d"
+  "CMakeFiles/latency.dir/src/SkipList.cpp.o"
+  "CMakeFiles/latency.dir/src/SkipList.cpp.o.d"
+  "CMakeFiles/latency.dir/src/TableCache.cpp.o"
+  "CMakeFiles/latency.dir/src/TableCache.cpp.o.d"
+  "CMakeFiles/latency.dir/src/Util.cpp.o"
+  "CMakeFiles/latency.dir/src/Util.cpp.o.d"
+  "CMakeFiles/latency.dir/test/latency.cpp.o"
+  "CMakeFiles/latency.dir/test/latency.cpp.o.d"
+  "latency"
+  "latency.pdb"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CXX)
+  include(CMakeFiles/latency.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

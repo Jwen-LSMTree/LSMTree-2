@@ -1,0 +1,41 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/throughput.dir/src/BlockCache.cpp.o"
+  "CMakeFiles/throughput.dir/src/BlockCache.cpp.o.d"
+  "CMakeFiles/throughput.dir/src/DiskStorage.cpp.o"
+  "CMakeFiles/throughput.dir/src/DiskStorage.cpp.o.d"
+  "CMakeFiles/throughput.dir/src/Entry.cpp.o"
+  "CMakeFiles/throughput.dir/src/Entry.cpp.o.d"
+  "CMakeFiles/throughput.dir/src/KVStore.cpp.o"
+  "CMakeFiles/throughput.dir/src/KVStore.cpp.o.d"
+  "CMakeFiles/throughput.dir/src/LevelNonZero.cpp.o"
+  "CMakeFiles/throughput.dir/src/LevelNonZero.cpp.o.d"
+  "CMakeFiles/throughput.dir/src/LevelZero.cpp.o"
+  "CMakeFiles/throughput.dir/src/LevelZero.cpp.o.d"
+  "CMakeFiles/throughput.dir/src/Location.cpp.o"
+  "CMakeFiles/throughput.dir/src/Location.cpp.o.d"
+  "CMakeFiles/throughput.dir/src/Option.cpp.o"
+  "CMakeFiles/throughput.dir/src/Option.cpp.o.d"
+  "CMakeFiles/throughput.dir/src/SSTable.cpp.o"
+  "CMakeFiles/throughput.dir/src/SSTable.cpp.o.d"
+  "CMakeFiles/throughput.dir/src/SSTableDataLocation.cpp.o"
+  "CMakeFiles/throughput.dir/src/SSTableDataLocation.cpp.o.d"
+  "CMakeFiles/throughput.dir/src/SSTableId.cpp.o"
+  "CMakeFiles/throughput.dir/src/SSTableId.cpp.o.d"
+  "CMakeFiles/throughput.dir/src/SearchResult.cpp.o"
+  "CMakeFiles/throughput.dir/src/SearchResult.cpp.o.d"
+  "CMakeFiles/throughput.dir/src/SkipList.cpp.o"
+  "CMakeFiles/throughput.dir/src/SkipList.cpp.o.d"
+  "CMakeFiles/throughput.dir/src/TableCache.cpp.o"
+  "CMakeFiles/throughput.dir/src/TableCache.cpp.o.d"
+  "CMakeFiles/throughput.dir/src/Util.cpp.o"
+  "CMakeFiles/throughput.dir/src/Util.cpp.o.d"
+  "CMakeFiles/throughput.dir/test/throughput.cpp.o"
+  "CMakeFiles/throughput.dir/test/throughput.cpp.o.d"
+  "throughput"
+  "throughput.pdb"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CXX)
+  include(CMakeFiles/throughput.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

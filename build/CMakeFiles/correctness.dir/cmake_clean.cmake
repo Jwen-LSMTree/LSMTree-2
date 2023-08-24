@@ -1,0 +1,41 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/correctness.dir/src/BlockCache.cpp.o"
+  "CMakeFiles/correctness.dir/src/BlockCache.cpp.o.d"
+  "CMakeFiles/correctness.dir/src/DiskStorage.cpp.o"
+  "CMakeFiles/correctness.dir/src/DiskStorage.cpp.o.d"
+  "CMakeFiles/correctness.dir/src/Entry.cpp.o"
+  "CMakeFiles/correctness.dir/src/Entry.cpp.o.d"
+  "CMakeFiles/correctness.dir/src/KVStore.cpp.o"
+  "CMakeFiles/correctness.dir/src/KVStore.cpp.o.d"
+  "CMakeFiles/correctness.dir/src/LevelNonZero.cpp.o"
+  "CMakeFiles/correctness.dir/src/LevelNonZero.cpp.o.d"
+  "CMakeFiles/correctness.dir/src/LevelZero.cpp.o"
+  "CMakeFiles/correctness.dir/src/LevelZero.cpp.o.d"
+  "CMakeFiles/correctness.dir/src/Location.cpp.o"
+  "CMakeFiles/correctness.dir/src/Location.cpp.o.d"
+  "CMakeFiles/correctness.dir/src/Option.cpp.o"
+  "CMakeFiles/correctness.dir/src/Option.cpp.o.d"
+  "CMakeFiles/correctness.dir/src/SSTable.cpp.o"
+  "CMakeFiles/correctness.dir/src/SSTable.cpp.o.d"
+  "CMakeFiles/correctness.dir/src/SSTableDataLocation.cpp.o"
+  "CMakeFiles/correctness.dir/src/SSTableDataLocation.cpp.o.d"
+  "CMakeFiles/correctness.dir/src/SSTableId.cpp.o"
+  "CMakeFiles/correctness.dir/src/SSTableId.cpp.o.d"
+  "CMakeFiles/correctness.dir/src/SearchResult.cpp.o"
+  "CMakeFiles/correctness.dir/src/SearchResult.cpp.o.d"
+  "CMakeFiles/correctness.dir/src/SkipList.cpp.o"
+  "CMakeFiles/correctness.dir/src/SkipList.cpp.o.d"
+  "CMakeFiles/correctness.dir/src/TableCache.cpp.o"
+  "CMakeFiles/correctness.dir/src/TableCache.cpp.o.d"
+  "CMakeFiles/correctness.dir/src/Util.cpp.o"
+  "CMakeFiles/correctness.dir/src/Util.cpp.o.d"
+  "CMakeFiles/correctness.dir/test/correctness.cpp.o"
+  "CMakeFiles/correctness.dir/test/correctness.cpp.o.d"
+  "correctness"
+  "correctness.pdb"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CXX)
+  include(CMakeFiles/correctness.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

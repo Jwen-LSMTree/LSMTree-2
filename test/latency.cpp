@@ -39,7 +39,7 @@ int main()
     KVStore store("./data");
 
     std::cout << "Generating data ... ";
-    std::vector<Entry> entries = generate(128 * 1024, 10000, 20000);
+    std::vector<Entry> entries = generate(1024, 10000, 20000);
     size_t n = entries.size();
     std::vector<uint64_t> keys;
     for (const Entry &entry : entries)

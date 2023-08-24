@@ -33,8 +33,6 @@ SearchResult DiskStorage::search(uint64_t key, bool needValue) {
     SearchResult result = level0.search(key);
     for (uint64_t i = 0; !result.success && i < Option::NZ_NUM; ++i)
         result = levels[i].search(key);
-    if (needValue)
-        blockCache.complete(result);
     return result;
 }
 

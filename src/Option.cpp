@@ -4,9 +4,9 @@ const bool Option::COMPRESSION = false;
 
 const bool Option::COMPACTION = true;
 
-const bool Option::BLOCK_CACHE = true;
+const bool Option::BLOCK_CACHE = false;
 
-const bool Option::TABLE_CACHE = true;
+const bool Option::TABLE_CACHE = false;
 
 const uint64_t Option::SST_SPACE = (uint64_t)2 * 1024 * 1024;
 
