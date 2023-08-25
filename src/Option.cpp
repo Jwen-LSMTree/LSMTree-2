@@ -1,4 +1,4 @@
-#include "Option.h"
+#include "../include/Option.h"
 
 const bool Option::COMPRESSION = false;
 

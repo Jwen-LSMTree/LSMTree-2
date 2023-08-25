@@ -1,6 +1,4 @@
-#include "LevelNonZero.h"
-#include "Util.h"
-#include "SSTableId.h"
+#include "../../include/disk/LevelNonZero.h"
 
 #include <filesystem>
 #include <fstream>

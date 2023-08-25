@@ -1,7 +1,8 @@
 #ifndef TABLE_CACHE_H
 #define TABLE_CACHE_H
 
-#include "SSTableId.h"
+#include "../disk/sstable/SSTableId.h"
+#include "../Option.h"
 
 #include <fstream>
 #include <list>

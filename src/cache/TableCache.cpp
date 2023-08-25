@@ -1,5 +1,4 @@
-#include "TableCache.h"
-#include "Option.h"
+#include "../../include/cache/TableCache.h"
 
 TableCache::~TableCache() {
     for (auto node: linkedList) {

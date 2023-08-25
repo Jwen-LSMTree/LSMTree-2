@@ -1,3 +1,6 @@
+#ifndef KV_STORE_H
+#define KV_STORE_H
+
 #include <cstdint>
 #include <string>
 
@@ -17,3 +20,5 @@ public:
 
     virtual void reset() = 0;
 };
+
+#endif

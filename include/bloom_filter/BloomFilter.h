@@ -4,7 +4,6 @@
 #define BLOOM_FILTER_SIZE 10240
 
 #include "Murmurhash3.h"
-#include "Entry.h"
 
 #include <cstring>
 

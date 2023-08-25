@@ -1,5 +1,5 @@
-#include "KVStore.h"
-#include "Entry.h"
+#include "../include/KVStore.h"
+#include "../include/Entry.h"
 
 #include <vector>
 #include <string>

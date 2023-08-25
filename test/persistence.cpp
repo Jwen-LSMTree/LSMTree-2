@@ -1,8 +1,8 @@
+#include "Test.h"
+
 #include <iostream>
 #include <string>
 #include <cassert>
-
-#include "Test.h"
 
 using namespace std;
 

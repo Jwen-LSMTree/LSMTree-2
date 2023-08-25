@@ -1,27 +1,26 @@
-#ifndef LEVEL_ZERO_H
-#define LEVEL_ZERO_H
+#ifndef LEVEL_NON_ZERO_H
+#define LEVEL_NON_ZERO_H
 
-#include "SSTable.h"
-#include "SkipList.h"
+#include "sstable/SSTable.h"
 #include "SearchResult.h"
-#include "Entry.h"
-#include "TableCache.h"
+#include "../Util.h"
 
 #include <string>
 #include <cstdint>
 #include <vector>
+#include <list>
 
 using namespace std;
 
-class LevelZero {
+class LevelNonZero {
 public:
-    explicit LevelZero(const string &dir, TableCache *tableCache);
+    explicit LevelNonZero(const string &dir, TableCache *tableCache);
 
     SearchResult search(uint64_t key) const;
 
-    void add(const SkipList &mem, uint64_t &no);
-
     vector<Entry> extract();
+
+    void merge(vector<Entry> &&entries1, uint64_t &no);
 
     void clear();
 
@@ -31,7 +30,8 @@ private:
     string dir;
     uint64_t size;
     uint64_t byteCnt;
-    vector<SSTable> ssts;
+    uint64_t lastKey;
+    list<SSTable> ssts;
     TableCache *tableCache;
 
     void save() const;

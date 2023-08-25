@@ -1,8 +1,10 @@
 #ifndef CACHE_H
 #define CACHE_H
 
-#include "SearchResult.h"
-#include "Location.h"
+#include "../disk/sstable/SSTable.h"
+#include "../disk/Location.h"
+#include "../disk/SearchResult.h"
+#include "../Option.h"
 
 #include <string>
 #include <list>

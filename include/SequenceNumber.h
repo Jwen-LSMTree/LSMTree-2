@@ -1,5 +1,5 @@
-#ifndef LSMTREE_SEQ_NO_H
-#define LSMTREE_SEQ_NO_H
+#ifndef SEQ_NUM_H
+#define SEQ_NUM_H
 
 #include <iostream>
 #include <atomic>

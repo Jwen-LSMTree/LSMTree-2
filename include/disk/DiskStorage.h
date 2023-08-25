@@ -1,12 +1,14 @@
 #ifndef DISK_STORAGE_H
 #define DISK_STORAGE_H
 
-#include "SkipList.h"
+#include "../cache/BlockCache.h"
+#include "../cache/TableCache.h"
 #include "LevelZero.h"
 #include "LevelNonZero.h"
 #include "SearchResult.h"
-#include "BlockCache.h"
-#include "TableCache.h"
+#include "../memory/SkipList.h"
+#include "../Option.h"
+#include "../Util.h"
 
 #include <string>
 #include <cstdint>

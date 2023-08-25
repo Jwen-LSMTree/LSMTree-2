@@ -1,7 +1,4 @@
-#include "SSTable.h"
-#include "Util.h"
-#include "Option.h"
-// #include "snappy.h"
+#include "../../../include/disk/sstable/SSTable.h"
 
 #include <fstream>
 #include <filesystem>

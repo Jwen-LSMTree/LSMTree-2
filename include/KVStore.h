@@ -1,7 +1,12 @@
+#ifndef KV_STORE_API_H
+#define KV_STORE_API_H
+
 #include "KVStoreAPI.h"
 #include "SequenceNumber.h"
-#include "SkipList.h"
-#include "DiskStorage.h"
+#include "memory/SkipList.h"
+#include "disk/DiskStorage.h"
+#include "disk/SearchResult.h"
+#include "Option.h"
 
 #include <string>
 
@@ -26,3 +31,5 @@ public:
 
     void reset() override;
 };
+
+#endif

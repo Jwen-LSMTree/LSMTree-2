@@ -1,4 +1,4 @@
-#include "SequenceNumber.h"
+#include "../include/SequenceNumber.h"
 
 uint64_t SequenceNumber::getSeqNum() {
     return globalSeqNum.load(memory_order_acquire);

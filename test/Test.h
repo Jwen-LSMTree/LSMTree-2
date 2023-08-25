@@ -1,6 +1,6 @@
 #pragma once
 
-#include "KVStore.h"
+#include "../include/KVStore.h"
 
 #include <iostream>
 #include <cstdint>

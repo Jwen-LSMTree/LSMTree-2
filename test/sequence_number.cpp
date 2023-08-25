@@ -1,4 +1,4 @@
-#include "SequenceNumber.h"
+#include "../include/SequenceNumber.h"
 
 #include <gtest/gtest.h>
 #include <pthread.h>
@@ -8,7 +8,7 @@ void *read(void *threadId);
 
 void *write(void *threadId);
 
-TEST(SequenceNumber, seqNoTest) {
+TEST(SequenceNumber, seqNumTest) {
     // given
     auto *s = new SequenceNumber();
 
@@ -27,7 +27,7 @@ int OPERATION_COUNT = 50;
 int DIVIDER = 4;
 int WRITE_COUNT = (THREAD_COUNT / DIVIDER) * (DIVIDER - 1);
 
-TEST(SequenceNumber, multi_threaded_seqNoTest) {
+TEST(SequenceNumber, multi_threaded_seqNumTest) {
     // given
     pthread_t threads[THREAD_COUNT];
     uint64_t initSeqNo = s->getSeqNum();

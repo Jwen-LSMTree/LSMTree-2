@@ -1,5 +1,4 @@
-#include "SkipList.h"
-#include "Option.h"
+#include "../../include/memory/SkipList.h"
 
 #include <iostream>
 #include <utility>

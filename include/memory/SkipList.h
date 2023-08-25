@@ -1,8 +1,9 @@
 #ifndef SKIP_LIST_H
 #define SKIP_LIST_H
 
-#include "Entry.h"
-#include "BloomFilter.h"
+#include "../bloom_filter/BloomFilter.h"
+#include "../Entry.h"
+#include "../Option.h"
 
 #include <cstdint>
 #include <cstddef>

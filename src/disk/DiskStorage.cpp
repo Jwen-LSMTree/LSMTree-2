@@ -1,6 +1,4 @@
-#include "DiskStorage.h"
-#include "Util.h"
-#include "Option.h"
+#include "../../include/disk/DiskStorage.h"
 
 #include <filesystem>
 #include <fstream>

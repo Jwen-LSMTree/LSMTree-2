@@ -1,4 +1,4 @@
-#include "BloomFilter.h"
+#include "../../include/bloom_filter/BloomFilter.h"
 
 // 생성자, BLOOM_FILTER_SIZE만큼의 비트배열 생성 후 0으로 초기화
 BloomFilter::BloomFilter() {
