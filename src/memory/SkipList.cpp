@@ -38,12 +38,9 @@ string SkipList::get(uint64_t key) const {
 
 void SkipList::put(uint64_t key, const string &value, uint64_t seqNum) {
     Tower *prev = find(key);
-
-    // TODO: 같은 key가 있다면 덮어 씌워버리는 부분 삭제 (후에 seqNum으로 필터링)
-//    if (prev != head && prev->key == key) {
-//        prev->value = value;
-//        return;
-//    }
+    cout << "=== put ===" << endl;
+    cout << "prev | key: " << prev->key << ", seqNum: " << prev->seqNum << "\n";
+    cout << "put | key: " << key << ", seqNum: " << seqNum << "\n";
 
     // 블룸필터에 키 표시
     bloomfilter.insert(key);
@@ -108,11 +105,14 @@ void SkipList::init() {
 }
 
 SkipList::Tower *SkipList::find(uint64_t key) const {
+    cout << "=== find ===" << endl;
     Tower *tower = head;
     size_t height = head->height;
     for (size_t i = 1; i <= height; ++i) {
-        while (tower->key <= key)
+        while (tower->key <= key) {
+            cout << "key: " << tower->key << ", seqNum: " << tower->seqNum << "\n";
             tower = tower->nexts[height - i];
+        }
         tower = tower->prevs[height - i];
     }
     return tower;

@@ -1,4 +1,4 @@
-#include "../include/SequenceNumber.h"
+#include "../../include/SequenceNumber.h"
 
 #include <gtest/gtest.h>
 #include <pthread.h>
@@ -13,12 +13,12 @@ TEST(SequenceNumber, seqNumTest) {
     auto *s = new SequenceNumber();
 
     // when
-    uint64_t seqNo = s->getSeqNum();
-    uint64_t updatedSeqNo = s->getUpdatedSeqNum();
+    uint64_t seqNum = s->getSeqNum();
+    uint64_t updatedSeqNum = s->getUpdatedSeqNum();
 
     // then
-    ASSERT_EQ(seqNo, 0);
-    ASSERT_EQ(updatedSeqNo, 1);
+    ASSERT_EQ(seqNum, 0);
+    ASSERT_EQ(updatedSeqNum, 1);
 }
 
 auto *s = new SequenceNumber();
@@ -30,7 +30,7 @@ int WRITE_COUNT = (THREAD_COUNT / DIVIDER) * (DIVIDER - 1);
 TEST(SequenceNumber, multi_threaded_seqNumTest) {
     // given
     pthread_t threads[THREAD_COUNT];
-    uint64_t initSeqNo = s->getSeqNum();
+    uint64_t initSeqNum = s->getSeqNum();
 
     // when
     for (int i = 0; i < THREAD_COUNT; i++) {
@@ -45,14 +45,14 @@ TEST(SequenceNumber, multi_threaded_seqNumTest) {
     }
 
     // then
-    uint64_t seqNo = s->getSeqNum();
-    ASSERT_EQ(seqNo, initSeqNo + WRITE_COUNT * OPERATION_COUNT);
+    uint64_t seqNum = s->getSeqNum();
+    ASSERT_EQ(seqNum, initSeqNum + WRITE_COUNT * OPERATION_COUNT);
 }
 
 void *read(void *threadId) {
     for (int i = 0; i < OPERATION_COUNT; ++i) {
-        uint64_t seqNo = s->getSeqNum();
-        cout << "[read  | seqNo: " << seqNo << "]\n";
+        uint64_t seqNum = s->getSeqNum();
+        cout << "[read  | seqNum: " << seqNum << "]\n";
         usleep(1000);
     }
     return nullptr;
@@ -60,8 +60,8 @@ void *read(void *threadId) {
 
 void *write(void *threadId) {
     for (int i = 0; i < OPERATION_COUNT; ++i) {
-        uint64_t seqNo = s->getUpdatedSeqNum();
-        cout << "[write | seqNo: " << seqNo << "]\n";
+        uint64_t seqNum = s->getUpdatedSeqNum();
+        cout << "[write | seqNum: " << seqNum << "]\n";
         usleep(1000);
     }
     return nullptr;
