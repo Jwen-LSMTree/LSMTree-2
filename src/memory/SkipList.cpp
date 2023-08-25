@@ -1,4 +1,5 @@
 #include "../../include/memory/SkipList.h"
+#include "../../include/exception/NoEntryFound.h"
 
 #include <iostream>
 #include <utility>
@@ -23,8 +24,16 @@ void SkipList::clear() {
 }
 
 string SkipList::get(uint64_t key) const {
+    if (!bloomfilter.hasKey(key)) {
+        // bloomfilter에 없는 경우 예외 던짐
+        throw NoEntryFoundException("no entry found in memory (filtered from BloomFilter)");
+    }
+
     Tower *tower = find(key);
-    return tower != head && tower->key == key ? tower->value : "";
+    if (tower != head && tower->key == key) {
+        return tower->value;
+    }
+    throw NoEntryFoundException("no entry found in memory");
 }
 
 void SkipList::put(uint64_t key, const string &value, uint64_t seqNum) {
@@ -70,15 +79,6 @@ void SkipList::put(uint64_t key, const string &value, uint64_t seqNum) {
 //     delete tower;
 //     return true;
 // }
-
-bool SkipList::contains(uint64_t key) const {
-    if (!bloomfilter.hasKey(key)) {
-        // bloomfilter에 없는 경우 바로 false 반환
-        return false;
-    }
-    Tower *tower = find(key);
-    return tower != head && tower->key == key;
-}
 
 SkipList::Iterator SkipList::iterator() const {
     return {head->nexts[0]};

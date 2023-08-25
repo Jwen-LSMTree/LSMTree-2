@@ -27,8 +27,6 @@ public:
 
 //    bool del(uint64_t key);
 
-    bool contains(uint64_t key) const;
-
     Iterator iterator() const;
 
     size_t size() const;

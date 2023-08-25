@@ -1,4 +1,5 @@
 #include "../include/KVStore.h"
+#include "../include/exception/NoEntryFound.h"
 
 #include <string>
 
@@ -23,11 +24,12 @@ void KVStore::put(uint64_t key, const string &value) {
 
 string KVStore::get(uint64_t key) {
     uint64_t seqNum = sequenceNumber->getSeqNum();
-    if (mem.contains(key)) {
+    try {
         return mem.get(key);
+    } catch (NoEntryFoundException &exception) {
+        SearchResult result = disk.search(key);
+        return result.value;
     }
-    SearchResult result = disk.search(key);
-    return result.value;
 }
 
 //bool KVStore::del(uint64_t key) {

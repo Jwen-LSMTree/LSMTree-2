@@ -18,6 +18,7 @@ set(SRC_FILES
         ./src/disk/LevelZero.cpp
         ./src/disk/Location.cpp
         ./src/disk/SearchResult.cpp
+        ./src/exception/NoEntryFound.cpp
         ./src/memory/SkipList.cpp
         ./src/Entry.cpp
         ./src/KVStore.cpp
