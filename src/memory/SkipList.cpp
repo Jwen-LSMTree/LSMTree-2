@@ -23,31 +23,30 @@ void SkipList::clear() {
     init();
 }
 
-string SkipList::get(uint64_t key) const {
+string SkipList::get(uint64_t key, uint64_t seqNum) const {
     if (!bloomfilter.hasKey(key)) {
         // bloomfilter에 없는 경우 예외 던짐
         throw NoEntryFoundException("no entry found in memory (filtered from BloomFilter)");
     }
-
-    Tower *tower = find(key);
-    if (tower != head && tower->key == key) {
+    try {
+        Tower *tower = get_recentTower(key, seqNum);
         return tower->value;
+    } catch (NoEntryFoundException &exception) {
+        throw;
     }
-    throw NoEntryFoundException("no entry found in memory");
 }
 
 void SkipList::put(uint64_t key, const string &value, uint64_t seqNum) {
-    Tower *prev = find(key);
-    cout << "=== put ===" << endl;
-    cout << "prev | key: " << prev->key << ", seqNum: " << prev->seqNum << "\n";
-    cout << "put | key: " << key << ", seqNum: " << seqNum << "\n";
+    Tower *prev = get_prevTower(key);
 
     // 블룸필터에 키 표시
     bloomfilter.insert(key);
 
     size_t height = 1;
     while (dist(engine)) ++height;
-    if (head->height < height + 1) enlargeHeight(height + 1);
+    if (head->height < height + 1) {
+        enlargeHeight(height + 1);
+    }
 
     Tower *tower = new Tower(key, value, seqNum, height);
     for (size_t lvl = 0; lvl < height; ++lvl) {
@@ -104,13 +103,40 @@ void SkipList::init() {
     totalEntries = 0;
 }
 
-SkipList::Tower *SkipList::find(uint64_t key) const {
-    cout << "=== find ===" << endl;
+SkipList::Tower *SkipList::get_recentTower(uint64_t key, uint64_t seqNum) const {
+    Tower *recent_tower = head;
+    Tower *tower = head;
+    size_t height = head->height;
+
+    for (size_t i = 1; i <= height; ++i) {
+        while (tower->key <= key) {
+            if (tower->key == key && tower->seqNum == seqNum) {
+                return tower;
+            }
+            if (tower->key == key && tower->seqNum < seqNum) {
+                if (recent_tower->seqNum < tower->seqNum) {
+                    recent_tower = tower;
+                }
+            }
+            tower = tower->nexts[height - i];
+        }
+        while (true) {
+            auto prev_tower = tower->prevs[height - i];
+            if (prev_tower == nullptr) break;
+            tower = prev_tower;
+        }
+    }
+    if (recent_tower == head) {
+        throw NoEntryFoundException("no entry found in memory");
+    }
+    return recent_tower;
+}
+
+SkipList::Tower *SkipList::get_prevTower(uint64_t key) const {
     Tower *tower = head;
     size_t height = head->height;
     for (size_t i = 1; i <= height; ++i) {
         while (tower->key <= key) {
-            cout << "key: " << tower->key << ", seqNum: " << tower->seqNum << "\n";
             tower = tower->nexts[height - i];
         }
         tower = tower->prevs[height - i];

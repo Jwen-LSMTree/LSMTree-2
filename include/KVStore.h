@@ -27,6 +27,8 @@ public:
 
     string get(uint64_t key) override;
 
+    string getFromSnapshot(uint64_t key, uint64_t seqNum);
+
 //	bool del(uint64_t key) override;
 
     void reset() override;

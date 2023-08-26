@@ -25,7 +25,16 @@ void KVStore::put(uint64_t key, const string &value) {
 string KVStore::get(uint64_t key) {
     uint64_t seqNum = sequenceNumber->getSeqNum();
     try {
-        return mem.get(key);
+        return mem.get(key, seqNum);
+    } catch (NoEntryFoundException &exception) {
+        SearchResult result = disk.search(key);
+        return result.value;
+    }
+}
+
+string KVStore::getFromSnapshot(uint64_t key, uint64_t seqNum) {
+    try {
+        return mem.get(key, seqNum);
     } catch (NoEntryFoundException &exception) {
         SearchResult result = disk.search(key);
         return result.value;

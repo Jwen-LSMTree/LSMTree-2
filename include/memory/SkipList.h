@@ -21,7 +21,7 @@ public:
 
     ~SkipList();
 
-    string get(uint64_t key) const;
+    string get(uint64_t key, uint64_t seqNum) const;
 
     void put(uint64_t key, const string &value, uint64_t seqNum);
 
@@ -49,7 +49,9 @@ private:
 
     void init();
 
-    Tower *find(uint64_t key) const;
+    Tower *get_recentTower(uint64_t key, uint64_t seqNum) const;
+
+    Tower *get_prevTower(uint64_t key) const;
 
     void enlargeHeight(size_t height);
 };
