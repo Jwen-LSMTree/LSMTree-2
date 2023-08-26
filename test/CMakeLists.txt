@@ -31,5 +31,11 @@ add_executable(skip_list_tests
         KVStore/SkipList.cpp
 )
 
+add_executable(disk_storage_tests
+        ${SRC_FILES}
+        KVStore/DiskStorage.cpp
+)
+
 target_link_libraries(sequence_number_tests gtest gtest_main)
 target_link_libraries(skip_list_tests gtest gtest_main)
+target_link_libraries(disk_storage_tests gtest gtest_main)
