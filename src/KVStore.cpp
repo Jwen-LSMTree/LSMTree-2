@@ -27,7 +27,7 @@ string KVStore::get(uint64_t key) {
     try {
         return mem.get(key, seqNum);
     } catch (NoEntryFoundException &exception) {
-        SearchResult result = disk.search(key);
+        SearchResult result = disk.search(key, seqNum);
         return result.value;
     }
 }
@@ -36,7 +36,7 @@ string KVStore::getFromSnapshot(uint64_t key, uint64_t seqNum) {
     try {
         return mem.get(key, seqNum);
     } catch (NoEntryFoundException &exception) {
-        SearchResult result = disk.search(key);
+        SearchResult result = disk.search(key, seqNum);
         return result.value;
     }
 }

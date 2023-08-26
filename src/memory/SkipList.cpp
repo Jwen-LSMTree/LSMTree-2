@@ -29,7 +29,7 @@ string SkipList::get(uint64_t key, uint64_t seqNum) const {
         throw NoEntryFoundException("no entry found in memory (filtered from BloomFilter)");
     }
     try {
-        Tower *tower = get_recentTower(key, seqNum);
+        Tower *tower = getTowerBySeqNum(key, seqNum);
         return tower->value;
     } catch (NoEntryFoundException &exception) {
         throw;
@@ -37,7 +37,7 @@ string SkipList::get(uint64_t key, uint64_t seqNum) const {
 }
 
 void SkipList::put(uint64_t key, const string &value, uint64_t seqNum) {
-    Tower *prev = get_prevTower(key);
+    Tower *prev = getTower(key);
 
     // 블룸필터에 키 표시
     bloomfilter.insert(key);
@@ -103,7 +103,7 @@ void SkipList::init() {
     totalEntries = 0;
 }
 
-SkipList::Tower *SkipList::get_recentTower(uint64_t key, uint64_t seqNum) const {
+SkipList::Tower *SkipList::getTowerBySeqNum(uint64_t key, uint64_t seqNum) const {
     Tower *recent_tower = head;
     Tower *tower = head;
     size_t height = head->height;
@@ -132,7 +132,7 @@ SkipList::Tower *SkipList::get_recentTower(uint64_t key, uint64_t seqNum) const 
     return recent_tower;
 }
 
-SkipList::Tower *SkipList::get_prevTower(uint64_t key) const {
+SkipList::Tower *SkipList::getTower(uint64_t key) const {
     Tower *tower = head;
     size_t height = head->height;
     for (size_t i = 1; i <= height; ++i) {

@@ -49,9 +49,9 @@ private:
 
     void init();
 
-    Tower *get_recentTower(uint64_t key, uint64_t seqNum) const;
+    Tower *getTowerBySeqNum(uint64_t key, uint64_t seqNum) const;
 
-    Tower *get_prevTower(uint64_t key) const;
+    Tower *getTower(uint64_t key) const;
 
     void enlargeHeight(size_t height);
 };

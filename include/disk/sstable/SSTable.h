@@ -21,17 +21,17 @@ using namespace std;
 
 class SSTable {
 public:
-    explicit SSTable(const SSTableId &id, TableCache *tableCache);
+    explicit SSTable(SSTableId id, TableCache *tableCache);
 
-    explicit SSTable(const SkipList &mem, const SSTableId &id, TableCache *tableCache);
+    explicit SSTable(const SkipList &mem, SSTableId id, TableCache *tableCache);
 
     explicit SSTable(const std::vector<Entry> &entries, size_t &pos, const SSTableId &id, TableCache *tableCache);
 
-    SearchResult search(uint64_t key) const;
+    SearchResult search(uint64_t key, uint64_t seqNum) const;
+
+    SearchResult filterBySeqNum(uint64_t target_key, uint64_t target_seqNum, SSTableDataLocation loc, uint64_t pos) const;
 
     vector<Entry> load() const;
-
-    string loadBlock(vector<uint64_t> cmps, uint64_t pos) const;
 
     void remove() const;
 
@@ -68,6 +68,8 @@ private:
     uint64_t blockSpace() const;
 
     SSTableDataLocation loadAll() const;
+
+    string loadBlock(vector<uint64_t> cmps, uint64_t pos) const;
 
     BloomFilter bloomfilter;
 };

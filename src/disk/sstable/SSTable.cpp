@@ -3,9 +3,10 @@
 #include <fstream>
 #include <filesystem>
 #include <iostream>
+#include <utility>
 
-SSTable::SSTable(const SSTableId &id, TableCache *tableCache)
-        : id(id), tableCache(tableCache) {
+SSTable::SSTable(SSTableId id, TableCache *tableCache)
+        : id(std::move(id)), tableCache(tableCache) {
     SSTableDataLocation loc = loadAll();
     min = loc.keys[0];
     max = loc.keys[entryCnt - 1];
@@ -15,8 +16,8 @@ SSTable::SSTable(const SSTableId &id, TableCache *tableCache)
     size = loc.cmps.back();
 }
 
-SSTable::SSTable(const SkipList &mem, const SSTableId &id, TableCache *tableCache)
-        : id(id), tableCache(tableCache) {
+SSTable::SSTable(const SkipList &mem, SSTableId id, TableCache *tableCache)
+        : id(std::move(id)), tableCache(tableCache) {
     // 기존 skiplist 블룸필터
     bloomfilter = mem.bloomfilter;
 
@@ -162,7 +163,7 @@ SSTable::SSTable(const std::vector<Entry> &entries, size_t &pos, const SSTableId
     save(keys, offsets, seqNums, oris, cmps, blockSeg);
 }
 
-SearchResult SSTable::search(uint64_t key) const {
+SearchResult SSTable::search(uint64_t key, uint64_t seqNum) const {
     // 현재는 무조건 Disk I/O
     // 먼저 SkipList의 블룸 필터를 이용하여 key가 존재하지 않는지 확인
     if (!bloomfilter.hasKey(key)) {
@@ -172,29 +173,48 @@ SearchResult SSTable::search(uint64_t key) const {
 
     uint64_t left = 0;
     uint64_t right = entryCnt;
+    uint64_t mid;
     while (right - left > 2) {
-        uint64_t mid = left + (right - left) / 2;
-        if (loc.keys[mid] < key)
+        mid = left + (right - left) / 2;
+        if (loc.keys[mid] == key) {
+            return filterBySeqNum(key, seqNum, loc, mid);
+        }
+        if (loc.keys[mid] < key) {
             left = mid;
-        else if (loc.keys[mid] > key)
+            continue;
+        }
+        if (loc.keys[mid] > key) {
             right = mid;
-        else {
-            Location location = locate(loc, mid);
-            string value = loadBlock(loc.cmps, location.pos).substr(location.offset, location.len);
-            return {true, locate(loc, mid), value};
         }
     }
     if (loc.keys[left] == key) {
-        Location location = locate(loc, left);
-        string value = loadBlock(loc.cmps, location.pos).substr(location.offset, location.len);
-        return {true, location, value};
+        return filterBySeqNum(key, seqNum, loc, left);
     }
     if (loc.keys[right - 1] == key) {
-        Location location = locate(loc, right - 1);
-        string value = loadBlock(loc.cmps, location.pos).substr(location.offset, location.len);
-        return {true, location, value};
+        return filterBySeqNum(key, seqNum, loc, right - 1);
     }
     return false;
+}
+
+SearchResult SSTable::filterBySeqNum(uint64_t target_key, uint64_t target_seqNum,
+                                     SSTableDataLocation loc, uint64_t pos) const {
+    uint64_t seqNum = loc.seqNums[pos];
+    if (seqNum < target_seqNum) {
+        while (loc.keys[pos] == target_key && seqNum <= target_seqNum) {
+            if (pos == entryCnt) return false;
+            seqNum = loc.seqNums[++pos];
+        }
+        --pos;
+    } else if (target_seqNum < seqNum) {
+        while (loc.keys[pos] == target_key && target_seqNum <= seqNum) {
+            if (pos == -1) return false;
+            seqNum = loc.seqNums[--pos];
+        }
+        ++pos;
+    }
+    Location location = locate(loc, pos);
+    string value = loadBlock(loc.cmps, location.pos).substr(location.offset, location.len);
+    return {true, locate(loc, pos), value};
 }
 
 SSTableDataLocation SSTable::loadAll() const {

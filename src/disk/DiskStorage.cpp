@@ -32,10 +32,10 @@ void DiskStorage::add(const SkipList &mem) {
     save();
 }
 
-SearchResult DiskStorage::search(uint64_t key) {
-    SearchResult result = level0.search(key);
+SearchResult DiskStorage::search(uint64_t key, uint64_t seqNum) {
+    SearchResult result = level0.search(key, seqNum);
     for (uint64_t i = 0; !result.success && i < Option::NZ_NUM; ++i)
-        result = levels[i].search(key);
+        result = levels[i].search(key, seqNum);
     return result;
 }
 
@@ -51,4 +51,8 @@ void DiskStorage::save() const {
     ofstream ofs(dir + "/meta", ios::binary);
     ofs.write((char *) &no, sizeof(uint64_t));
     ofs.close();
+}
+
+LevelZero *DiskStorage::getLevelZero() {
+    return &level0;
 }

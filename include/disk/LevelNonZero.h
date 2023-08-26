@@ -16,7 +16,7 @@ class LevelNonZero {
 public:
     explicit LevelNonZero(const string &dir, TableCache *tableCache);
 
-    SearchResult search(uint64_t key) const;
+    SearchResult search(uint64_t key, uint64_t seqNum) const;
 
     vector<Entry> extract();
 

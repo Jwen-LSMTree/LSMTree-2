@@ -22,9 +22,11 @@ public:
 
     void add(const SkipList &mem);
 
-    SearchResult search(uint64_t key);
+    SearchResult search(uint64_t key, uint64_t seqNum);
 
     void clear();
+
+    LevelZero *getLevelZero();
 
 private:
     string dir;

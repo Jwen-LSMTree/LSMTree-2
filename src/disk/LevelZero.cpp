@@ -23,9 +23,9 @@ LevelZero::LevelZero(const string &dir, TableCache *tableCache) : dir(dir), tabl
     }
 }
 
-SearchResult LevelZero::search(uint64_t key) const {
+SearchResult LevelZero::search(uint64_t key, uint64_t seqNum) const {
     for (uint64_t i = 1; i <= size; ++i) {
-        SearchResult res = ssts[size - i].search(key);
+        SearchResult res = ssts[size - i].search(key, seqNum);
         if (res.success)
             return res;
     }
