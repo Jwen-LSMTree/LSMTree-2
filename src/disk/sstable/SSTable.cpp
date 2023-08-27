@@ -212,6 +212,9 @@ SearchResult SSTable::filterBySeqNum(uint64_t target_key, uint64_t target_seqNum
         }
         ++pos;
     }
+    if (loc.keys[pos] != target_key || target_seqNum < loc.seqNums[pos]) {
+        return false;
+    }
     Location location = locate(loc, pos);
     string value = loadBlock(loc.cmps, location.pos).substr(location.offset, location.len);
     return {true, locate(loc, pos), value};
