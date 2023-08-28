@@ -3,7 +3,8 @@
 
 #include <cstdint>
 
-namespace Option {
+namespace Option
+{
     extern const bool COMPRESSION;
     extern const bool COMPACTION;
     extern const bool BLOCK_CACHE;
@@ -15,8 +16,10 @@ namespace Option {
     extern const uint64_t NZ_NUM;
     extern const uint64_t Z_SPACE;
     extern const uint64_t NZ_SPACES[];
+    extern const uint64_t BLOOM_FILTER_SIZE;
     extern const char *const Z_NAME;
     extern const char *const NZ_NAMES[];
+
 }
 
 #endif
