@@ -1,13 +1,12 @@
 #ifndef LSM_TREE_BLOOMFILTER_H
 #define LSM_TREE_BLOOMFILTER_H
 
-#define BLOOM_FILTER_SIZE 10240
-
 #include "Murmurhash3.h"
-
+#include "../Option.h"
 #include <cstring>
 
-class BloomFilter {
+class BloomFilter
+{
 public:
     bool *byteArray;
 
