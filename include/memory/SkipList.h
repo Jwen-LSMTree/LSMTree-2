@@ -40,8 +40,8 @@ public:
     BloomFilter bloomfilter;
 
 private:
-    struct Tower;
-    Tower *head, *tail;
+    struct Node;
+    Node *head, *tail;
     size_t totalEntries;
     size_t totalBytes;
     std::default_random_engine engine;
@@ -49,26 +49,26 @@ private:
 
     void init();
 
-    Tower *getTowerBySeqNum(uint64_t key, uint64_t seqNum) const;
+    Node *getNodeBySeqNum(uint64_t key, uint64_t seqNum) const;
 
-    Tower *getTower(uint64_t key) const;
+    Node *getNode(uint64_t key) const;
 
     void enlargeHeight(size_t height);
 };
 
-struct SkipList::Tower {
+struct SkipList::Node {
     uint64_t key;
     string value;
     uint64_t seqNum;
-    Tower **prevs;
-    Tower **nexts;
+    Node **prevs;
+    Node **nexts;
     size_t height;
 
-    explicit Tower(uint64_t key, string value, uint64_t seqNum, size_t height);
+    explicit Node(uint64_t key, string value, uint64_t seqNum, size_t height);
 
-    Tower() = delete;
+    Node() = delete;
 
-    ~Tower();
+    ~Node();
 };
 
 class SkipList::Iterator {
@@ -78,9 +78,9 @@ public:
     bool hasNext() const;
 
 private:
-    Tower *tower;
+    Node *node;
 
-    Iterator(Tower *tower);
+    Iterator(Node *node);
 
     friend SkipList;
 };

@@ -4,50 +4,41 @@
 #include <iostream>
 #include <utility>
 
-SkipList::SkipList() : dist(0, 1)
-{
+SkipList::SkipList() : dist(0, 1) {
     init();
 }
 
-SkipList::~SkipList()
-{
+SkipList::~SkipList() {
     clear();
     delete head;
     delete tail;
 }
 
-void SkipList::clear()
-{
-    for (Tower *tower = head; tower != nullptr;)
-    {
-        Tower *next = tower->nexts[0];
-        delete tower;
-        tower = next;
+void SkipList::clear() {
+    for (Node *node = head; node != nullptr;) {
+        Node *next = node->nexts[0];
+        delete node;
+        node = next;
     }
     init();
 }
 
-string SkipList::get(uint64_t key, uint64_t seqNum) const
-{
-    if (!bloomfilter.hasKey(key))
-    {
+string SkipList::get(uint64_t key, uint64_t seqNum) const {
+    if (!bloomfilter.hasKey(key)) {
         // bloomfilter에 없는 경우 예외 던짐
         throw NoEntryFoundException("no entry found in memory (filtered from BloomFilter)");
     }
-    try
-    {
-        Tower *tower = getTowerBySeqNum(key, seqNum);
-        return tower->value;
+    try {
+        Node *node = getNodeBySeqNum(key, seqNum);
+        return node->value;
     }
-    catch (NoEntryFoundException &exception)
-    {
+    catch (NoEntryFoundException &exception) {
         throw;
     }
 }
 
-void SkipList::put(uint64_t key, const string &value, uint64_t seqNum)
-{
-    Tower *prev = getTower(key);
+void SkipList::put(uint64_t key, const string &value, uint64_t seqNum) {
+    Node *prev = getNode(key);
 
     // 블룸필터에 키 표시
     bloomfilter.insert(key);
@@ -55,18 +46,16 @@ void SkipList::put(uint64_t key, const string &value, uint64_t seqNum)
     size_t height = 1;
     while (dist(engine))
         ++height;
-    if (head->height < height + 1)
-    {
+    if (head->height < height + 1) {
         enlargeHeight(height + 1);
     }
 
-    Tower *tower = new Tower(key, value, seqNum, height);
-    for (size_t lvl = 0; lvl < height; ++lvl)
-    {
-        tower->prevs[lvl] = prev;
-        tower->nexts[lvl] = prev->nexts[lvl];
-        prev->nexts[lvl]->prevs[lvl] = tower;
-        prev->nexts[lvl] = tower;
+    Node *node = new Node(key, value, seqNum, height);
+    for (size_t lvl = 0; lvl < height; ++lvl) {
+        node->prevs[lvl] = prev;
+        node->nexts[lvl] = prev->nexts[lvl];
+        prev->nexts[lvl]->prevs[lvl] = node;
+        prev->nexts[lvl] = node;
         while (lvl + 1 >= prev->height)
             prev = prev->prevs[lvl];
     }
@@ -75,44 +64,39 @@ void SkipList::put(uint64_t key, const string &value, uint64_t seqNum)
 }
 
 // bool SkipList::del(uint64_t key) {
-//     Tower *tower = find(key);
-//     if (tower == head || tower->key != key)
+//     node *node = find(key);
+//     if (node == head || node->key != key)
 //         return false;
-//     size_t height = tower->height;
+//     size_t height = node->height;
 //     for (size_t lvl = 0; lvl < height; ++lvl) {
-//         tower->prevs[lvl]->nexts[lvl] = tower->nexts[lvl];
-//         tower->nexts[lvl]->prevs[lvl] = tower->prevs[lvl];
+//         node->prevs[lvl]->nexts[lvl] = node->nexts[lvl];
+//         node->nexts[lvl]->prevs[lvl] = node->prevs[lvl];
 //     }
 //     --totalEntries;
-//     totalBytes -= tower->value.size();
-//     delete tower;
+//     totalBytes -= node->value.size();
+//     delete node;
 //     return true;
 // }
 
-SkipList::Iterator SkipList::iterator() const
-{
+SkipList::Iterator SkipList::iterator() const {
     return {head->nexts[0]};
 }
 
-size_t SkipList::size() const
-{
+size_t SkipList::size() const {
     return totalEntries;
 }
 
-bool SkipList::empty() const
-{
+bool SkipList::empty() const {
     return totalEntries == 0;
 }
 
-uint64_t SkipList::space() const
-{
+uint64_t SkipList::space() const {
     return (totalEntries * 3 + totalBytes / Option::BLOCK_SPACE * 2 + 7) * sizeof(uint64_t) + totalBytes;
 }
 
-void SkipList::init()
-{
-    head = new Tower(0, "", 0, 1);
-    tail = new Tower(UINT64_MAX, "", 0, 1);
+void SkipList::init() {
+    head = new Node(0, "", 0, 1);
+    tail = new Node(UINT64_MAX, "", 0, 1);
     head->prevs[0] = nullptr;
     head->nexts[0] = tail;
     tail->prevs[0] = head;
@@ -122,81 +106,67 @@ void SkipList::init()
     bloomfilter = BloomFilter();
 }
 
-SkipList::Tower *SkipList::getTowerBySeqNum(uint64_t key, uint64_t seqNum) const
-{
-    Tower *recent_tower = head;
-    Tower *tower = head;
+SkipList::Node *SkipList::getNodeBySeqNum(uint64_t key, uint64_t seqNum) const {
+    Node *recent_node = head;
+    Node *node = head;
     size_t height = head->height;
 
-    for (size_t i = 1; i <= height; ++i)
-    {
-        while (tower->key <= key)
-        {
-            if (tower->key == key && tower->seqNum == seqNum)
-            {
-                return tower;
+    for (size_t i = 1; i <= height; ++i) {
+        while (node->key <= key) {
+            if (node->key == key && node->seqNum == seqNum) {
+                return node;
             }
-            if (tower->key == key && tower->seqNum < seqNum)
-            {
-                if (recent_tower->seqNum < tower->seqNum)
-                {
-                    recent_tower = tower;
+            if (node->key == key && node->seqNum < seqNum) {
+                if (recent_node->seqNum < node->seqNum) {
+                    recent_node = node;
                 }
             }
-            tower = tower->nexts[height - i];
+            node = node->nexts[height - i];
         }
-        while (true)
-        {
-            auto prev_tower = tower->prevs[height - i];
-            if (prev_tower == nullptr)
+        while (true) {
+            auto prev_node = node->prevs[height - i];
+            if (prev_node == nullptr)
                 break;
-            tower = prev_tower;
+            node = prev_node;
         }
     }
-    if (recent_tower == head)
-    {
+    if (recent_node == head) {
         throw NoEntryFoundException("no entry found in memory");
     }
-    return recent_tower;
+    return recent_node;
 }
 
-SkipList::Tower *SkipList::getTower(uint64_t key) const
-{
-    Tower *tower = head;
+SkipList::Node *SkipList::getNode(uint64_t key) const {
+    Node *node = head;
     size_t height = head->height;
-    for (size_t i = 1; i <= height; ++i)
-    {
-        while (tower->key <= key)
-        {
-            tower = tower->nexts[height - i];
+    for (size_t i = 1; i <= height; ++i) {
+        while (node->key <= key) {
+            node = node->nexts[height - i];
         }
-        tower = tower->prevs[height - i];
+        node = node->prevs[height - i];
     }
-    return tower;
+    return node;
 }
 
-void SkipList::enlargeHeight(size_t height)
-{
+void SkipList::enlargeHeight(size_t height) {
     size_t oldHeight = head->height;
     head->height = height;
     tail->height = height;
-    Tower **oldHeadPrevs = head->prevs;
-    Tower **oldHeadNexts = head->nexts;
-    Tower **oldTailPrevs = tail->prevs;
-    Tower **oldTailNexts = tail->nexts;
-    head->prevs = new Tower *[height];
-    head->nexts = new Tower *[height];
-    tail->prevs = new Tower *[height];
-    tail->nexts = new Tower *[height];
+    Node **oldHeadPrevs = head->prevs;
+    Node **oldHeadNexts = head->nexts;
+    Node **oldTailPrevs = tail->prevs;
+    Node **oldTailNexts = tail->nexts;
+    head->prevs = new Node *[height];
+    head->nexts = new Node *[height];
+    tail->prevs = new Node *[height];
+    tail->nexts = new Node *[height];
     for (size_t lvl = 0; lvl < height; ++lvl)
         head->prevs[lvl] = tail->nexts[lvl] = nullptr;
-    for (size_t lvl = 0; lvl < oldHeight; ++lvl)
-    {
+    for (size_t lvl = 0; lvl < oldHeight; ++lvl) {
         head->nexts[lvl] = oldHeadNexts[lvl];
         tail->prevs[lvl] = oldTailPrevs[lvl];
     }
-    for (size_t lvl = oldHeight; lvl < height; ++lvl)
-    {
+    for (size_t lvl = oldHeight; lvl < height; ++lvl) {
         head->nexts[lvl] = tail;
         tail->prevs[lvl] = head;
     }
@@ -206,30 +176,26 @@ void SkipList::enlargeHeight(size_t height)
     delete[] oldTailNexts;
 }
 
-SkipList::Tower::Tower(uint64_t key, string value, uint64_t seqNum, size_t height)
-    : key(key), value(std::move(value)), seqNum(seqNum), height(height)
-{
-    prevs = new Tower *[height];
-    nexts = new Tower *[height];
+SkipList::Node::Node(uint64_t key, string value, uint64_t seqNum, size_t height)
+        : key(key), value(std::move(value)), seqNum(seqNum), height(height) {
+    prevs = new Node *[height];
+    nexts = new Node *[height];
 }
 
-SkipList::Tower::~Tower()
-{
+SkipList::Node::~Node() {
     delete[] prevs;
     delete[] nexts;
 }
 
-SkipList::Iterator::Iterator(Tower *tower) : tower(tower) {}
+SkipList::Iterator::Iterator(Node *node) : node(node) {}
 
-Entry SkipList::Iterator::next()
-{
-    Entry entry(tower->key, tower->value, tower->seqNum);
-    if (tower->nexts[0] != nullptr)
-        tower = tower->nexts[0];
+Entry SkipList::Iterator::next() {
+    Entry entry(node->key, node->value, node->seqNum);
+    if (node->nexts[0] != nullptr)
+        node = node->nexts[0];
     return entry;
 }
 
-bool SkipList::Iterator::hasNext() const
-{
-    return tower->nexts[0] != nullptr;
+bool SkipList::Iterator::hasNext() const {
+    return node->nexts[0] != nullptr;
 }
