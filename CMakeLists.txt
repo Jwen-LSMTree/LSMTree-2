@@ -8,7 +8,6 @@ add_compile_options(-O3)
 
 set(SRC_FILES
         ./src/bloom_filter/Bloomfilter.cpp
-        ./src/cache/TableCache.cpp
         ./src/disk/sstable/SSTable.cpp
         ./src/disk/sstable/SSTableDataLocation.cpp
         ./src/disk/sstable/SSTableId.cpp

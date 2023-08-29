@@ -2,7 +2,6 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
 set(SRC_FILES
         ../src/bloom_filter/Bloomfilter.cpp
-        ../src/cache/TableCache.cpp
         ../src/disk/sstable/SSTable.cpp
         ../src/disk/sstable/SSTableDataLocation.cpp
         ../src/disk/sstable/SSTableId.cpp

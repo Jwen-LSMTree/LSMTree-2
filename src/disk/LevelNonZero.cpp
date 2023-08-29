@@ -4,7 +4,7 @@
 #include <fstream>
 #include <iostream>
 
-LevelNonZero::LevelNonZero(const string &dir, TableCache *tableCache) : dir(dir), tableCache(tableCache) {
+LevelNonZero::LevelNonZero(const string &dir) : dir(dir) {
     if (!filesystem::exists(filesystem::path(dir))) {
         filesystem::create_directories(filesystem::path(dir));
         size = 0;
@@ -19,7 +19,7 @@ LevelNonZero::LevelNonZero(const string &dir, TableCache *tableCache) : dir(dir)
         for (uint64_t i = 0; i < size; ++i) {
             uint64_t no;
             ifs.read((char *) &no, sizeof(uint64_t));
-            ssts.emplace_back(SSTableId(dir, no), tableCache);
+            ssts.emplace_back(SSTableId(dir, no));
         }
         ifs.close();
     }
@@ -71,7 +71,7 @@ void LevelNonZero::merge(vector<Entry> &&entries1, uint64_t &no) {
     size_t n = entries.size();
     size_t pos = 0;
     while (pos < n) {
-        byteCnt += ssts.emplace(itr, entries, pos, SSTableId(dir, no++), tableCache)->space();
+        byteCnt += ssts.emplace(itr, entries, pos, SSTableId(dir, no++))->space();
         ++size;
     }
     save();

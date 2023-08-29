@@ -6,10 +6,8 @@
 namespace Option {
     extern const bool COMPRESSION;
     extern const bool COMPACTION;
-    extern const bool TABLE_CACHE;
     extern const uint64_t SST_SPACE;
     extern const uint64_t BLOCK_SPACE;
-    extern const uint64_t TABLE_CACHE_SIZE;
     extern const uint64_t NZ_NUM;
     extern const uint64_t Z_SPACE;
     extern const uint64_t NZ_SPACES[];

@@ -4,7 +4,7 @@
 #include <fstream>
 #include <iostream>
 
-LevelZero::LevelZero(const string &dir, TableCache *tableCache) : dir(dir), tableCache(tableCache) {
+LevelZero::LevelZero(const string &dir) : dir(dir) {
     if (!filesystem::exists(filesystem::path(dir))) {
         filesystem::create_directories(filesystem::path(dir));
         size = 0;
@@ -17,7 +17,7 @@ LevelZero::LevelZero(const string &dir, TableCache *tableCache) : dir(dir), tabl
         for (uint64_t i = 0; i < size; ++i) {
             uint64_t no;
             ifs.read((char *) &no, sizeof(uint64_t));
-            ssts.emplace_back(SSTableId(dir, no), tableCache);
+            ssts.emplace_back(SSTableId(dir, no));
         }
         ifs.close();
     }
@@ -33,7 +33,7 @@ SearchResult LevelZero::search(uint64_t key, uint64_t seqNum) const {
 }
 
 void LevelZero::add(const SkipList &mem, uint64_t &no) {
-    ssts.emplace_back(mem, SSTableId(dir, no++), tableCache);
+    ssts.emplace_back(mem, SSTableId(dir, no++));
     ++size;
     byteCnt += mem.space();
     save();

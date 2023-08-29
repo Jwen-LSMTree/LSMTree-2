@@ -4,7 +4,7 @@
 #include <fstream>
 #include <iostream>
 
-DiskStorage::DiskStorage(const string &dir) : dir(dir), level0(dir + Option::Z_NAME, &tableCache) {
+DiskStorage::DiskStorage(const string &dir) : dir(dir), level0(dir + Option::Z_NAME) {
     if (filesystem::exists(filesystem::path(dir + "/meta"))) {
         ifstream ifs(dir + "/meta", ios::binary);
         ifs.read((char *) &no, sizeof(uint64_t));
@@ -14,7 +14,7 @@ DiskStorage::DiskStorage(const string &dir) : dir(dir), level0(dir + Option::Z_N
         save();
     }
     for (uint64_t i = 0; i < Option::NZ_NUM; ++i)
-        levels.emplace_back(dir + Option::NZ_NAMES[i], &tableCache);
+        levels.emplace_back(dir + Option::NZ_NAMES[i]);
 }
 
 void DiskStorage::add(const SkipList &mem) {

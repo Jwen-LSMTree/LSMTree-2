@@ -2,7 +2,6 @@
 #define SSTABLE_H
 
 #include "../../bloom_filter/BloomFilter.h"
-#include "../../cache/TableCache.h"
 #include "SSTableDataLocation.h"
 #include "SSTableId.h"
 #include "../Location.h"
@@ -21,11 +20,11 @@ using namespace std;
 
 class SSTable {
 public:
-    explicit SSTable(SSTableId id, TableCache *tableCache);
+    explicit SSTable(SSTableId id);
 
-    explicit SSTable(const SkipList &mem, SSTableId id, TableCache *tableCache);
+    explicit SSTable(const SkipList &mem, SSTableId id);
 
-    explicit SSTable(const std::vector<Entry> &entries, size_t &pos, const SSTableId &id, TableCache *tableCache);
+    explicit SSTable(const std::vector<Entry> &entries, size_t &pos, const SSTableId &id);
 
     SearchResult search(uint64_t key, uint64_t seqNum) const;
 
@@ -51,8 +50,6 @@ private:
     uint64_t min;
     uint64_t max;
     uint64_t size;
-
-    TableCache *tableCache;
 
     void save(vector<uint64_t> keys, vector<uint64_t> offsets, vector<uint64_t> seqNums,
               vector<uint64_t> oris, vector<uint64_t> cmps, const string &blockSeg);

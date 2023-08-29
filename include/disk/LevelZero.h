@@ -1,7 +1,6 @@
 #ifndef LEVEL_ZERO_H
 #define LEVEL_ZERO_H
 
-#include "../cache/TableCache.h"
 #include "sstable/SSTable.h"
 #include "sstable/SSTableId.h"
 #include "SearchResult.h"
@@ -17,7 +16,7 @@ using namespace std;
 
 class LevelZero {
 public:
-    explicit LevelZero(const string &dir, TableCache *tableCache);
+    explicit LevelZero(const string &dir);
 
     SearchResult search(uint64_t key, uint64_t seqNum) const;
 
@@ -34,7 +33,6 @@ private:
     uint64_t size;
     uint64_t byteCnt;
     vector<SSTable> ssts;
-    TableCache *tableCache;
 
     void save() const;
 };

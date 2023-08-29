@@ -4,13 +4,9 @@ const bool Option::COMPRESSION = false;
 
 const bool Option::COMPACTION = true;
 
-const bool Option::TABLE_CACHE = false;
-
 const uint64_t Option::SST_SPACE = (uint64_t) 2 * 1024 * 1024;
 
 const uint64_t Option::BLOCK_SPACE = (uint64_t) 4 * 1024;
-
-const uint64_t Option::TABLE_CACHE_SIZE = 5;
 
 const uint64_t Option::NZ_NUM = 6;
 

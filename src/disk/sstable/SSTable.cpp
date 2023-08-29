@@ -5,8 +5,9 @@
 #include <iostream>
 #include <utility>
 
-SSTable::SSTable(SSTableId id, TableCache *tableCache)
-        : id(std::move(id)), tableCache(tableCache) {
+SSTable::SSTable(SSTableId id)
+        : id(std::move(id)){
+    //TODO BlockCnt 초기화 필요?
     SSTableDataLocation loc = loadAll();
     min = loc.keys[0];
     max = loc.keys[entryCnt - 1];
@@ -16,8 +17,8 @@ SSTable::SSTable(SSTableId id, TableCache *tableCache)
     size = loc.cmps.back();
 }
 
-SSTable::SSTable(const SkipList &mem, SSTableId id, TableCache *tableCache)
-        : id(std::move(id)), tableCache(tableCache) {
+SSTable::SSTable(const SkipList &mem, SSTableId id)
+        : id(std::move(id)) {
     // 기존 skiplist 블룸필터
     bloomfilter = mem.bloomfilter;
 
@@ -88,8 +89,8 @@ SSTable::SSTable(const SkipList &mem, SSTableId id, TableCache *tableCache)
     save(keys, offsets, seqNums, oris, cmps, blockSeg);
 }
 
-SSTable::SSTable(const std::vector<Entry> &entries, size_t &pos, const SSTableId &id, TableCache *tableCache)
-        : id(id), tableCache(tableCache) {
+SSTable::SSTable(const std::vector<Entry> &entries, size_t &pos, const SSTableId &id)
+        : id(id) {
     vector<uint64_t> keys;
     vector<uint64_t> offsets;
     vector<uint64_t> seqNums;
@@ -273,8 +274,6 @@ vector<Entry> SSTable::load() const {
 }
 
 void SSTable::remove() const {
-    if (Option::TABLE_CACHE)
-        tableCache->close(id);
     filesystem::remove(filesystem::path(id.name()));
 }
 
@@ -323,16 +322,12 @@ Location SSTable::locate(SSTableDataLocation loc, uint64_t pos) const {
 string SSTable::loadBlock(vector<uint64_t> cmps, uint64_t pos) const {
     string block;
     char *buf = new char[cmps[pos + 1] - cmps[pos]];
-    if (Option::TABLE_CACHE) {
-        ifstream *ifs = tableCache->open(id);
-        ifs->seekg(indexSpace() + cmps[pos], ios::beg);
-        ifs->read(buf, cmps[pos + 1] - cmps[pos]);
-    } else {
-        ifstream ifs(id.name(), ios::binary);
-        ifs.seekg(indexSpace() + cmps[pos], ios::beg);
-        ifs.read(buf, cmps[pos + 1] - cmps[pos]);
-        ifs.close();
-    }
+
+    ifstream ifs(id.name(), ios::binary);
+    ifs.seekg(indexSpace() + cmps[pos], ios::beg);
+    ifs.read(buf, cmps[pos + 1] - cmps[pos]);
+    ifs.close();
+
     block.assign(buf, cmps[pos + 1] - cmps[pos]);
     delete[] buf;
     return block;

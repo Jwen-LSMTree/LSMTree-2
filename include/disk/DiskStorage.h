@@ -1,7 +1,6 @@
 #ifndef DISK_STORAGE_H
 #define DISK_STORAGE_H
 
-#include "../cache/TableCache.h"
 #include "LevelZero.h"
 #include "LevelNonZero.h"
 #include "SearchResult.h"
@@ -33,8 +32,6 @@ private:
 
     LevelZero level0;
     vector<LevelNonZero> levels;
-
-    TableCache tableCache;
 
     void save() const;
 };

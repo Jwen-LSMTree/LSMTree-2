@@ -14,7 +14,7 @@ using namespace std;
 
 class LevelNonZero {
 public:
-    explicit LevelNonZero(const string &dir, TableCache *tableCache);
+    explicit LevelNonZero(const string &dir);
 
     SearchResult search(uint64_t key, uint64_t seqNum) const;
 
@@ -32,7 +32,6 @@ private:
     uint64_t byteCnt;
     uint64_t lastKey;
     list<SSTable> ssts;
-    TableCache *tableCache;
 
     void save() const;
 };
