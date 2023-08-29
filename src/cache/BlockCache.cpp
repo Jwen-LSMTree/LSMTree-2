@@ -6,7 +6,7 @@
 BlockCache::BlockCache() : byteCnt(0) {}
 
 void BlockCache::complete(SearchResult &result) {
-    result.value = result.success ? read(result.location) : "";
+//    result.value = result.success ? read(result.location) : "";
 }
 
 string BlockCache::read(Location location) {

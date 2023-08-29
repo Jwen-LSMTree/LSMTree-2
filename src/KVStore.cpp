@@ -28,7 +28,10 @@ string KVStore::get(uint64_t key) {
         return mem.get(key, seqNum);
     } catch (NoEntryFoundException &exception) {
         SearchResult result = disk.search(key, seqNum);
-        return result.value;
+        if (result.success) {
+            return result.value;
+        }
+        throw NoEntryFoundException("no entry found in DISK");
     }
 }
 

@@ -9,14 +9,11 @@ using namespace std;
 
 struct SearchResult {
     bool success;
-    Location location;
     string value;
 
     SearchResult(bool success);
 
-    SearchResult(bool success, Location location);
-
-    SearchResult(bool success, Location location, std::string value);
+    SearchResult(bool success, std::string value);
 };
 
 #endif

@@ -4,8 +4,8 @@
 
 SearchResult::SearchResult(bool success) : success(success) {}
 
-SearchResult::SearchResult(bool success, Location location)
-        : success(success), location(location) {}
-
-SearchResult::SearchResult(bool success, Location location, string value)
-        : success(success), location(location), value(std::move(value)) {}
+// Object b = new Object();
+// Object a = b; // Object b(a)
+// move 함수는 위와 같이 객체 전달
+SearchResult::SearchResult(bool success, string value)
+        : success(success), value(std::move(value)) {}

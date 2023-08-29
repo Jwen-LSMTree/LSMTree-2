@@ -47,10 +47,6 @@ private:
     SSTableId id;
     uint64_t entryCnt;
 
-    vector<uint64_t> keys;
-    vector<uint64_t> offsets;
-    vector<uint64_t> seqNums;
-
     uint64_t blockCnt;
     uint64_t min;
     uint64_t max;
