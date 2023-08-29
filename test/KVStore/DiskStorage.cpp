@@ -2,6 +2,7 @@
 #include "../../include/disk/DiskStorage.h"
 
 #include <gtest/gtest.h>
+#include <filesystem>
 
 TEST(DiskStorage, search) {
     if (filesystem::exists(filesystem::path("./data"))) {
