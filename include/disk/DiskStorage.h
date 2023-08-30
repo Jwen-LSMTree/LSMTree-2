@@ -26,6 +26,8 @@ public:
 
     LevelZero *getLevelZero();
 
+    void print() const;
+
 private:
     string dir;
     uint64_t no;

@@ -42,6 +42,8 @@ public:
 
     uint64_t space() const;
 
+    void print(uint64_t id) const;
+
 private:
     SSTableId id;
     uint64_t entryCnt;

@@ -37,6 +37,8 @@ public:
 
     uint64_t space() const;
 
+    void print() const;
+
     BloomFilter bloomfilter;
 
 private:

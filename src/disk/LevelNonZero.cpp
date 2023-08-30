@@ -103,3 +103,11 @@ void LevelNonZero::save() const {
     }
     ofs.close();
 }
+
+void LevelNonZero::print(uint64_t i) const {
+    cout << "=== LevelNonZero " << i << " === " << endl;
+    uint64_t j = 0;
+    for (const SSTable &sst: ssts) {
+        sst.print(j++);
+    }
+}

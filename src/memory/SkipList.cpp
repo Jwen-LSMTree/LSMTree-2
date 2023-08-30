@@ -199,3 +199,13 @@ Entry SkipList::Iterator::next() {
 bool SkipList::Iterator::hasNext() const {
     return node->nexts[0] != nullptr;
 }
+
+void SkipList::print() const {
+    cout << "=== SkipList === " << endl;
+    Iterator itr = iterator();
+    while (itr.hasNext()) {
+        Entry entry = itr.next();
+        cout << "key: " << entry.key << ", value: " << entry.value << ", seqNum: " << entry.seqNum << endl;
+    }
+    cout << "\n" << endl;
+}

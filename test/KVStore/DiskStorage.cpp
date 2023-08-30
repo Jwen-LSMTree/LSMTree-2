@@ -40,4 +40,6 @@ TEST(DiskStorage, search) {
     ASSERT_EQ(level0->search(key2, 5).value, entry2_2->value);
 
     ASSERT_EQ(level0->search(0, 0).success, false);
+
+    level0->print();
 }

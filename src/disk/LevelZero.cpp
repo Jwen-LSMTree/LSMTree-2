@@ -76,3 +76,10 @@ void LevelZero::save() const {
     }
     ofs.close();
 }
+
+void LevelZero::print() const {
+    cout << "=== LevelZero === " << endl;
+    for (uint64_t i = 0; i < ssts.size(); ++i) {
+        ssts[i].print(i);
+    }
+}

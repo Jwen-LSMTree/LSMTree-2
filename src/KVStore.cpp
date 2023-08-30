@@ -61,3 +61,8 @@ void KVStore::reset() {
     mem.clear();
     disk.clear();
 }
+
+void KVStore::print() const {
+    mem.print();
+    disk.print();
+}

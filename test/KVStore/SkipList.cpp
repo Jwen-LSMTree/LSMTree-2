@@ -31,4 +31,6 @@ TEST(SkipList, get) {
     ASSERT_EQ(mem->get(key2, 5), entry2_2->value);
 
     EXPECT_THROW(mem->get(0, 0), NoEntryFoundException);
+
+    mem->print();
 }

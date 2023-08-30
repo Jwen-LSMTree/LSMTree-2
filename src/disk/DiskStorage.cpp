@@ -56,3 +56,13 @@ void DiskStorage::save() const {
 LevelZero *DiskStorage::getLevelZero() {
     return &level0;
 }
+
+void DiskStorage::print() const {
+    // LevelZero
+    level0.print();
+
+    // LevelNonZeros
+    for (uint64_t i = 0; i < levels.size(); ++i) {
+        levels[i].print(i);
+    }
+}

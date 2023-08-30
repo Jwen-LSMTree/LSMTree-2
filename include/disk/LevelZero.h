@@ -28,6 +28,8 @@ public:
 
     uint64_t space() const;
 
+    void print() const;
+
 private:
     string dir;
     uint64_t size;

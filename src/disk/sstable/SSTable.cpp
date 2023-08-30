@@ -6,7 +6,7 @@
 #include <utility>
 
 SSTable::SSTable(SSTableId id)
-        : id(std::move(id)){
+        : id(std::move(id)) {
     //TODO BlockCnt 초기화 필요?
     SSTableDataLocation loc = loadAll();
     min = loc.keys[0];
@@ -339,4 +339,13 @@ uint64_t SSTable::indexSpace() const {
 
 uint64_t SSTable::blockSpace() const {
     return size;
+}
+
+void SSTable::print(uint64_t i) const {
+    cout << "--- SSTable " << i << " ---" << endl;
+    vector<Entry> entries = load();
+    for (const auto &entry: entries) {
+        cout << "key: " << entry.key << ", value: " << entry.value << ", seqNum: " << entry.seqNum << endl;
+    }
+    cout << "\n" << endl;
 }
