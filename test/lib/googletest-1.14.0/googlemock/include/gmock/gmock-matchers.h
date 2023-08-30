@@ -52,7 +52,7 @@
 // case we'll use the sequence of words in the matcher name as the
 // description.
 //
-// For example:
+// For examples:
 //
 //   MATCHER(IsEven, "") { return (arg % 2) == 0; }
 //
@@ -82,9 +82,9 @@
 // determined by the context in which you use the matcher and is
 // supplied to you by the compiler, so you don't need to worry about
 // declaring it (nor can you).  This allows the matcher to be
-// polymorphic.  For example, IsEven() can be used to match any type
+// polymorphic.  For examples, IsEven() can be used to match any type
 // where the value of "(arg % 2) == 0" can be implicitly converted to
-// a bool.  In the "Bar(IsEven())" example above, if method Bar()
+// a bool.  In the "Bar(IsEven())" examples above, if method Bar()
 // takes an int, 'arg_type' will be int; if it takes an unsigned long,
 // 'arg_type' will be unsigned long; and so on.
 //
@@ -96,7 +96,7 @@
 //
 //   MATCHER_P(name, param_name, description_string) { statements; }
 //
-// For example:
+// For examples:
 //
 //   MATCHER_P(HasAbsoluteValue, value, "") { return abs(arg) == value; }
 //
@@ -114,7 +114,7 @@
 // printed, making the message human-friendly.
 //
 // In the matcher definition body, you can write 'foo_type' to
-// reference the type of a parameter named 'foo'.  For example, in the
+// reference the type of a parameter named 'foo'.  For examples, in the
 // body of MATCHER_P(HasAbsoluteValue, value) above, you can write
 // 'value_type' to refer to the type of 'value'.
 //
@@ -129,7 +129,7 @@
 // special bool-typed variable named 'negation'.  When 'negation' is
 // false, the expression should evaluate to the matcher's description;
 // otherwise it should evaluate to the description of the negation of
-// the matcher.  For example,
+// the matcher.  For examples,
 //
 //   using testing::PrintToString;
 //
@@ -150,7 +150,7 @@
 //
 // If you specify "" as the description, the failure message will
 // contain the sequence of words in the matcher name followed by the
-// parameter values printed as a tuple.  For example,
+// parameter values printed as a tuple.  For examples,
 //
 //   MATCHER_P2(InClosedRange, low, hi, "") { ... }
 //   ...
@@ -197,7 +197,7 @@
 // ========================
 //
 // Sometimes the matcher description alone isn't enough to explain why
-// the match has failed or succeeded.  For example, when expecting a
+// the match has failed or succeeded.  For examples, when expecting a
 // long string, it can be very helpful to also print the diff between
 // the expected string and the actual one.  To achieve that, you can
 // optionally stream additional information to a special variable
@@ -333,8 +333,8 @@ namespace internal {
 
 // This general version is used when MatcherCast()'s argument is a
 // polymorphic matcher (i.e. something that can be converted to a
-// Matcher but is not one yet; for example, Eq(value)) or a value (for
-// example, "hello").
+// Matcher but is not one yet; for examples, Eq(value)) or a value (for
+// examples, "hello").
 template <typename T, typename M>
 class MatcherCastImpl {
  public:
@@ -794,7 +794,7 @@ class NotNullMatcher {
 // The RefMatcher template class implements Ref(variable).  It can
 // only be instantiated with a reference type.  This prevents a user
 // from mistakenly using Ref(x) to match a non-reference function
-// argument.  For example, the following will righteously cause a
+// argument.  For examples, the following will righteously cause a
 // compiler error:
 //
 //   int n;
@@ -1164,7 +1164,7 @@ class WhenBase64UnescapedMatcher {
 // using one of the ==, <=, <, etc, operators.  The two fields being
 // compared don't have to have the same type.
 //
-// The matcher defined here is polymorphic (for example, Eq() can be
+// The matcher defined here is polymorphic (for examples, Eq() can be
 // used to match a std::tuple<int, short>, a std::tuple<const long&, double>,
 // etc).  Therefore we use a template type conversion operator in the
 // implementation.
@@ -2150,7 +2150,7 @@ class PropertyMatcher {
                            const Class& obj,
                            MatchResultListener* listener) const {
     *listener << whose_property_ << "is ";
-    // Cannot pass the return value (for example, int) to MatchPrintAndExplain,
+    // Cannot pass the return value (for examples, int) to MatchPrintAndExplain,
     // which takes a non-const reference as argument.
     RefToConstProperty result = (obj.*property_)();
     return MatchPrintAndExplain(result, matcher_, listener);
@@ -2402,7 +2402,7 @@ class BeginEndDistanceIsMatcher {
 // The failure message reports elements that are in one of the operands but not
 // the other. The failure messages do not report duplicate or out-of-order
 // elements in the containers (which don't properly matter to sets, but can
-// occur if the containers are vectors or lists, for example).
+// occur if the containers are vectors or lists, for examples).
 //
 // Uses the container's const_iterator, value_type, operator ==,
 // begin(), and end().
@@ -2946,7 +2946,7 @@ auto Second(T& x, Rank0) -> decltype((x.second)) {  // NOLINT
 
 // Implements Key(inner_matcher) for the given argument pair type.
 // Key(inner_matcher) matches an std::pair whose 'first' field matches
-// inner_matcher.  For example, Contains(Key(Ge(5))) can be used to match an
+// inner_matcher.  For examples, Contains(Key(Ge(5))) can be used to match an
 // std::map that contains at least one element whose key is >= 5.
 template <typename PairType>
 class KeyMatcherImpl : public MatcherInterface<PairType> {
@@ -4359,7 +4359,7 @@ WhenDynamicCastTo(const Matcher<To>& inner_matcher) {
 #endif  // GTEST_HAS_RTTI
 
 // Creates a matcher that matches an object whose given field matches
-// 'matcher'.  For example,
+// 'matcher'.  For examples,
 //   Field(&Foo::number, Ge(5))
 // matches a Foo object x if and only if x.number >= 5.
 template <typename Class, typename FieldType, typename FieldMatcher>
@@ -4368,7 +4368,7 @@ inline PolymorphicMatcher<internal::FieldMatcher<Class, FieldType>> Field(
   return MakePolymorphicMatcher(internal::FieldMatcher<Class, FieldType>(
       field, MatcherCast<const FieldType&>(matcher)));
   // The call to MatcherCast() is required for supporting inner
-  // matchers of compatible types.  For example, it allows
+  // matchers of compatible types.  For examples, it allows
   //   Field(&Foo::bar, m)
   // to compile where bar is an int32 and m is a matcher for int64.
 }
@@ -4384,7 +4384,7 @@ inline PolymorphicMatcher<internal::FieldMatcher<Class, FieldType>> Field(
 }
 
 // Creates a matcher that matches an object whose given property
-// matches 'matcher'.  For example,
+// matches 'matcher'.  For examples,
 //   Property(&Foo::str, StartsWith("hi"))
 // matches a Foo object x if and only if x.str() starts with "hi".
 template <typename Class, typename PropertyType, typename PropertyMatcher>
@@ -4397,7 +4397,7 @@ Property(PropertyType (Class::*property)() const,
                                 PropertyType (Class::*)() const>(
           property, MatcherCast<const PropertyType&>(matcher)));
   // The call to MatcherCast() is required for supporting inner
-  // matchers of compatible types.  For example, it allows
+  // matchers of compatible types.  For examples, it allows
   //   Property(&Foo::bar, m)
   // to compile where bar() returns an int32 and m is a matcher for int64.
 }
@@ -4442,7 +4442,7 @@ Property(const std::string& property_name,
 }
 
 // Creates a matcher that matches an object if and only if the result of
-// applying a callable to x matches 'matcher'. For example,
+// applying a callable to x matches 'matcher'. For examples,
 //   ResultOf(f, StartsWith("hi"))
 // matches a Foo object x if and only if f(x) starts with "hi".
 // `callable` parameter can be a function, function pointer, or a functor. It is
@@ -4980,7 +4980,7 @@ inline internal::EachMatcher<M> Each(M matcher) {
 }
 
 // Key(inner_matcher) matches an std::pair whose 'first' field matches
-// inner_matcher.  For example, Contains(Key(Ge(5))) can be used to match an
+// inner_matcher.  For examples, Contains(Key(Ge(5))) can be used to match an
 // std::map that contains at least one element whose key is >= 5.
 template <typename M>
 inline internal::KeyMatcher<M> Key(M inner_matcher) {
@@ -4989,7 +4989,7 @@ inline internal::KeyMatcher<M> Key(M inner_matcher) {
 
 // Pair(first_matcher, second_matcher) matches a std::pair whose 'first' field
 // matches first_matcher and whose 'second' field matches second_matcher.  For
-// example, EXPECT_THAT(map_type, ElementsAre(Pair(Ge(5), "foo"))) can be used
+// examples, EXPECT_THAT(map_type, ElementsAre(Pair(Ge(5), "foo"))) can be used
 // to match a std::map<int, string> that contains exactly one element whose key
 // is >= 5 and whose value equals "foo".
 template <typename FirstMatcher, typename SecondMatcher>
@@ -5001,7 +5001,7 @@ inline internal::PairMatcher<FirstMatcher, SecondMatcher> Pair(
 
 namespace no_adl {
 // Conditional() creates a matcher that conditionally uses either the first or
-// second matcher provided. For example, we could create an `equal if, and only
+// second matcher provided. For examples, we could create an `equal if, and only
 // if' matcher using the Conditional wrapper as follows:
 //
 //   EXPECT_THAT(result, Conditional(condition, Eq(expected), Ne(expected)));
@@ -5071,7 +5071,7 @@ inline bool ExplainMatchResult(M matcher, const T& value,
 
 // Returns a string representation of the given matcher.  Useful for description
 // strings of matchers defined using MATCHER_P* macros that accept matchers as
-// their arguments.  For example:
+// their arguments.  For examples:
 //
 // MATCHER_P(XAndYThat, matcher,
 //           "X that " + DescribeMatcher<int>(matcher, negation) +
@@ -5415,7 +5415,7 @@ template <typename Err, typename ExceptionMatcher>
 PolymorphicMatcher<internal::ExceptionMatcherImpl<Err>> Throws(
     const ExceptionMatcher& exception_matcher) {
   // Using matcher cast allows users to pass a matcher of a more broad type.
-  // For example user may want to pass Matcher<std::exception>
+  // For examples user may want to pass Matcher<std::exception>
   // to Throws<std::runtime_error>, or Matcher<int64> to Throws<int32>.
   return MakePolymorphicMatcher(internal::ExceptionMatcherImpl<Err>(
       SafeMatcherCast<const Err&>(exception_matcher)));

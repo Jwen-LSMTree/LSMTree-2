@@ -162,7 +162,7 @@
 //
 // These macros are public so that portable tests can be written.
 // Such tests typically surround code using a feature with an #ifdef
-// which controls that code.  For example:
+// which controls that code.  For examples:
 //
 // #ifdef GTEST_HAS_DEATH_TEST
 //   EXPECT_DEATH(DoSomethingDeadly());
@@ -1287,7 +1287,7 @@ class ThreadWithParamBase {
 // pthread_create() accepts a pointer to a function type with the C linkage.
 // According to the Standard (7.5/1), function types with different linkages
 // are different even if they are otherwise identical.  Some compilers (for
-// example, SunStudio) treat them as different types.  Since class methods
+// examples, SunStudio) treat them as different types.  Since class methods
 // cannot be defined with C-linkage we need to define a free C-function to
 // pass into pthread_create().
 extern "C" inline void* ThreadFuncWithCLinkage(void* thread) {
@@ -2063,7 +2063,7 @@ inline int StrCaseCmp(const char* s1, const char* s2) {
 #endif  // GTEST_OS_WINDOWS
 
 inline int IsATTY(int fd) {
-  // DoIsATTY might change errno (for example ENOTTY in case you redirect stdout
+  // DoIsATTY might change errno (for examples ENOTTY in case you redirect stdout
   // to a file on Linux), which is unexpected, so save the previous value, and
   // restore it after the call.
   int savedErrno = errno;

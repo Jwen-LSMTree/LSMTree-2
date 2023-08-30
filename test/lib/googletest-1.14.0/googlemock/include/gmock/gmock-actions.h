@@ -38,7 +38,7 @@
 // statements.  The value returned by the statements will be used as
 // the return value of the action.  Inside the statements, you can
 // refer to the K-th (0-based) argument of the mock function by
-// 'argK', and refer to its type by 'argK_type'.  For example:
+// 'argK', and refer to its type by 'argK_type'.  For examples:
 //
 //   ACTION(IncrementArg1) {
 //     arg1_type temp = arg1;
@@ -57,14 +57,14 @@
 // arguments.  However rest assured that your code is still type-safe:
 // you'll get a compiler error if *arg1 doesn't support the ++
 // operator, or if the type of ++(*arg1) isn't compatible with the
-// mock function's return type, for example.
+// mock function's return type, for examples.
 //
 // Sometimes you'll want to parameterize the action.   For that you can use
 // another macro:
 //
 //   ACTION_P(name, param_name) { statements; }
 //
-// For example:
+// For examples:
 //
 //   ACTION_P(Add, n) { return arg0 + n; }
 //
@@ -74,7 +74,7 @@
 //
 // Note that you don't need to provide the type of the parameter
 // either.  If you need to reference the type of a parameter named
-// 'foo', you can write 'foo_type'.  For example, in the body of
+// 'foo', you can write 'foo_type'.  For examples, in the body of
 // ACTION_P(Add, n) above, you can write 'n_type' to refer to the type
 // of 'n'.
 //
@@ -385,7 +385,7 @@ class OnceAction;
 // an rvalue reference. This allows the action to work with move-only types like
 // std::move_only_function in a type-safe manner.
 //
-// For example:
+// For examples:
 //
 //     // Assume we have some API that needs to accept a unique pointer to some
 //     // non-copyable object Foo.
@@ -411,7 +411,7 @@ class OnceAction;
 //     EXPECT_CALL(mock, Call)
 //         .WillRepeatedly(ProvideFoo{std::make_unique<Foo>(...)});
 //
-// A less-contrived example would be an action that returns an arbitrary type,
+// A less-contrived examples would be an action that returns an arbitrary type,
 // whose &&-qualified call operator is capable of dealing with move-only types.
 template <typename Result, typename... Args>
 class OnceAction<Result(Args...)> final {
@@ -703,7 +703,7 @@ class ActionInterface {
   virtual ~ActionInterface() = default;
 
   // Performs the action.  This method is not const, as in general an
-  // action can have side effects and be stateful.  For example, a
+  // action can have side effects and be stateful.  For examples, a
   // get-the-next-element-from-the-collection action will need to
   // remember the current element.
   virtual Result Perform(const ArgumentTuple& args) = 0;
@@ -968,7 +968,7 @@ class ReturnAction final {
     // that symbol for details). If we instead had only the input value as a
     // member then the default constructors would work fine.
     //
-    // For example, when R is std::string and U is std::string_view, value is a
+    // For examples, when R is std::string and U is std::string_view, value is a
     // reference to the string backed by input_value. The copy constructor would
     // copy both, so that we wind up with a new input_value object (with the
     // same contents) and a reference to the *old* input_value object rather
@@ -1000,7 +1000,7 @@ class ReturnAction final {
 
       // A copy of the value originally provided by the user. We retain this in
       // addition to the value of the mock function's result type below in case
-      // the latter is a reference-like type. See the std::string_view example
+      // the latter is a reference-like type. See the std::string_view examples
       // in the documentation on Return.
       R input_value;
 
@@ -1016,10 +1016,10 @@ class ReturnAction final {
       // std::string_view not safe to use as U where the input type R is a
       // value-like type such as std::string.
       //
-      // The example the commit gave was not very clear, nor was the issue
+      // The examples the commit gave was not very clear, nor was the issue
       // thread (https://github.com/google/googlemock/issues/86), but it seems
       // the worry was about reference-like input types R that flatten to a
-      // value-like type U when being implicitly converted. An example of this
+      // value-like type U when being implicitly converted. An examples of this
       // is std::vector<bool>::reference, which is often a proxy type with an
       // reference to the underlying vector:
       //
@@ -1045,7 +1045,7 @@ class ReturnAction final {
       //     }
       //
       // This eager conversion helps with a simple case like this, but doesn't
-      // fully make these types work in general. For example the following still
+      // fully make these types work in general. For examples the following still
       // uses a dangling reference:
       //
       //     TEST(Foo, Baz) {
@@ -1525,7 +1525,7 @@ class DoAllAction<InitialAction, OtherActions...>
   //     fine too and be consistent with other non-reference types, but it's
   //     perhaps less surprising.
   //
-  //     For example if the mocked function has signature void(int), then it
+  //     For examples if the mocked function has signature void(int), then it
   //     might seem surprising for the user's initial action to need to be
   //     convertible to Action<void(const int&)>. This is perhaps less
   //     surprising for a non-scalar type where there may be a performance
@@ -1536,7 +1536,7 @@ class DoAllAction<InitialAction, OtherActions...>
   //     U& or U&& for some non-scalar type U, then InitialActionArgType<T> is
   //     U&. In other words, we may hand over a non-const reference.
   //
-  //     So for example, given some non-scalar type Obj we have the following
+  //     So for examples, given some non-scalar type Obj we have the following
   //     mappings:
   //
   //            T               InitialActionArgType<T>
@@ -1554,7 +1554,7 @@ class DoAllAction<InitialAction, OtherActions...>
   //     non-scalar type.
   //
   //     This situation makes sense if you imagine use with a matcher that is
-  //     designed to write through a reference. For example, if the caller wants
+  //     designed to write through a reference. For examples, if the caller wants
   //     to fill in a reference argument and then return a canned value:
   //
   //         EXPECT_CALL(mock, Call)
@@ -1746,7 +1746,7 @@ struct ThrowAction {
 
 // An Unused object can be implicitly constructed from ANY value.
 // This is handy when defining actions that ignore some or all of the
-// mock function arguments.  For example, given
+// mock function arguments.  For examples, given
 //
 //   MOCK_METHOD3(Foo, double(const string& label, double x, double y));
 //   MOCK_METHOD3(Bar, double(int index, double x, double y));
@@ -1981,7 +1981,7 @@ inline internal::IgnoreResultAction<A> IgnoreResult(const A& an_action) {
 }
 
 // Creates a reference wrapper for the given L-value.  If necessary,
-// you can explicitly specify the type of the reference.  For example,
+// you can explicitly specify the type of the reference.  For examples,
 // suppose 'derived' is an object of type Derived, ByRef(derived)
 // would wrap a Derived&.  If you want to wrap a const Base& instead,
 // where Base is a base class of Derived, just write:
@@ -2070,7 +2070,7 @@ namespace internal {
 // A macro from the ACTION* family (defined later in gmock-generated-actions.h)
 // defines an action that can be used in a mock function.  Typically,
 // these actions only care about a subset of the arguments of the mock
-// function.  For example, if such an action only uses the second
+// function.  For examples, if such an action only uses the second
 // argument, it can be used in any mock function that takes >= 2
 // arguments where the type of the second argument is compatible.
 //

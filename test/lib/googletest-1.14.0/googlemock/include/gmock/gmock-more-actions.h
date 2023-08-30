@@ -106,7 +106,7 @@
 // GMOCK_INTERNAL_*_HAS_m_TEMPLATE_PARAMS and
 // GMOCK_INTERNAL_*_AND_n_VALUE_PARAMS are internal macros for
 // implementing ACTION_TEMPLATE.  The main trick we use is to create
-// new macro invocations when expanding a macro.  For example, we have
+// new macro invocations when expanding a macro.  For examples, we have
 //
 //   #define ACTION_TEMPLATE(name, template_params, value_params)
 //       ... GMOCK_INTERNAL_DECL_##template_params ...
@@ -625,7 +625,7 @@ struct InvokeArgumentAction {
 //
 //   1. The arguments are passed by value by default.  If you need to
 //   pass an argument by reference, wrap it inside std::ref().  For
-//   example,
+//   examples,
 //
 //     InvokeArgument<1>(5, string("Hello"), std::ref(foo))
 //
@@ -634,7 +634,7 @@ struct InvokeArgumentAction {
 //
 //   2. If the callable takes an argument by reference but std::ref() is
 //   not used, it will receive the reference to a copy of the value,
-//   instead of the original value.  For example, when the 0-th
+//   instead of the original value.  For examples, when the 0-th
 //   argument of the mock function takes a const string&, the action
 //
 //     InvokeArgument<0>(string("Hello"))

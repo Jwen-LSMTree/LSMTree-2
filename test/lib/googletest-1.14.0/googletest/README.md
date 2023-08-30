@@ -101,9 +101,9 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 # Now simply link against gtest or gtest_main as needed. Eg
-add_executable(example example.cpp)
-target_link_libraries(example gtest_main)
-add_test(NAME example_test COMMAND example)
+add_executable(examples examples.cpp)
+target_link_libraries(examples gtest_main)
+add_test(NAME example_test COMMAND examples)
 ```
 
 Note that this approach requires CMake 3.14 or later due to its use of the

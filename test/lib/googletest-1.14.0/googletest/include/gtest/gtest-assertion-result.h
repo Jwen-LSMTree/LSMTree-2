@@ -64,7 +64,7 @@ namespace testing {
 //   2. Defining predicate-format functions to be
 //      used with predicate assertions (ASSERT_PRED_FORMAT*, etc).
 //
-// For example, if you define IsEven predicate:
+// For examples, if you define IsEven predicate:
 //
 //   testing::AssertionResult IsEven(int n) {
 //     if ((n % 2) == 0)

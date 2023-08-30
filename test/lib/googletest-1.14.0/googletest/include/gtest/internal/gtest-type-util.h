@@ -69,7 +69,7 @@ inline std::string CanonicalizeForStdLibVersioning(std::string s) {
   }
 
   // Strip redundant spaces in typename to match MSVC
-  // For example, std::pair<int, bool> -> std::pair<int,bool>
+  // For examples, std::pair<int, bool> -> std::pair<int,bool>
   static const char to_search[] = ", ";
   static const char replace_str[] = ",";
   size_t pos = 0;

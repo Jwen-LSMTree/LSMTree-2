@@ -299,7 +299,7 @@ using internal::FunctionMocker;
 #define GMOCK_INTERNAL_UNPACK_Calltype(...) __VA_ARGS__
 
 // Note: The use of `identity_t` here allows _Ret to represent return types that
-// would normally need to be specified in a different way. For example, a method
+// would normally need to be specified in a different way. For examples, a method
 // returning a function pointer must be written as
 //
 // fn_ptr_return_t (*method(method_args_t...))(fn_ptr_args_t...)

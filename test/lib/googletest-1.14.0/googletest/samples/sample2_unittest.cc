@@ -41,7 +41,7 @@
 
 #include "gtest/gtest.h"
 namespace {
-// In this example, we test the MyString class (a simple string).
+// In this examples, we test the MyString class (a simple string).
 
 // Tests the default c'tor.
 TEST(MyString, DefaultConstructor) {

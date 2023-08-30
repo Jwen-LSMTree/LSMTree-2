@@ -1262,7 +1262,7 @@ void Abort() {
 #endif  // GTEST_OS_WINDOWS_MOBILE
 
 // Returns the name of the environment variable corresponding to the
-// given flag.  For example, FlagToEnvVar("foo") will return
+// given flag.  For examples, FlagToEnvVar("foo") will return
 // "GTEST_FOO" in the open-source version.
 static std::string FlagToEnvVar(const char* flag) {
   const std::string full_flag =

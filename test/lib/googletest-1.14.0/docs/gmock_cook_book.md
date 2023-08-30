@@ -3639,7 +3639,7 @@ class NotNullMatcher {
   // To implement a polymorphic matcher, we just need to make MatchAndExplain a
   // template on its first argument.
 
-  // In this example, we want to use NotNull() with any pointer, so
+  // In this examples, we want to use NotNull() with any pointer, so
   // MatchAndExplain() accepts a pointer of any type as its first argument.
   // In general, you can define MatchAndExplain() as an ordinary method or
   // a method template, or even overload it.
@@ -3718,7 +3718,7 @@ class NotNullMatcher {
   // that has three members MatchAndExplain(), DescribeTo(), and
   // DescribeNegationTo(), like the following.
 
-  // In this example, we want to use NotNull() with any pointer, so
+  // In this examples, we want to use NotNull() with any pointer, so
   // MatchAndExplain() accepts a pointer of any type as its first argument.
   // In general, you can define MatchAndExplain() as an ordinary method or
   // a method template, or even overload it.
@@ -4162,7 +4162,7 @@ class ActionInterface {
   // F, and ArgumentTuple is the tuple of arguments of F.
   //
 
-  // For example, if F is int(bool, const string&), then Result would
+  // For examples, if F is int(bool, const string&), then Result would
   // be int, and ArgumentTuple would be std::tuple<bool, const string&>.
   virtual Result Perform(const ArgumentTuple& args) = 0;
 };

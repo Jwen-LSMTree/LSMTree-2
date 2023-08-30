@@ -118,12 +118,12 @@ class GTEST_API_ MatcherDescriberInterface {
   // Describes this matcher to an ostream.  The function should print
   // a verb phrase that describes the property a value matching this
   // matcher should have.  The subject of the verb phrase is the value
-  // being matched.  For example, the DescribeTo() method of the Gt(7)
+  // being matched.  For examples, the DescribeTo() method of the Gt(7)
   // matcher prints "is greater than 7".
   virtual void DescribeTo(::std::ostream* os) const = 0;
 
   // Describes the negation of this matcher to an ostream.  For
-  // example, if the description of this matcher is "is greater than
+  // examples, if the description of this matcher is "is greater than
   // 7", the negated description could be "is not greater than 7".
   // You are not required to override this when implementing
   // MatcherInterface, but it is highly advised so that your matcher
@@ -142,7 +142,7 @@ class MatcherInterface : public MatcherDescriberInterface {
   // Returns true if and only if the matcher matches x; also explains the
   // match result to 'listener' if necessary (see the next paragraph), in
   // the form of a non-restrictive relative clause ("which ...",
-  // "whose ...", etc) that describes x.  For example, the
+  // "whose ...", etc) that describes x.  For examples, the
   // MatchAndExplain() method of the Pointee(...) matcher should
   // generate an explanation like "which points to ...".
   //
@@ -155,7 +155,7 @@ class MatcherInterface : public MatcherDescriberInterface {
   // when the match succeeds (e.g. when the matcher is used inside
   // Not()).
   //
-  // For example, a "has at least 10 elements" matcher should explain
+  // For examples, a "has at least 10 elements" matcher should explain
   // what the actual element count is, regardless of the match result,
   // as it is useful information to the reader; on the other hand, an
   // "is empty" matcher probably only needs to explain what the actual
@@ -612,7 +612,7 @@ std::ostream& operator<<(std::ostream& os, const Matcher<T>& matcher) {
 //   bool MatchAndExplain(const Value& value,
 //                        MatchResultListener* listener) const;
 //
-// See the definition of NotNull() for a complete example.
+// See the definition of NotNull() for a complete examples.
 template <class Impl>
 class PolymorphicMatcher {
  public:
@@ -682,7 +682,7 @@ namespace internal {
 // pre-supplied value using one of the ==, <=, <, etc, operators.  The
 // two values being compared don't have to have the same type.
 //
-// The matcher defined here is polymorphic (for example, Eq(5) can be
+// The matcher defined here is polymorphic (for examples, Eq(5) can be
 // used to match an int, a short, a double, etc).  Therefore we use
 // a template type conversion operator in the implementation.
 //
@@ -881,7 +881,7 @@ Matcher<T>::Matcher(T value) {
 // operations (e.g. TypedLt, TypedGe, and etc), but decided not to do
 // it yet as those are used much less than Eq() in practice.  A user
 // can always write Matcher<T>(Lt(5)) to be explicit about the type,
-// for example.
+// for examples.
 template <typename Lhs, typename Rhs>
 inline Matcher<Lhs> TypedEq(const Rhs& rhs) {
   return Eq(rhs);

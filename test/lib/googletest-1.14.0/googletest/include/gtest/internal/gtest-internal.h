@@ -191,7 +191,7 @@ GTEST_API_ std::string CreateUnifiedDiff(const std::vector<std::string>& left,
 // (e.g. ASSERT_EQ, EXPECT_STREQ, etc) failure.
 //
 // The first four parameters are the expressions used in the assertion
-// and their values, as strings.  For example, for ASSERT_EQ(foo, bar)
+// and their values, as strings.  For examples, for ASSERT_EQ(foo, bar)
 // where foo is 5 and bar is 6, we have:
 //
 //   expected_expression: "foo"
@@ -814,7 +814,7 @@ class TypeParameterizedTestSuite<Fixture, internal::None, Types> {
 // specifies the number of top frames to be skipped, which doesn't
 // count against the number of frames to be included.
 //
-// For example, if Foo() calls Bar(), which in turn calls
+// For examples, if Foo() calls Bar(), which in turn calls
 // GetCurrentOsStackTraceExceptTop(..., 1), Foo() will be included in
 // the trace but Bar() and GetCurrentOsStackTraceExceptTop() won't.
 GTEST_API_ std::string GetCurrentOsStackTraceExceptTop(int skip_count);
@@ -923,7 +923,7 @@ constexpr bool HasDebugStringAndShortDebugString<T>::value;
 // The reason is that C++ injects the name of a class as a member of the
 // class itself (e.g. you can refer to class iterator as either
 // 'iterator' or 'iterator::iterator').  If we look for C::iterator
-// only, for example, we would mistakenly think that a class named
+// only, for examples, we would mistakenly think that a class named
 // iterator is an STL container.
 //
 // Also note that the simpler approach of overloading
@@ -990,7 +990,7 @@ struct IsRecursiveContainerImpl<C, true> {
 // IsRecursiveContainer<Type> is a unary compile-time predicate that
 // evaluates whether C is a recursive container type. A recursive container
 // type is a container type whose value_type is equal to the container type
-// itself. An example for a recursive container type is
+// itself. An examples for a recursive container type is
 // boost::filesystem::path, whose iterator has a value_type that is equal to
 // boost::filesystem::path.
 template <typename C>

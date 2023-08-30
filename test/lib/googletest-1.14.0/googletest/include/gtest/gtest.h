@@ -227,7 +227,7 @@ class UnitTest;
 // this for you.
 //
 // The only time you derive from Test is when defining a test fixture
-// to be used in a TEST_F.  For example:
+// to be used in a TEST_F.  For examples:
 //
 //   class FooTest : public testing::Test {
 //    protected:
@@ -585,7 +585,7 @@ class GTEST_API_ TestInfo {
   // matches one of the positive patterns and does not match any of
   // the negative patterns.
   //
-  // For example, *A*:Foo.* is a filter that matches any string that
+  // For examples, *A*:Foo.* is a filter that matches any string that
   // contains the character 'A' or starts with "Foo.".
   bool should_run() const { return should_run_; }
 
@@ -1314,7 +1314,7 @@ class GTEST_API_ UnitTest {
 //
 // You should call this before RUN_ALL_TESTS() is called, probably in
 // main().  If you use gtest_main, you need to call this before main()
-// starts for it to take effect.  For example, you can define a global
+// starts for it to take effect.  For examples, you can define a global
 // variable like this:
 //
 //   testing::Environment* const foo_env =
@@ -2118,7 +2118,7 @@ class GTEST_API_ ScopedTrace {
 //
 // When used inside a method of a class template,
 // StaticAssertTypeEq<T1, T2>() is effective ONLY IF the method is
-// instantiated.  For example, given:
+// instantiated.  For examples, given:
 //
 //   template <typename T> class Foo {
 //    public:
@@ -2147,7 +2147,7 @@ constexpr bool StaticAssertTypeEq() noexcept {
 // parameter is the name of the test within the test suite.
 //
 // The convention is to end the test suite name with "Test".  For
-// example, a test suite for the Foo class can be named FooTest.
+// examples, a test suite for the Foo class can be named FooTest.
 //
 // Test code should appear between braces after an invocation of
 // this macro.  Example:
@@ -2240,7 +2240,7 @@ GTEST_DISABLE_MSC_WARNINGS_POP_()  // 4805 4100
 // Must be called before `RUN_ALL_TESTS()` is invoked, otherwise behavior is
 // undefined.
 //
-// Use case example:
+// Use case examples:
 //
 // class MyFixture : public ::testing::Test {
 //  public:

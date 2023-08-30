@@ -898,7 +898,7 @@ class TypedExpectation<R(Args...)> : public ExpectationBase {
 
   ~TypedExpectation() override {
     // Check the validity of the action count if it hasn't been done
-    // yet (for example, if the expectation was never used).
+    // yet (for examples, if the expectation was never used).
     CheckActionCountIfNotDone();
     for (UntypedActions::const_iterator it = untyped_actions_.begin();
          it != untyped_actions_.end(); ++it) {
@@ -1452,7 +1452,7 @@ class FunctionMocker<R(Args...)> final : public UntypedFunctionMockerBase {
   // copying a mock object, so copying a mock is usually a user error.
   // Thus we disallow copying function mockers.  If the user really
   // wants to copy a mock object, they should implement their own copy
-  // operation, for example:
+  // operation, for examples:
   //
   //   class MockFoo : public Foo {
   //    public:
@@ -1521,7 +1521,7 @@ class FunctionMocker<R(Args...)> final : public UntypedFunctionMockerBase {
     g_gmock_mutex.AssertHeld();
 
     // Deleting our default actions may trigger other mock objects to be
-    // deleted, for example if an action contains a reference counted smart
+    // deleted, for examples if an action contains a reference counted smart
     // pointer to that mock object, and that is the last reference. So if we
     // delete our actions within the context of the global mutex we may deadlock
     // when this method is called again. Instead, make a copy of the set of
@@ -1973,7 +1973,7 @@ using SignatureOfT = typename SignatureOf<F>::type;
 // internal::SignatureOfT<F>.  It is useful when you just want your
 // test code to emit some messages and have Google Mock verify the
 // right messages are sent (and perhaps at the right times).  For
-// example, if you are exercising code:
+// examples, if you are exercising code:
 //
 //   Foo(1);
 //   Foo(2);

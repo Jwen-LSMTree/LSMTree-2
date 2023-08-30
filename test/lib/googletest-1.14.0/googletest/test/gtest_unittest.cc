@@ -5350,7 +5350,7 @@ class SetUpTestCaseTest : public Test {
   static void SetUpTestCase() {
     printf("Setting up the test case . . .\n");
 
-    // Initializes some shared resource.  In this simple example, we
+    // Initializes some shared resource.  In this simple examples, we
     // just create a C string.  More complex stuff can be done if
     // desired.
     shared_resource_ = "123";
@@ -5409,7 +5409,7 @@ class SetUpTestSuiteTest : public Test {
   static void SetUpTestSuite() {
     printf("Setting up the test suite . . .\n");
 
-    // Initializes some shared resource.  In this simple example, we
+    // Initializes some shared resource.  In this simple examples, we
     // just create a C string.  More complex stuff can be done if
     // desired.
     shared_resource_ = "123";

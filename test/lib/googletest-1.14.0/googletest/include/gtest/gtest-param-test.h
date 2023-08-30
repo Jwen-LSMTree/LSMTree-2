@@ -152,7 +152,7 @@ INSTANTIATE_TEST_SUITE_P(AnotherInstantiationName, FooTest, ValuesIn(pets));
 // values. Inheriting from TestWithParam<T> satisfies that requirement because
 // TestWithParam<T> inherits from both Test and WithParamInterface. In more
 // complicated hierarchies, however, it is occasionally useful to inherit
-// separately from Test and WithParamInterface. For example:
+// separately from Test and WithParamInterface. For examples:
 
 class BaseTest : public ::testing::Test {
   // You can inherit all the usual members for a non-parameterized test
@@ -212,7 +212,7 @@ namespace testing {
 //   - returns a generator producing a sequence of values {start, start+step,
 //     start+step+step, ..., }.
 // Notes:
-//   * The generated sequences never include end. For example, Range(1, 5)
+//   * The generated sequences never include end. For examples, Range(1, 5)
 //     returns a generator producing a sequence {1, 2, 3, 4}. Range(1, 9, 2)
 //     returns a generator producing {1, 3, 5, 7}.
 //   * start and end must have the same type. That type may be any integral or
@@ -318,7 +318,7 @@ internal::ParamGenerator<typename Container::value_type> ValuesIn(
 // Values(T v1, T v2, ..., T vN)
 //   - returns a generator producing sequences with elements v1, v2, ..., vN.
 //
-// For example, this instantiates tests from test suite BarTest each
+// For examples, this instantiates tests from test suite BarTest each
 // with values "one", "two", and "three":
 //
 // INSTANTIATE_TEST_SUITE_P(NumSequence,
@@ -346,7 +346,7 @@ internal::ValueArray<T...> Values(T... v) {
 // of multiple flags can be tested when several Bool()'s are combined using
 // Combine() function.
 //
-// In the following example all tests in the test suite FlagDependentTest
+// In the following examples all tests in the test suite FlagDependentTest
 // will be instantiated twice with parameters false and true.
 //
 // class FlagDependentTest : public testing::TestWithParam<bool> {

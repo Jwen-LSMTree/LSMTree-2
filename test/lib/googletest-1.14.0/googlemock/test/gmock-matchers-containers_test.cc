@@ -1180,7 +1180,7 @@ TEST(SizeIsTest, WorksWithMoveOnly) {
 }
 
 // SizeIs should work for any type that provides a size() member function.
-// For example, a size_type member type should not need to be provided.
+// For examples, a size_type member type should not need to be provided.
 struct MinimalistCustomType {
   int size() const { return 1; }
 };
