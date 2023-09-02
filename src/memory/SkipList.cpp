@@ -38,8 +38,6 @@ string SkipList::get(uint64_t key, uint64_t seqNum) const {
 }
 
 void SkipList::put(uint64_t key, const string &value, uint64_t seqNum) {
-    Node *prev = getNode(key);
-
     // 블룸필터에 키 표시
     bloomfilter.insert(key);
 
@@ -49,16 +47,28 @@ void SkipList::put(uint64_t key, const string &value, uint64_t seqNum) {
     if (head->height < height + 1) {
         enlargeHeight(height + 1);
     }
+    Node *new_node = new Node(key, value, seqNum, height);
 
-    Node *node = new Node(key, value, seqNum, height);
-    for (size_t lvl = 0; lvl < height; ++lvl) {
-        node->prevs[lvl] = prev;
-        node->nexts[lvl] = prev->nexts[lvl];
-        prev->nexts[lvl]->prevs[lvl] = node;
-        prev->nexts[lvl] = node;
-        while (lvl + 1 >= prev->height)
-            prev = prev->prevs[lvl];
+    //key값에 따라 update 해야하는 Node들 모두 저장 (전체 레벨)
+    size_t max_level = head->height;
+    Node *update[max_level];
+    Node *node = head;
+    for (size_t i = 1; i <= max_level; ++i) {
+        while (node->nexts[max_level - i] && node->nexts[max_level - i]->key <= key) {
+            node = node->nexts[max_level - i];
+        }
+        update[max_level - i] = node;
     }
+
+    //새로운 노드 연결
+    //원래 코드는 key값이 동일한지 아닌지 확인함, 우리는 sequenceNum 있으니 다 다른걸로 판단?
+    for (size_t lvl = 0; lvl < height; ++lvl) {
+        new_node->prevs[lvl] = update[lvl];
+        new_node->nexts[lvl] = update[lvl]->nexts[lvl];
+        update[lvl]->nexts[lvl]->prevs[lvl] = new_node;
+        update[lvl]->nexts[lvl] = new_node;
+    }
+
     ++totalEntries;
     totalBytes += value.size();
 }
