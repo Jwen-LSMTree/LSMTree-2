@@ -20,8 +20,9 @@ SSTable::SSTable(SSTableId id)
 
 SSTable::SSTable(const SkipList &mem, SSTableId id)
         : id(std::move(id)) {
-    // 기존 skiplist 블룸필터
+    // 기존 skiplist 블룸필터, 시퀀스넘버필터
     bloomfilter = mem.bloomfilter;
+    seqNumFilter = mem.seqNumFilter;
 
     vector<uint64_t> keys;
     vector<uint64_t> offsets;
@@ -158,7 +159,7 @@ SSTable::SSTable(const std::vector<Entry> &entries, size_t &pos, const SSTableId
     setSeqNumFilter(seqNums);
 
     keys.push_back(0);
-    //여긴 마지막에 seqNums.push_back(0) 안해줘도 되나?
+    seqNums.push_back(0);
     offsets.push_back(offset);
     oris.push_back(ori);
     cmps.push_back(cmp);
@@ -176,7 +177,6 @@ SearchResult SSTable::search(uint64_t key, uint64_t seqNum) const {
     if (!bloomfilter.hasKey(key)) {
         return false; // 블룸 필터에 없으면 키가 없다고 판단
     }
-
     if(!seqNumFilter.isVisible(seqNum)){
         return false;
     }
@@ -365,9 +365,6 @@ void SSTable::setSeqNumFilter(const vector<uint64_t>& seqNums)
     for (size_t i = 0; i <= seqNums.size(); ++i) {
         if (seqNums[i] < seqNumFilter.minSeqNum) {
             seqNumFilter.minSeqNum = seqNums[i];
-        }
-        if (seqNums[i] > seqNumFilter.maxSeqNum) {
-            seqNumFilter.maxSeqNum = seqNums[i];
         }
     }
 }
