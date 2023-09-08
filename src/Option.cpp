@@ -1,7 +1,5 @@
 #include "../include/Option.h"
 
-const bool Option::COMPACTION = true;
-
 const uint64_t Option::SST_SPACE = (uint64_t) 2 * 1024 * 1024;
 
 const uint64_t Option::BLOCK_SPACE = (uint64_t) 4 * 1024;

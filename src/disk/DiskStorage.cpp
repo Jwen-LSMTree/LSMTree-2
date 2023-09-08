@@ -19,14 +19,12 @@ DiskStorage::DiskStorage(const string &dir) : dir(dir), level0(dir + Option::Z_N
 
 void DiskStorage::add(const SkipList &mem) {
     level0.add(mem, no);
-    if (Option::COMPACTION) {
-        if (level0.space() > Option::Z_SPACE) {
-            levels[0].merge(level0.extract(), no);
-        }
-        for (uint64_t i = 0; i + 1 < Option::NZ_NUM; ++i) {
-            if (levels[i].space() > Option::NZ_SPACES[i]) {
-                levels[i + 1].merge(levels[i].extract(), no);
-            }
+    if (level0.space() > Option::Z_SPACE) {
+        levels[0].merge(level0.extract(), no);
+    }
+    for (uint64_t i = 0; i + 1 < Option::NZ_NUM; ++i) {
+        if (levels[i].space() > Option::NZ_SPACES[i]) {
+            levels[i + 1].merge(levels[i].extract(), no);
         }
     }
     save();

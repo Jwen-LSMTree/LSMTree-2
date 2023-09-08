@@ -5,7 +5,6 @@
 
 namespace Option
 {
-    extern const bool COMPACTION;
     extern const uint64_t SST_SPACE;
     extern const uint64_t BLOCK_SPACE;
     extern const uint64_t NZ_NUM;
