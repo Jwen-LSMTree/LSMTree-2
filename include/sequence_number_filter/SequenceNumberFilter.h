@@ -1,5 +1,5 @@
-#ifndef LSMTREE_SEQUENCE_NUMBER_FILTER_H
-#define LSMTREE_SEQUENCE_NUMBER_FILTER_H
+#ifndef LSMTREE_SEQUENCENUMBERFILTER_H
+#define LSMTREE_SEQUENCENUMBERFILTER_H
 
 #include "../SequenceNumber.h"
 #include <limits>
@@ -17,4 +17,4 @@ public:
     bool isVisible(uint64_t seqNum) const;
 };
 
-#endif //LSMTREE_SEQUENCE_NUMBER_FILTER_H
+#endif //LSMTREE_SEQUENCENUMBERFILTER_H

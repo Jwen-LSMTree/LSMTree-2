@@ -41,9 +41,8 @@ string SkipList::get(uint64_t key, uint64_t seqNum) const {
 }
 
 void SkipList::put(uint64_t key, const string &value, uint64_t seqNum) {
-    Node *prev = getNode(key);
+    Node *prev = getPreviousNode(key);
 
-    // 블룸필터에 키 표시
     bloomfilter.insert(key);
 
     if (seqNum < seqNumFilter.minSeqNum) {
@@ -54,36 +53,21 @@ void SkipList::put(uint64_t key, const string &value, uint64_t seqNum) {
     while (dist(engine))
         ++height;
     if (head->height < height + 1) {
-        enlargeHeight(height + 1);
+        enlargeHeadTailHeight(height + 1);
     }
 
-    Node *node = new Node(key, value, seqNum, height);
-    for (size_t lvl = 0; lvl < height; ++lvl) {
-        node->prevs[lvl] = prev;
-        node->nexts[lvl] = prev->nexts[lvl];
-        prev->nexts[lvl]->prevs[lvl] = node;
-        prev->nexts[lvl] = node;
-        while (lvl + 1 >= prev->height)
-            prev = prev->prevs[lvl];
+    Node *newNode = new Node(key, value, seqNum, height);
+    for (size_t level = 0; level < height; ++level) {
+        newNode->prevs[level] = prev;
+        newNode->nexts[level] = prev->nexts[level];
+        prev->nexts[level]->prevs[level] = newNode;
+        prev->nexts[level] = newNode;
+        while (level + 1 >= prev->height)
+            prev = prev->prevs[level];
     }
     ++totalEntries;
     totalBytes += value.size();
 }
-
-// bool SkipList::del(uint64_t key) {
-//     node *node = find(key);
-//     if (node == head || node->key != key)
-//         return false;
-//     size_t height = node->height;
-//     for (size_t lvl = 0; lvl < height; ++lvl) {
-//         node->prevs[lvl]->nexts[lvl] = node->nexts[lvl];
-//         node->nexts[lvl]->prevs[lvl] = node->prevs[lvl];
-//     }
-//     --totalEntries;
-//     totalBytes -= node->value.size();
-//     delete node;
-//     return true;
-// }
 
 SkipList::Iterator SkipList::iterator() const {
     return {head->nexts[0]};
@@ -144,7 +128,7 @@ SkipList::Node *SkipList::getNodeBySeqNum(uint64_t key, uint64_t seqNum) const {
     return recent_node;
 }
 
-SkipList::Node *SkipList::getNode(uint64_t key) const {
+SkipList::Node *SkipList::getPreviousNode(uint64_t key) const {
     Node *node = head;
     size_t height = head->height;
     for (size_t i = 1; i <= height; ++i) {
@@ -156,7 +140,7 @@ SkipList::Node *SkipList::getNode(uint64_t key) const {
     return node;
 }
 
-void SkipList::enlargeHeight(size_t height) {
+void SkipList::enlargeHeadTailHeight(size_t height) {
     size_t oldHeight = head->height;
     head->height = height;
     tail->height = height;
@@ -168,15 +152,15 @@ void SkipList::enlargeHeight(size_t height) {
     head->nexts = new Node *[height];
     tail->prevs = new Node *[height];
     tail->nexts = new Node *[height];
-    for (size_t lvl = 0; lvl < height; ++lvl)
-        head->prevs[lvl] = tail->nexts[lvl] = nullptr;
-    for (size_t lvl = 0; lvl < oldHeight; ++lvl) {
-        head->nexts[lvl] = oldHeadNexts[lvl];
-        tail->prevs[lvl] = oldTailPrevs[lvl];
+    for (size_t level = 0; level < height; ++level)
+        head->prevs[level] = tail->nexts[level] = nullptr;
+    for (size_t level = 0; level < oldHeight; ++level) {
+        head->nexts[level] = oldHeadNexts[level];
+        tail->prevs[level] = oldTailPrevs[level];
     }
-    for (size_t lvl = oldHeight; lvl < height; ++lvl) {
-        head->nexts[lvl] = tail;
-        tail->prevs[lvl] = head;
+    for (size_t level = oldHeight; level < height; ++level) {
+        head->nexts[level] = tail;
+        tail->prevs[level] = head;
     }
     delete[] oldHeadPrevs;
     delete[] oldHeadNexts;

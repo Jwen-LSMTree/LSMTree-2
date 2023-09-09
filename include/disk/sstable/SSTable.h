@@ -2,7 +2,7 @@
 #define SSTABLE_H
 
 #include "../../bloom_filter/BloomFilter.h"
-#include "../../sequence_number_filter/Sequence_number_filter.h"
+#include "../../sequence_number_filter/SequenceNumberFilter.h"
 #include "SSTableDataLocation.h"
 #include "SSTableId.h"
 #include "../Location.h"

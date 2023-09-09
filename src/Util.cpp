@@ -2,12 +2,12 @@
 
 #include <algorithm>
 
-bool compareKey(Entry &e1, Entry &e2);
+bool compareKey(Entry &entry1, Entry &entry2);
 
 vector<Entry> Util::compact(const vector<vector<Entry>> &inputs) {
-    size_t n = inputs.size();
-    vector<Entry> ret;
-    vector<size_t> poses(n);
+//    size_t n = inputs.size();
+//    vector<Entry> ret;
+//    vector<size_t> poses(n);
 
     vector<Entry> entries;
     for (const vector<Entry> &input: inputs) {
@@ -19,6 +19,6 @@ vector<Entry> Util::compact(const vector<vector<Entry>> &inputs) {
     return entries;
 }
 
-bool compareKey(Entry &e1, Entry &e2) {
-    return e1.key < e2.key;
+bool compareKey(Entry &entry1, Entry &entry2) {
+    return entry1.key < entry2.key;
 }

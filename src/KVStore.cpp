@@ -44,19 +44,6 @@ string KVStore::getFromSnapshot(uint64_t key, uint64_t seqNum) {
     }
 }
 
-//bool KVStore::del(uint64_t key) {
-//    bool exist;
-//    if (mem.contains(key))
-//        exist = !mem.get(key).empty();
-//    else {
-//        SearchResult result = disk.search(key, false);
-//        exist = result.success && result.location.len;
-//    }
-//    if (exist)
-//        put(key, "");
-//    return exist;
-//}
-
 void KVStore::reset() {
     mem.clear();
     disk.clear();

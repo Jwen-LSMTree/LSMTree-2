@@ -2,7 +2,7 @@
 #define SKIP_LIST_H
 
 #include "../bloom_filter/BloomFilter.h"
-#include "../sequence_number_filter/Sequence_number_filter.h"
+#include "../sequence_number_filter/SequenceNumberFilter.h"
 #include "../Entry.h"
 #include "../Option.h"
 
@@ -56,9 +56,9 @@ private:
 
     Node *getNodeBySeqNum(uint64_t key, uint64_t seqNum) const;
 
-    Node *getNode(uint64_t key) const;
+    Node *getPreviousNode(uint64_t key) const;
 
-    void enlargeHeight(size_t height);
+    void enlargeHeadTailHeight(size_t height);
 };
 
 struct SkipList::Node {

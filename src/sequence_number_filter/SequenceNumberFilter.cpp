@@ -1,4 +1,4 @@
-#include "../../include/sequence_number_filter/Sequence_number_filter.h"
+#include "../../include/sequence_number_filter/SequenceNumberFilter.h"
 
 SequenceNumberFilter::SequenceNumberFilter()
         : minSeqNum(std::numeric_limits<uint64_t>::max()) {

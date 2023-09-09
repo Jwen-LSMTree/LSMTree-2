@@ -1,13 +1,11 @@
 #include "../../include/bloom_filter/BloomFilter.h"
 
-// 생성자, BLOOM_FILTER_SIZE만큼의 비트배열 생성 후 0으로 초기화
 BloomFilter::BloomFilter()
 {
     byteArray = new bool[Option::BLOOM_FILTER_SIZE];
     byteArray = (bool *)memset(byteArray, 0, Option::BLOOM_FILTER_SIZE);
 }
 
-// 생성자, BLOOM_FILTER_SIZE만큼의 비트배열 생성 후 인자로 받은 bits로 초기화
 BloomFilter::BloomFilter(bool *bits)
 {
     byteArray = new bool[Option::BLOOM_FILTER_SIZE];
@@ -16,7 +14,6 @@ BloomFilter::BloomFilter(bool *bits)
 
 BloomFilter::~BloomFilter() = default;
 
-// key값이 들어오면 hashValues(4개) 계산 후 비트배열에 표시
 void BloomFilter::insert(uint64_t k)
 {
     uint32_t *hashValues = new uint32_t[4];
@@ -29,7 +26,6 @@ void BloomFilter::insert(uint64_t k)
     }
 }
 
-// 하나라도 false면 없는 키로 판단
 bool BloomFilter::hasKey(uint64_t k) const
 {
     uint32_t *hashValues = new uint32_t[4];

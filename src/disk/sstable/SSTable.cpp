@@ -20,7 +20,7 @@ SSTable::SSTable(SSTableId id)
 
 SSTable::SSTable(const SkipList &mem, SSTableId id)
         : id(std::move(id)) {
-    // 기존 skiplist 블룸필터, 시퀀스넘버필터
+
     bloomfilter = mem.bloomfilter;
     seqNumFilter = mem.seqNumFilter;
 
@@ -117,8 +117,6 @@ SSTable::SSTable(const std::vector<Entry> &entries, size_t &pos, const SSTableId
     while (pos < n) {
         Entry entry = entries[pos++];
         keys.push_back(entry.key);
-
-        // 블룸필터에 추가
         bloomfilter.insert(entry.key);
 
         offsets.push_back(offset);
@@ -173,9 +171,9 @@ SSTable::SSTable(const std::vector<Entry> &entries, size_t &pos, const SSTableId
 
 SearchResult SSTable::search(uint64_t key, uint64_t seqNum) const {
     // 현재는 무조건 Disk I/O
-    // 먼저 SkipList의 블룸 필터를 이용하여 key가 존재하지 않는지 확인
+
     if (!bloomfilter.hasKey(key)) {
-        return false; // 블룸 필터에 없으면 키가 없다고 판단
+        return false;
     }
     if(!seqNumFilter.isVisible(seqNum)){
         return false;
