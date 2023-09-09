@@ -2,6 +2,7 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
 set(SRC_FILES
         ../src/bloom_filter/Bloomfilter.cpp
+        ../src/sequence_number_filter/SequenceNumberFilter.cpp
         ../src/disk/sstable/SSTable.cpp
         ../src/disk/sstable/SSTableDataLocation.cpp
         ../src/disk/sstable/SSTableId.cpp
@@ -36,6 +37,7 @@ add_executable(disk_storage_tests
 
 add_executable(kvstore_tests
         ../src/bloom_filter/Bloomfilter.cpp
+        ../src/sequence_number_filter/SequenceNumberFilter.cpp
         ../src/disk/sstable/SSTable.cpp
         ../src/disk/sstable/SSTableDataLocation.cpp
         ../src/disk/sstable/SSTableId.cpp

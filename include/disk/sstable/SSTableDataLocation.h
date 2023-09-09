@@ -11,10 +11,9 @@ public:
     vector<uint64_t> offsets;
     vector<uint64_t> seqNums;
     vector<uint64_t> oris;
-    vector<uint64_t> cmps;
 
     SSTableDataLocation(vector<uint64_t> keys, vector<uint64_t> offsets, vector<uint64_t> seqNums,
-                        vector<uint64_t> oris, vector<uint64_t> cmps);
+                        vector<uint64_t> oris);
 
     SSTableDataLocation() = default;
 };

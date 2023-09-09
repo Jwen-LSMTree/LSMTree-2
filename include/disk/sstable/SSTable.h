@@ -57,7 +57,7 @@ private:
     uint64_t size;
 
     void save(vector<uint64_t> keys, vector<uint64_t> offsets, vector<uint64_t> seqNums,
-              vector<uint64_t> oris, vector<uint64_t> cmps, const string &blockSeg);
+              vector<uint64_t> oris, const string &blockSeg);
 
     string loadValue(SSTableDataLocation loc, uint64_t pos) const;
 
@@ -67,7 +67,7 @@ private:
 
     SSTableDataLocation loadAll() const;
 
-    string loadBlock(vector<uint64_t> cmps, uint64_t pos) const;
+    string loadBlock(vector<uint64_t> oris, uint64_t pos) const;
 
     BloomFilter bloomfilter;
 

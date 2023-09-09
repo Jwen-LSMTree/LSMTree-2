@@ -15,7 +15,7 @@ SSTable::SSTable(SSTableId id)
         bloomfilter.insert(loc.keys[i]);
     }
     setSeqNumFilter(loc.seqNums);
-    size = loc.cmps.back();
+    size = loc.oris.back();
 }
 
 SSTable::SSTable(const SkipList &mem, SSTableId id)
@@ -28,13 +28,11 @@ SSTable::SSTable(const SkipList &mem, SSTableId id)
     vector<uint64_t> offsets;
     vector<uint64_t> seqNums;
     vector<uint64_t> oris;
-    vector<uint64_t> cmps;
 
     entryCnt = mem.size();
     blockCnt = 0;
     uint64_t offset = 0;
     uint64_t ori = 0;
-    uint64_t cmp = 0;
 
     string block;
     block.reserve(Option::BLOCK_SPACE);
@@ -54,26 +52,18 @@ SSTable::SSTable(const SkipList &mem, SSTableId id)
         ++entryInBlockCnt;
 
         if (block.size() >= Option::BLOCK_SPACE) {
-            string compressed;
-            compressed = block;
-            blockSeg += compressed;
+            blockSeg += block;
             oris.push_back(ori);
-            cmps.push_back(cmp);
             ori += block.size();
-            cmp += compressed.size();
             block.clear();
             entryInBlockCnt = 0;
             ++blockCnt;
         }
     }
     if (entryInBlockCnt > 0) {
-        string compressed;
-        compressed = block;
-        blockSeg += compressed;
+        blockSeg += block;
         oris.push_back(ori);
-        cmps.push_back(cmp);
         ori += block.size();
-        cmp += compressed.size();
         block.clear();
         ++blockCnt;
     }
@@ -84,13 +74,12 @@ SSTable::SSTable(const SkipList &mem, SSTableId id)
     offsets.push_back(offset);
     seqNums.push_back(0);
     oris.push_back(ori);
-    cmps.push_back(cmp);
 
     min = keys[0];
     max = keys[entryCnt - 1];
-    size = cmps.back();
+    size = oris.back();
 
-    save(keys, offsets, seqNums, oris, cmps, blockSeg);
+    save(keys, offsets, seqNums, oris,  blockSeg);
 }
 
 SSTable::SSTable(const std::vector<Entry> &entries, size_t &pos, const SSTableId &id)
@@ -99,14 +88,12 @@ SSTable::SSTable(const std::vector<Entry> &entries, size_t &pos, const SSTableId
     vector<uint64_t> offsets;
     vector<uint64_t> seqNums;
     vector<uint64_t> oris;
-    vector<uint64_t> cmps;
 
     size_t n = entries.size();
     entryCnt = 0;
     blockCnt = 0;
     uint64_t offset = 0;
     uint64_t ori = 0;
-    uint64_t cmp = 0;
 
     string block;
     block.reserve(Option::BLOCK_SPACE);
@@ -128,17 +115,13 @@ SSTable::SSTable(const std::vector<Entry> &entries, size_t &pos, const SSTableId
         ++entryInBlockCnt;
 
         if (block.size() >= Option::BLOCK_SPACE) {
-            string compressed;
-            compressed = block;
-            blockSeg += compressed;
+            blockSeg += block;
             oris.push_back(ori);
-            cmps.push_back(cmp);
             ori += block.size();
-            cmp += compressed.size();
             block.clear();
             entryInBlockCnt = 0;
             ++blockCnt;
-            if (indexSpace() + cmp >= Option::SST_SPACE)
+            if (indexSpace() + ori >= Option::SST_SPACE)
                 break;
         }
     }
@@ -147,9 +130,7 @@ SSTable::SSTable(const std::vector<Entry> &entries, size_t &pos, const SSTableId
         compressed = block;
         blockSeg += compressed;
         oris.push_back(ori);
-        cmps.push_back(cmp);
         ori += block.size();
-        cmp += compressed.size();
         block.clear();
         ++blockCnt;
     }
@@ -160,13 +141,12 @@ SSTable::SSTable(const std::vector<Entry> &entries, size_t &pos, const SSTableId
     seqNums.push_back(0);
     offsets.push_back(offset);
     oris.push_back(ori);
-    cmps.push_back(cmp);
 
     min = keys[0];
     max = keys[entryCnt - 1];
-    size = cmps.back();
+    size = oris.back();
 
-    save(keys, offsets, seqNums, oris, cmps, blockSeg);
+    save(keys, offsets, seqNums, oris, blockSeg);
 }
 
 SearchResult SSTable::search(uint64_t key, uint64_t seqNum) const {
@@ -233,7 +213,6 @@ SSTableDataLocation SSTable::loadAll() const {
     vector<uint64_t> offsets;
     vector<uint64_t> seqNums;
     vector<uint64_t> oris;
-    vector<uint64_t> cmps;
 
     ifstream ifs(id.name(), ios::binary);
 
@@ -252,25 +231,23 @@ SSTableDataLocation SSTable::loadAll() const {
     // BlockIndex
     ifs.read((char *) &blockCnt, sizeof(uint64_t)); // m
     for (uint64_t i = 0; i <= blockCnt; ++i) {
-        uint64_t ori, cmp;
+        uint64_t ori;
         ifs.read((char *) &ori, sizeof(uint64_t));
-        ifs.read((char *) &cmp, sizeof(uint64_t));
         oris.push_back(ori);
-        cmps.push_back(cmp);
     }
     ifs.close();
 
-    return {keys, offsets, seqNums, oris, cmps};
+    return {keys, offsets, seqNums, oris};
 }
 
 vector<Entry> SSTable::load() const {
     SSTableDataLocation loc = loadAll();
     vector<Entry> entries;
     uint64_t k = 0;
-    string block = loadBlock(loc.cmps, 0);
+    string block = loadBlock(loc.oris, 0);
     for (uint64_t i = 0; i < entryCnt; ++i) {
         if (loc.offsets[i + 1] > loc.oris[k + 1]) {
-            block = loadBlock(loc.cmps, ++k);
+            block = loadBlock(loc.oris, ++k);
         }
         uint64_t key = loc.keys[i];
         string value = block.substr(loc.offsets[i] - loc.oris[k], loc.offsets[i + 1] - loc.offsets[i]);
@@ -301,7 +278,7 @@ uint64_t SSTable::space() const {
 }
 
 void SSTable::save(vector<uint64_t> keys, vector<uint64_t> offsets, vector<uint64_t> seqNums,
-                   vector<uint64_t> oris, vector<uint64_t> cmps, const string &blockSeg) {
+                   vector<uint64_t> oris, const string &blockSeg) {
     ofstream ofs(id.name(), ios::binary);
     ofs.write((char *) &entryCnt, sizeof(uint64_t));
     for (uint64_t i = 0; i <= entryCnt; ++i) {
@@ -312,7 +289,6 @@ void SSTable::save(vector<uint64_t> keys, vector<uint64_t> offsets, vector<uint6
     ofs.write((char *) &blockCnt, sizeof(uint64_t));
     for (uint64_t i = 0; i <= blockCnt; ++i) {
         ofs.write((char *) &oris[i], sizeof(uint64_t));
-        ofs.write((char *) &cmps[i], sizeof(uint64_t));
     }
     ofs.write(blockSeg.data(), blockSpace());
     ofs.close();
@@ -327,25 +303,25 @@ string SSTable::loadValue(SSTableDataLocation loc, uint64_t pos) const {
     uint64_t offset = loc.offsets[pos] - loc.oris[k];
     uint64_t len = loc.offsets[pos + 1] - loc.offsets[pos];
 
-    return loadBlock(loc.cmps, k).substr(offset, len);
+    return loadBlock(loc.oris, k).substr(offset, len);
 }
 
-string SSTable::loadBlock(vector<uint64_t> cmps, uint64_t pos) const {
+string SSTable::loadBlock(vector<uint64_t> oris, uint64_t pos) const {
     string block;
-    char *buf = new char[cmps[pos + 1] - cmps[pos]];
+    char *buf = new char[oris[pos + 1] - oris[pos]];
 
     ifstream ifs(id.name(), ios::binary);
-    ifs.seekg(indexSpace() + cmps[pos], ios::beg);
-    ifs.read(buf, cmps[pos + 1] - cmps[pos]);
+    ifs.seekg(indexSpace() + oris[pos], ios::beg);
+    ifs.read(buf, oris[pos + 1] - oris[pos]);
     ifs.close();
 
-    block.assign(buf, cmps[pos + 1] - cmps[pos]);
+    block.assign(buf, oris[pos + 1] - oris[pos]);
     delete[] buf;
     return block;
 }
 
 uint64_t SSTable::indexSpace() const {
-    return (entryCnt * 3 + blockCnt * 2 + 7) * sizeof(uint64_t);
+    return (entryCnt * 3 + blockCnt * 1 + 6) * sizeof(uint64_t);
 }
 
 uint64_t SSTable::blockSpace() const {

@@ -82,7 +82,7 @@ bool SkipList::empty() const {
 }
 
 uint64_t SkipList::space() const {
-    return (totalEntries * 3 + totalBytes / Option::BLOCK_SPACE * 2 + 7) * sizeof(uint64_t) + totalBytes;
+    return (totalEntries * 3 + totalBytes / Option::BLOCK_SPACE * 1 + 6) * sizeof(uint64_t) + totalBytes;
 }
 
 void SkipList::init() {
