@@ -224,8 +224,7 @@ SearchResult SSTable::filterBySeqNum(uint64_t target_key, uint64_t target_seqNum
     if (loc.keys[pos] != target_key || target_seqNum < loc.seqNums[pos]) {
         return false;
     }
-    Location location = locate(loc, pos);
-    string value = loadBlock(loc.cmps, location.pos).substr(location.offset, location.len);
+    string value = loadValue(loc, pos);
     return {true, value};
 }
 
@@ -319,12 +318,16 @@ void SSTable::save(vector<uint64_t> keys, vector<uint64_t> offsets, vector<uint6
     ofs.close();
 }
 
-Location SSTable::locate(SSTableDataLocation loc, uint64_t pos) const {
+string SSTable::loadValue(SSTableDataLocation loc, uint64_t pos) const {
     uint64_t k = 0;
     while (loc.offsets[pos + 1] > loc.oris[k + 1])
         ++k;
     // sst pos offset len
-    return {this, k, loc.offsets[pos] - loc.oris[k], loc.offsets[pos + 1] - loc.offsets[pos]};
+
+    uint64_t offset = loc.offsets[pos] - loc.oris[k];
+    uint64_t len = loc.offsets[pos + 1] - loc.offsets[pos];
+
+    return loadBlock(loc.cmps, k).substr(offset, len);
 }
 
 string SSTable::loadBlock(vector<uint64_t> cmps, uint64_t pos) const {

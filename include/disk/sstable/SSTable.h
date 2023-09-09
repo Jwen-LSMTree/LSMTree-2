@@ -59,7 +59,7 @@ private:
     void save(vector<uint64_t> keys, vector<uint64_t> offsets, vector<uint64_t> seqNums,
               vector<uint64_t> oris, vector<uint64_t> cmps, const string &blockSeg);
 
-    Location locate(SSTableDataLocation loc, uint64_t pos) const;
+    string loadValue(SSTableDataLocation loc, uint64_t pos) const;
 
     uint64_t indexSpace() const;
 

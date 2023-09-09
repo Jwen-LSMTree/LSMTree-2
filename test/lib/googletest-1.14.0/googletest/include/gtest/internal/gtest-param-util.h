@@ -687,7 +687,7 @@ using ParameterizedTestCaseInfo = ParameterizedTestSuiteInfo<TestCase>;
 //
 // ParameterizedTestSuiteRegistry contains a map of
 // ParameterizedTestSuiteInfoBase classes accessed by test suite names. TEST_P
-// and INSTANTIATE_TEST_SUITE_P macros use it to locate their corresponding
+// and INSTANTIATE_TEST_SUITE_P macros use it to loadValue their corresponding
 // ParameterizedTestSuiteInfo descriptors.
 class ParameterizedTestSuiteRegistry {
  public:
