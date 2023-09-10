@@ -11,75 +11,88 @@ LevelNonZero::LevelNonZero(const string &dir) : dir(dir) {
         byteCnt = 0;
         lastKey = 0;
         save();
-    } else {
-        ifstream ifs(dir + "/index", ios::binary);
-        ifs.read((char *) &size, sizeof(uint64_t));
-        ifs.read((char *) &byteCnt, sizeof(uint64_t));
-        ifs.read((char *) &lastKey, sizeof(uint64_t));
-        for (uint64_t i = 0; i < size; ++i) {
-            uint64_t no;
-            ifs.read((char *) &no, sizeof(uint64_t));
-            ssts.emplace_back(SSTableId(dir, no));
-        }
-        ifs.close();
+        return;
     }
+    ifstream ifs(dir + "/index", ios::binary);
+    ifs.read((char *) &size, sizeof(uint64_t));
+    ifs.read((char *) &byteCnt, sizeof(uint64_t));
+    ifs.read((char *) &lastKey, sizeof(uint64_t));
+    for (uint64_t i = 0; i < size; i++) {
+        uint64_t id;
+        ifs.read((char *) &id, sizeof(uint64_t));
+        ssts.emplace_back(SSTableId(dir, id));
+    }
+    ifs.close();
 }
 
 SearchResult LevelNonZero::search(uint64_t key, uint64_t seqNum) const {
     for (const SSTable &sst: ssts) {
-        SearchResult res = sst.search(key, seqNum);
-        if (res.success)
-            return res;
+        SearchResult result = sst.search(key, seqNum);
+        if (result.success) {
+            return result;
+        }
     }
     return false;
 }
 
-vector<Entry> LevelNonZero::extract() {
+vector<Entry> LevelNonZero::flush() {
     auto itr = ssts.begin();
-    while (itr != ssts.end() && itr->upper() <= lastKey)
-        ++itr;
-    if (itr == ssts.end())
+    while (itr != ssts.end() && itr->getMaxKey() <= lastKey) {
+        itr++;
+    }
+    if (itr == ssts.end()) {
         itr = ssts.begin();
+    }
+
     byteCnt -= itr->space();
-    lastKey = itr->upper();
-    vector<Entry> ret = itr->load();
+    lastKey = itr->getMaxKey();
+    vector<Entry> entries = itr->load();
+
     itr->remove();
     ssts.erase(itr);
     --size;
     save();
-    return ret;
+
+    return entries;
 }
 
-void LevelNonZero::merge(vector<Entry> &&entries1, uint64_t &no) {
-    uint64_t lo = entries1[0].key;
-    uint64_t hi = entries1.back().key;
+void LevelNonZero::merge(vector<Entry> &&lowerLevelEntries, uint64_t &id) {
+    uint64_t minKey = lowerLevelEntries[0].key;
+    uint64_t maxKey = lowerLevelEntries.back().key;
 
-    vector<Entry> entries0;
+    // posit iterator on the first overlapped key
     auto itr = ssts.begin();
-    while (itr != ssts.end() && itr->upper() < lo) ++itr;
+    while (itr != ssts.end() && itr->getMaxKey() < minKey) {
+        itr++;
+    }
 
-    while (itr != ssts.end() && itr->lower() <= hi) {
+    // collect every entry that is overlapped
+    vector<Entry> curLevelEntries;
+    while (itr != ssts.end() && itr->getMinKey() <= maxKey) {
         for (const Entry &entry: itr->load()) {
-            entries0.emplace_back(entry);
+            curLevelEntries.emplace_back(entry);
         }
         byteCnt -= itr->space();
         itr->remove();
         itr = ssts.erase(itr);
-        --size;
+        size--;
     }
-    vector<Entry> entries = Util::compact({entries0, entries1});
+
+    // compact
+    vector<Entry> entries = Util::compact({curLevelEntries, lowerLevelEntries});
+
+    // save
     size_t n = entries.size();
     size_t pos = 0;
     while (pos < n) {
-        byteCnt += ssts.emplace(itr, entries, pos, SSTableId(dir, no++))->space();
-        ++size;
+        byteCnt += ssts.emplace(itr, entries, pos, SSTableId(dir, id++))->space();
+        size++;
     }
     save();
 }
 
 void LevelNonZero::clear() {
     while (!ssts.empty()) {
-        ssts.back().remove();
         ssts.pop_back();
     }
     size = 0;
@@ -98,8 +111,8 @@ void LevelNonZero::save() const {
     ofs.write((char *) &byteCnt, sizeof(uint64_t));
     ofs.write((char *) &lastKey, sizeof(uint64_t));
     for (const SSTable &sst: ssts) {
-        uint64_t no = sst.number();
-        ofs.write((char *) &no, sizeof(uint64_t));
+        uint64_t id = sst.getId();
+        ofs.write((char *) &id, sizeof(uint64_t));
     }
     ofs.close();
 }

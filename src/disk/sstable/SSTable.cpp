@@ -5,38 +5,35 @@
 #include <iostream>
 #include <utility>
 
-SSTable::SSTable(SSTableId id)
-        : id(std::move(id)) {
-    //TODO BlockCnt 초기화 필요?
+SSTable::SSTable(SSTableId id) : id(std::move(id)) {
+    // TODO: BlockCnt 초기화 필요?
     SSTableDataLocation loc = loadAll();
-    min = loc.keys[0];
-    max = loc.keys[entryCnt - 1];
+    minKey = loc.keys[0];
+    maxKey = loc.keys[entryCnt - 1];
     for (uint64_t i = 0; i <= entryCnt; i++) {
         bloomfilter.insert(loc.keys[i]);
     }
     size = loc.dataBlockOffsets.back();
 }
 
-SSTable::SSTable(const SkipList &mem, SSTableId id)
-        : id(std::move(id)) {
-
+SSTable::SSTable(const SkipList &mem, SSTableId id) : id(std::move(id)) {
     bloomfilter = mem.bloomFilter;
+    entryCnt = mem.size();
+    blockCnt = 0;
 
     vector<uint64_t> keys;
     vector<uint64_t> offsets;
     vector<uint64_t> seqNums;
     vector<uint64_t> dataBlockOffsets;
 
-    entryCnt = mem.size();
-    blockCnt = 0;
     uint64_t offset = 0;
     uint64_t dataBlockOffset = 0;
+    uint64_t entryInBlockCnt = 0;
 
     string block;
     block.reserve(Option::BLOCK_SPACE);
-    string blockSeg;
-    blockSeg.reserve(Option::SST_SPACE);
-    uint64_t entryInBlockCnt = 0;
+    string blockSegment;
+    blockSegment.reserve(Option::SST_SPACE);
 
     SkipList::Iterator itr = mem.iterator();
     while (itr.hasNext()) {
@@ -50,7 +47,7 @@ SSTable::SSTable(const SkipList &mem, SSTableId id)
         ++entryInBlockCnt;
 
         if (block.size() >= Option::BLOCK_SPACE) {
-            blockSeg += block;
+            blockSegment += block;
             dataBlockOffsets.push_back(dataBlockOffset);
             dataBlockOffset += block.size();
             block.clear();
@@ -59,7 +56,7 @@ SSTable::SSTable(const SkipList &mem, SSTableId id)
         }
     }
     if (entryInBlockCnt > 0) {
-        blockSeg += block;
+        blockSegment += block;
         dataBlockOffsets.push_back(dataBlockOffset);
         dataBlockOffset += block.size();
         block.clear();
@@ -71,15 +68,14 @@ SSTable::SSTable(const SkipList &mem, SSTableId id)
     seqNums.push_back(0);
     dataBlockOffsets.push_back(dataBlockOffset);
 
-    min = keys[0];
-    max = keys[entryCnt - 1];
+    minKey = keys[0];
+    maxKey = keys[entryCnt - 1];
     size = dataBlockOffsets.back();
 
-    save(keys, offsets, seqNums, dataBlockOffsets, blockSeg);
+    save(keys, offsets, seqNums, dataBlockOffsets, blockSegment);
 }
 
-SSTable::SSTable(const std::vector<Entry> &entries, size_t &pos, const SSTableId &id)
-        : id(id) {
+SSTable::SSTable(const std::vector<Entry> &entries, size_t &pos, const SSTableId &id) : id(id) {
     vector<uint64_t> keys;
     vector<uint64_t> offsets;
     vector<uint64_t> seqNums;
@@ -93,8 +89,8 @@ SSTable::SSTable(const std::vector<Entry> &entries, size_t &pos, const SSTableId
 
     string block;
     block.reserve(Option::BLOCK_SPACE);
-    string blockSeg;
-    blockSeg.reserve(Option::SST_SPACE);
+    string blockSegment;
+    blockSegment.reserve(Option::SST_SPACE);
     uint64_t entryInBlockCnt = 0;
 
     while (pos < n) {
@@ -111,7 +107,7 @@ SSTable::SSTable(const std::vector<Entry> &entries, size_t &pos, const SSTableId
         ++entryInBlockCnt;
 
         if (block.size() >= Option::BLOCK_SPACE) {
-            blockSeg += block;
+            blockSegment += block;
             dataBlockOffsets.push_back(dataBlockOffset);
             dataBlockOffset += block.size();
             block.clear();
@@ -124,7 +120,7 @@ SSTable::SSTable(const std::vector<Entry> &entries, size_t &pos, const SSTableId
     if (entryInBlockCnt > 0) {
         string compressed;
         compressed = block;
-        blockSeg += compressed;
+        blockSegment += compressed;
         dataBlockOffsets.push_back(dataBlockOffset);
         dataBlockOffset += block.size();
         block.clear();
@@ -136,11 +132,11 @@ SSTable::SSTable(const std::vector<Entry> &entries, size_t &pos, const SSTableId
     offsets.push_back(offset);
     dataBlockOffsets.push_back(dataBlockOffset);
 
-    min = keys[0];
-    max = keys[entryCnt - 1];
+    minKey = keys[0];
+    maxKey = keys[entryCnt - 1];
     size = dataBlockOffsets.back();
 
-    save(keys, offsets, seqNums, dataBlockOffsets, blockSeg);
+    save(keys, offsets, seqNums, dataBlockOffsets, blockSegment);
 }
 
 SearchResult SSTable::search(uint64_t key, uint64_t seqNum) const {
@@ -209,7 +205,7 @@ SSTableDataLocation SSTable::loadAll() const {
 
     // EntryIndex
     ifs.read((char *) &entryCnt, sizeof(uint64_t)); // n
-    for (uint64_t i = 0; i <= entryCnt; ++i) {
+    for (uint64_t i = 0; i <= entryCnt; i++) {
         uint64_t key, offset, seqNum;
         ifs.read((char *) &key, sizeof(uint64_t));
         ifs.read((char *) &offset, sizeof(uint64_t));
@@ -221,7 +217,7 @@ SSTableDataLocation SSTable::loadAll() const {
 
     // BlockIndex
     ifs.read((char *) &blockCnt, sizeof(uint64_t)); // m
-    for (uint64_t i = 0; i <= blockCnt; ++i) {
+    for (uint64_t i = 0; i <= blockCnt; i++) {
         uint64_t dataBlockOffset;
         ifs.read((char *) &dataBlockOffset, sizeof(uint64_t));
         dataBlockOffsets.push_back(dataBlockOffset);
@@ -234,14 +230,16 @@ SSTableDataLocation SSTable::loadAll() const {
 vector<Entry> SSTable::load() const {
     SSTableDataLocation loc = loadAll();
     vector<Entry> entries;
-    uint64_t k = 0;
-    string block = loadBlock(loc.dataBlockOffsets, 0);
-    for (uint64_t i = 0; i < entryCnt; ++i) {
-        if (loc.offsets[i + 1] > loc.dataBlockOffsets[k + 1]) {
-            block = loadBlock(loc.dataBlockOffsets, ++k);
+
+    uint64_t pos = 0;
+    string block = loadBlock(loc.dataBlockOffsets, pos);
+    for (uint64_t i = 0; i < entryCnt; i++) {
+        if (loc.offsets[i + 1] > loc.dataBlockOffsets[pos + 1]) {
+            block = loadBlock(loc.dataBlockOffsets, pos++);
         }
         uint64_t key = loc.keys[i];
-        string value = block.substr(loc.offsets[i] - loc.dataBlockOffsets[k], loc.offsets[i + 1] - loc.offsets[i]);
+        string value = block.substr(loc.offsets[i] - loc.dataBlockOffsets[pos],
+                                    loc.offsets[i + 1] - loc.offsets[i]);
         uint64_t seqNum = loc.seqNums[i];
         entries.emplace_back(key, value, seqNum);
     }
@@ -252,16 +250,16 @@ void SSTable::remove() const {
     filesystem::remove(filesystem::path(id.name()));
 }
 
-uint64_t SSTable::number() const {
-    return id.no;
+uint64_t SSTable::getId() const {
+    return id.id;
 }
 
-uint64_t SSTable::lower() const {
-    return min;
+uint64_t SSTable::getMinKey() const {
+    return minKey;
 }
 
-uint64_t SSTable::upper() const {
-    return max;
+uint64_t SSTable::getMaxKey() const {
+    return maxKey;
 }
 
 uint64_t SSTable::space() const {
@@ -269,28 +267,27 @@ uint64_t SSTable::space() const {
 }
 
 void SSTable::save(vector<uint64_t> keys, vector<uint64_t> offsets, vector<uint64_t> seqNums,
-                   vector<uint64_t> dataBlockOffsets, const string &blockSeg) {
+                   vector<uint64_t> dataBlockOffsets, const string &blockSegment) {
     ofstream ofs(id.name(), ios::binary);
     ofs.write((char *) &entryCnt, sizeof(uint64_t));
-    for (uint64_t i = 0; i <= entryCnt; ++i) {
+    for (uint64_t i = 0; i <= entryCnt; i++) {
         ofs.write((char *) &keys[i], sizeof(uint64_t));
         ofs.write((char *) &offsets[i], sizeof(uint64_t));
         ofs.write((char *) &seqNums[i], sizeof(uint64_t));
     }
     ofs.write((char *) &blockCnt, sizeof(uint64_t));
-    for (uint64_t i = 0; i <= blockCnt; ++i) {
+    for (uint64_t i = 0; i <= blockCnt; i++) {
         ofs.write((char *) &dataBlockOffsets[i], sizeof(uint64_t));
     }
-    ofs.write(blockSeg.data(), blockSpace());
+    ofs.write(blockSegment.data(), blockSpace());
     ofs.close();
 }
 
 string SSTable::loadValue(SSTableDataLocation loc, uint64_t pos) const {
     uint64_t k = 0;
-    while (loc.offsets[pos + 1] > loc.dataBlockOffsets[k + 1])
-        ++k;
-    // sst pos offset len
-
+    while (loc.offsets[pos + 1] > loc.dataBlockOffsets[k + 1]) {
+        k++;
+    }
     uint64_t offset = loc.offsets[pos] - loc.dataBlockOffsets[k];
     uint64_t len = loc.offsets[pos + 1] - loc.offsets[pos];
 
