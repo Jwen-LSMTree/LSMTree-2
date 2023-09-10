@@ -4,7 +4,7 @@
 #include <fstream>
 #include <iostream>
 
-DiskStorage::DiskStorage(const string &dir) : dir(dir), level0(dir + Option::ZERO_NAME) {
+DiskStorage::DiskStorage(const string &dir) : dir(dir), level0(dir + Option::LEVEL_ZERO_NAME) {
     if (filesystem::exists(filesystem::path(dir + "/meta"))) {
         ifstream ifs(dir + "/meta", ios::binary);
         ifs.read((char *) &no, sizeof(uint64_t));
@@ -13,17 +13,17 @@ DiskStorage::DiskStorage(const string &dir) : dir(dir), level0(dir + Option::ZER
         no = 0;
         save();
     }
-    for (uint64_t i = 0; i < Option::NON_ZERO_NUM; ++i)
-        levels.emplace_back(dir + Option::NON_ZERO_NAMES[i]);
+    for (uint64_t i = 0; i < Option::LEVEL_NON_ZERO_NUM; ++i)
+        levels.emplace_back(dir + Option::LEVEL_NON_ZERO_NAMES[i]);
 }
 
 void DiskStorage::flush(const SkipList &mem) {
     level0.flush(mem, no);
-    if (level0.space() > Option::ZERO_SPACE) {
+    if (level0.space() > Option::LEVEL_ZERO_SPACE) {
         levels[0].merge(level0.extract(), no);
     }
-    for (uint64_t i = 0; i + 1 < Option::NON_ZERO_NUM; ++i) {
-        if (levels[i].space() > Option::NON_ZERO_SPACES[i]) {
+    for (uint64_t i = 0; i + 1 < Option::LEVEL_NON_ZERO_NUM; ++i) {
+        if (levels[i].space() > Option::LEVEL_NON_ZERO_SPACES[i]) {
             levels[i + 1].merge(levels[i].extract(), no);
         }
     }
@@ -32,14 +32,14 @@ void DiskStorage::flush(const SkipList &mem) {
 
 SearchResult DiskStorage::search(uint64_t key, uint64_t seqNum) {
     SearchResult result = level0.search(key, seqNum);
-    for (uint64_t i = 0; !result.success && i < Option::NON_ZERO_NUM; ++i)
+    for (uint64_t i = 0; !result.success && i < Option::LEVEL_NON_ZERO_NUM; ++i)
         result = levels[i].search(key, seqNum);
     return result;
 }
 
 void DiskStorage::clear() {
     level0.clear();
-    for (uint64_t i = 0; i < Option::NON_ZERO_NUM; ++i)
+    for (uint64_t i = 0; i < Option::LEVEL_NON_ZERO_NUM; ++i)
         levels[i].clear();
     no = 0;
     save();
