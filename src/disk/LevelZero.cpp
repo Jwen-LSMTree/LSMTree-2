@@ -32,7 +32,7 @@ SearchResult LevelZero::search(uint64_t key, uint64_t seqNum) const {
     return false;
 }
 
-void LevelZero::add(const SkipList &mem, uint64_t &no) {
+void LevelZero::flush(const SkipList &mem, uint64_t &no) {
     ssts.emplace_back(mem, SSTableId(dir, no++));
     ++size;
     byteCnt += mem.space();

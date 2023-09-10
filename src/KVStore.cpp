@@ -9,7 +9,7 @@ KVStore::KVStore(const string &dir) : KVStoreAPI(dir), disk(dir) {
 
 KVStore::~KVStore() {
     if (!mem.empty()) {
-        disk.add(mem);
+        disk.flush(mem);
     }
 }
 
@@ -17,7 +17,7 @@ void KVStore::put(uint64_t key, const string &value) {
     uint64_t seqNum = sequenceNumber->getUpdatedSeqNum();
     mem.put(key, value, seqNum);
     if (mem.space() > Option::SST_SPACE) {
-        disk.add(mem);
+        disk.flush(mem);
         mem.clear();
     }
 }

@@ -27,7 +27,7 @@ TEST(DiskStorage, search) {
 
     // when
     DiskStorage *disk = new DiskStorage("./data");
-    disk->add(*mem);
+    disk->flush(*mem);
     LevelZero *level0 = disk->getLevelZero();
 
     // then

@@ -18,7 +18,7 @@ class DiskStorage {
 public:
     explicit DiskStorage(const string &dir);
 
-    void add(const SkipList &mem);
+    void flush(const SkipList &mem);
 
     SearchResult search(uint64_t key, uint64_t seqNum);
 

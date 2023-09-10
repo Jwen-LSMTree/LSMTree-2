@@ -20,7 +20,7 @@ public:
 
     SearchResult search(uint64_t key, uint64_t seqNum) const;
 
-    void add(const SkipList &mem, uint64_t &no);
+    void flush(const SkipList &mem, uint64_t &no);
 
     vector<Entry> extract();
 

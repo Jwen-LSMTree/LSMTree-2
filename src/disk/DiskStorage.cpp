@@ -17,8 +17,8 @@ DiskStorage::DiskStorage(const string &dir) : dir(dir), level0(dir + Option::ZER
         levels.emplace_back(dir + Option::NON_ZERO_NAMES[i]);
 }
 
-void DiskStorage::add(const SkipList &mem) {
-    level0.add(mem, no);
+void DiskStorage::flush(const SkipList &mem) {
+    level0.flush(mem, no);
     if (level0.space() > Option::ZERO_SPACE) {
         levels[0].merge(level0.extract(), no);
     }
