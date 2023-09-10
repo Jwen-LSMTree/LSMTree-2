@@ -20,7 +20,7 @@ SSTable::SSTable(SSTableId id)
 SSTable::SSTable(const SkipList &mem, SSTableId id)
         : id(std::move(id)) {
 
-    bloomfilter = mem.bloomfilter;
+    bloomfilter = mem.bloomFilter;
 
     vector<uint64_t> keys;
     vector<uint64_t> offsets;
