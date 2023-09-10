@@ -2,7 +2,6 @@
 #define SKIP_LIST_H
 
 #include "../bloom_filter/BloomFilter.h"
-#include "../sequence_number_filter/SequenceNumberFilter.h"
 #include "../Entry.h"
 #include "../Option.h"
 
@@ -41,8 +40,6 @@ public:
     void print() const;
 
     BloomFilter bloomfilter;
-
-    SequenceNumberFilter seqNumFilter;
 
 private:
     struct Node;

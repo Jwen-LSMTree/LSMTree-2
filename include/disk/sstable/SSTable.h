@@ -2,7 +2,6 @@
 #define SSTABLE_H
 
 #include "../../bloom_filter/BloomFilter.h"
-#include "../../sequence_number_filter/SequenceNumberFilter.h"
 #include "SSTableDataLocation.h"
 #include "SSTableId.h"
 #include "../Location.h"
@@ -45,8 +44,6 @@ public:
 
     void print(uint64_t id) const;
 
-    void setSeqNumFilter(const vector<uint64_t>& seqNums);
-
 private:
     SSTableId id;
     uint64_t entryCnt;
@@ -70,8 +67,6 @@ private:
     string loadBlock(vector<uint64_t> dataBlockOffsets, uint64_t pos) const;
 
     BloomFilter bloomfilter;
-
-    SequenceNumberFilter seqNumFilter;
 };
 
 #endif
