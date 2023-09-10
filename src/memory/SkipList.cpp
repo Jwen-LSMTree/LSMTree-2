@@ -28,6 +28,9 @@ string SkipList::get(uint64_t key, uint64_t seqNum) const {
         // bloomfilter에 없는 경우 예외 던짐
         throw NoEntryFoundException("no entry found in memory (filtered from BloomFilter)");
     }
+    if (!seqNumFilter.isVisible(seqNum)){
+        throw NoEntryFoundException("no entry found in memory (filtered from SequenceNumberFilter");
+    }
     try {
         Node *node = getNodeBySeqNum(key, seqNum);
         return node->value;
@@ -41,6 +44,10 @@ void SkipList::put(uint64_t key, const string &value, uint64_t seqNum) {
     Node *prev = getPreviousNode(key);
 
     bloomfilter.insert(key);
+
+    if (seqNum < seqNumFilter.minSeqNum) {
+        seqNumFilter.minSeqNum = seqNum;
+    }
 
     size_t height = 1;
     while (dist(engine))
@@ -88,6 +95,7 @@ void SkipList::init() {
     totalBytes = 0;
     totalEntries = 0;
     bloomfilter = BloomFilter();
+    seqNumFilter = SequenceNumberFilter();
 }
 
 SkipList::Node *SkipList::getNodeBySeqNum(uint64_t key, uint64_t seqNum) const {
