@@ -35,11 +35,11 @@ public:
 
     void remove() const;
 
-    uint64_t number() const;
+    uint64_t getId() const;
 
-    uint64_t lower() const;
+    uint64_t getMinKey() const;
 
-    uint64_t upper() const;
+    uint64_t getMaxKey() const;
 
     uint64_t space() const;
 
@@ -50,14 +50,13 @@ public:
 private:
     SSTableId id;
     uint64_t entryCnt;
-
     uint64_t blockCnt;
-    uint64_t min;
-    uint64_t max;
+    uint64_t minKey;
+    uint64_t maxKey;
     uint64_t size;
 
     void save(vector<uint64_t> keys, vector<uint64_t> offsets, vector<uint64_t> seqNums,
-              vector<uint64_t> dataBlockOffsets, const string &blockSeg);
+              vector<uint64_t> dataBlockOffsets, const string &blockSegment);
 
     string loadValue(SSTableDataLocation loc, uint64_t pos) const;
 

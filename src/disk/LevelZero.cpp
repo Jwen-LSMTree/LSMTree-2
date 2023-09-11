@@ -10,36 +10,37 @@ LevelZero::LevelZero(const string &dir) : dir(dir) {
         size = 0;
         byteCnt = 0;
         save();
-    } else {
-        ifstream ifs(dir + "/index", ios::binary);
-        ifs.read((char *) &size, sizeof(uint64_t));
-        ifs.read((char *) &byteCnt, sizeof(uint64_t));
-        for (uint64_t i = 0; i < size; ++i) {
-            uint64_t no;
-            ifs.read((char *) &no, sizeof(uint64_t));
-            ssts.emplace_back(SSTableId(dir, no));
-        }
-        ifs.close();
+        return;
     }
+    ifstream ifs(dir + "/index", ios::binary);
+    ifs.read((char *) &size, sizeof(uint64_t));
+    ifs.read((char *) &byteCnt, sizeof(uint64_t));
+    for (uint64_t i = 0; i < size; i++) {
+        uint64_t id;
+        ifs.read((char *) &id, sizeof(uint64_t));
+        ssts.emplace_back(SSTableId(dir, id));
+    }
+    ifs.close();
 }
 
 SearchResult LevelZero::search(uint64_t key, uint64_t seqNum) const {
-    for (uint64_t i = 1; i <= size; ++i) {
-        SearchResult res = ssts[size - i].search(key, seqNum);
-        if (res.success)
-            return res;
+    for (uint64_t i = 1; i <= size; i++) {
+        SearchResult result = ssts[size - i].search(key, seqNum);
+        if (result.success) {
+            return result;
+        }
     }
     return false;
 }
 
-void LevelZero::flush(const SkipList &mem, uint64_t &no) {
-    ssts.emplace_back(mem, SSTableId(dir, no++));
-    ++size;
+void LevelZero::flushMemTable(const SkipList &mem, uint64_t &id) {
+    ssts.emplace_back(mem, SSTableId(dir, id++));
+    size++;
     byteCnt += mem.space();
     save();
 }
 
-vector<Entry> LevelZero::extract() {
+vector<Entry> LevelZero::flush() {
     vector<vector<Entry>> inputs;
     for (const SSTable &sst: ssts) {
         inputs.emplace_back(sst.load());
@@ -54,7 +55,6 @@ vector<Entry> LevelZero::extract() {
 
 void LevelZero::clear() {
     while (!ssts.empty()) {
-        ssts.back().remove();
         ssts.pop_back();
     }
     size = 0;
@@ -71,15 +71,15 @@ void LevelZero::save() const {
     ofs.write((char *) &size, sizeof(uint64_t));
     ofs.write((char *) &byteCnt, sizeof(uint64_t));
     for (const SSTable &sst: ssts) {
-        uint64_t no = sst.number();
-        ofs.write((char *) &no, sizeof(uint64_t));
+        uint64_t id = sst.getId();
+        ofs.write((char *) &id, sizeof(uint64_t));
     }
     ofs.close();
 }
 
 void LevelZero::print() const {
     cout << "=== LevelZero === " << endl;
-    for (uint64_t i = 0; i < ssts.size(); ++i) {
+    for (uint64_t i = 0; i < ssts.size(); i++) {
         ssts[i].print(i);
     }
 }

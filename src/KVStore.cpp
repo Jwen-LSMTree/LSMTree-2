@@ -8,7 +8,7 @@ KVStore::KVStore(const string &dir) : KVStoreAPI(dir), disk(dir) {
 }
 
 KVStore::~KVStore() {
-    if (!mem.empty()) {
+    if (!mem.isEmpty()) {
         disk.flush(mem);
     }
 }

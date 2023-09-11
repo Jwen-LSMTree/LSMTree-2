@@ -18,7 +18,7 @@ public:
 
     SearchResult search(uint64_t key, uint64_t seqNum) const;
 
-    vector<Entry> extract();
+    vector<Entry> flush();
 
     void merge(vector<Entry> &&entries1, uint64_t &no);
 

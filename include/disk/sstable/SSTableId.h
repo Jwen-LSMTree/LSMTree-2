@@ -8,11 +8,11 @@ using namespace std;
 
 struct SSTableId {
     string dir;
-    uint64_t no;
+    uint64_t id;
 
     SSTableId() = default;
 
-    SSTableId(const string &dir, uint64_t no);
+    SSTableId(string dir, uint64_t no);
 
     string name() const;
 };

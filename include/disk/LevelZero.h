@@ -20,9 +20,9 @@ public:
 
     SearchResult search(uint64_t key, uint64_t seqNum) const;
 
-    void flush(const SkipList &mem, uint64_t &no);
+    void flushMemTable(const SkipList &mem, uint64_t &id);
 
-    vector<Entry> extract();
+    vector<Entry> flush();
 
     void clear();
 

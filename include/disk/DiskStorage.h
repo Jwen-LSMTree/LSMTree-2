@@ -30,10 +30,10 @@ public:
 
 private:
     string dir;
-    uint64_t no;
+    uint64_t id;
 
-    LevelZero level0;
-    vector<LevelNonZero> levels;
+    LevelZero levelZero;
+    vector<LevelNonZero> levelNonZeros;
 
     void save() const;
 };

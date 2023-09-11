@@ -18,53 +18,54 @@ class SkipList {
 public:
     class Iterator;
 
+    BloomFilter bloomFilter;
+
     explicit SkipList();
 
     ~SkipList();
+
+    void clear();
 
     string get(uint64_t key, uint64_t seqNum) const;
 
     void put(uint64_t key, const string &value, uint64_t seqNum);
 
-//    bool del(uint64_t key);
-
-    Iterator iterator() const;
-
     size_t size() const;
-
-    bool empty() const;
-
-    void clear();
 
     uint64_t space() const;
 
+    bool isEmpty() const;
+
     void print() const;
 
-    BloomFilter bloomfilter;
+    Iterator iterator() const;
 
     SequenceNumberFilter seqNumFilter;
 
 private:
     struct Node;
     Node *head, *tail;
+
     size_t totalEntries;
     size_t totalBytes;
-    std::default_random_engine engine;
-    std::uniform_int_distribution<int> dist;
+
+    default_random_engine random_engine; // 난수 생성기
+    uniform_int_distribution<int> dist;
 
     void init();
+
+    void enlargeHeadTailHeight(size_t height);
 
     Node *getNodeBySeqNum(uint64_t key, uint64_t seqNum) const;
 
     Node *getPreviousNode(uint64_t key) const;
-
-    void enlargeHeadTailHeight(size_t height);
 };
 
 struct SkipList::Node {
     uint64_t key;
     string value;
     uint64_t seqNum;
+
     Node **prevs;
     Node **nexts;
     size_t height;
