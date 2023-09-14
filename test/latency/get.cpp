@@ -5,8 +5,8 @@
 
 using namespace std;
 
-const int TEST_COUNT = 5;
-const int ENTRY_COUNT = 100000;
+const int TEST_COUNT = 3;
+const int ENTRY_COUNT = 300000;
 
 KVStore *store;
 uint64_t keys[ENTRY_COUNT];
