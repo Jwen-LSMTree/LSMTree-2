@@ -5,6 +5,7 @@
 
 using namespace std;
 
+const int TEST_COUNT = 5;
 const int ENTRY_COUNT = 10000000;
 
 KVStore *store;
@@ -14,18 +15,23 @@ string values[ENTRY_COUNT];
 void init();
 
 int main() {
-    init();
+    auto totalTime = 0;
+    for (int i = 0; i < TEST_COUNT; i++) {
+        init();
 
-    auto startTime = chrono::high_resolution_clock::now();
-    for (int i = 0; i < ENTRY_COUNT; i++) {
-        store->put(keys[i], values[i]);
+        auto startTime = chrono::high_resolution_clock::now();
+        for (int j = 0; j < ENTRY_COUNT; j++) {
+            store->put(keys[j], values[j]);
+        }
+        auto endTime = chrono::high_resolution_clock::now();
+
+        store->print();
+
+        auto duration = chrono::duration_cast<chrono::milliseconds>(endTime - startTime).count();
+        cout << "Elapsed time: " << duration << " milliseconds" << "\n" << endl;
+        totalTime += duration;
     }
-    auto endTime = chrono::high_resolution_clock::now();
-
-    store->print();
-
-    auto duration = chrono::duration_cast<chrono::milliseconds>(endTime - startTime).count();
-    cout << "Elapsed time: " << duration << " milliseconds" << "\n" << endl;
+    cout << "Average time: " << totalTime / TEST_COUNT << " milliseconds" << endl;
 }
 
 void init() {
