@@ -5,7 +5,8 @@
 
 using namespace std;
 
-const int ENTRY_COUNT = 10000;
+const int TEST_COUNT = 3;
+const int ENTRY_COUNT = 100000;
 const int DUPLICATE_COUNT = 3;
 const string alphabets[5] = {"a", "b", "c", "d", "e"};
 
@@ -17,21 +18,26 @@ uint64_t seqNums[ENTRY_COUNT * DUPLICATE_COUNT];
 void init();
 
 int main() {
-    init();
+    auto totalTime = 0;
+    for (int i = 0; i < TEST_COUNT; i++) {
+        init();
 
-    for (int i = 0; i < ENTRY_COUNT * DUPLICATE_COUNT; i++) {
-        store->put(keys[i], values[i]);
+        for (int j = 0; j < ENTRY_COUNT * DUPLICATE_COUNT; j++) {
+            store->put(keys[j], values[j]);
+        }
+        store->print();
+
+        auto startTime = chrono::high_resolution_clock::now();
+        for (int j = 0; j < ENTRY_COUNT * DUPLICATE_COUNT; j++) {
+            store->getFromSnapshot(keys[j], seqNums[j]);
+        }
+        auto endTime = chrono::high_resolution_clock::now();
+
+        auto duration = chrono::duration_cast<chrono::milliseconds>(endTime - startTime).count();
+        cout << "Elapsed time: " << duration << " milliseconds" << "\n" << endl;
+        totalTime += duration;
     }
-    store->print();
-
-    auto startTime = chrono::high_resolution_clock::now();
-    for (int i = 0; i < ENTRY_COUNT * DUPLICATE_COUNT; i++) {
-        store->getFromSnapshot(keys[i], seqNums[i]);
-    }
-    auto endTime = chrono::high_resolution_clock::now();
-
-    auto duration = chrono::duration_cast<chrono::milliseconds>(endTime - startTime).count();
-    cout << "Elapsed time: " << duration << " milliseconds" << "\n" << endl;
+    cout << "Average time: " << totalTime / TEST_COUNT << " milliseconds" << endl;
 }
 
 void init() {

@@ -5,7 +5,6 @@
 #include "../../sequence_number_filter/SequenceNumberFilter.h"
 #include "SSTableDataLocation.h"
 #include "SSTableId.h"
-#include "../Location.h"
 #include "../SearchResult.h"
 #include "../../memory/SkipList.h"
 #include "../../Entry.h"

@@ -9,7 +9,6 @@ set(SRC_FILES
         ../src/disk/DiskStorage.cpp
         ../src/disk/LevelNonZero.cpp
         ../src/disk/LevelZero.cpp
-        ../src/disk/Location.cpp
         ../src/disk/SearchResult.cpp
         ../src/exception/NoEntryFound.cpp
         ../src/memory/SkipList.cpp
