@@ -39,6 +39,8 @@ public:
 
     uint64_t getMaxKey() const;
 
+    uint64_t getMinSeqNum() const;
+
     uint64_t space() const;
 
     void print(uint64_t id) const;
@@ -49,6 +51,7 @@ private:
     uint64_t blockCnt;
     uint64_t minKey;
     uint64_t maxKey;
+    uint64_t minSeqNum;
     uint64_t size;
 
     void save(vector<uint64_t> keys, vector<uint64_t> offsets, vector<uint64_t> seqNums,
