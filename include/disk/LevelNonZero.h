@@ -32,7 +32,6 @@ private:
     string dir;
     uint64_t size;
     uint64_t byteCnt;
-    uint64_t lastKey;
     list<SSTable> ssts;
 
     void save() const;
