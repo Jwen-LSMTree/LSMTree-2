@@ -12,12 +12,14 @@ KVStore *store;
 uint64_t keys[ENTRY_COUNT];
 string values[ENTRY_COUNT];
 
-void init();
+void beforeEach();
+
+void afterEach();
 
 int main() {
     auto totalTime = 0;
     for (int i = 0; i < TEST_COUNT; i++) {
-        init();
+        beforeEach();
 
         for (int j = 0; j < ENTRY_COUNT; j++) {
             store->put(keys[j], values[j]);
@@ -33,11 +35,13 @@ int main() {
         auto duration = chrono::duration_cast<chrono::milliseconds>(endTime - startTime).count();
         cout << "Elapsed time: " << duration << " milliseconds" << "\n" << endl;
         totalTime += duration;
+
+        afterEach();
     }
     cout << "Average time: " << totalTime / TEST_COUNT << " milliseconds" << endl;
 }
 
-void init() {
+void beforeEach() {
     if (filesystem::exists(filesystem::path("./data"))) {
         filesystem::remove_all(filesystem::path("./data"));
     }
@@ -46,4 +50,10 @@ void init() {
         keys[i] = i;
         values[i] = "a";
     }
+}
+
+void afterEach() {
+    store->reset();
+    delete store;
+    store = nullptr;
 }
