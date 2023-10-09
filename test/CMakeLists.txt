@@ -20,25 +20,25 @@ set(SRC_FILES
 
 add_executable(sequence_number_tests
         ../src/SequenceNumber.cpp
-        KVStore/SequenceNumber.cpp
+        accuracy/SequenceNumber.cpp
 )
 
 add_executable(skip_list_tests
         ${SRC_FILES}
         ../src/Option.cpp
-        KVStore/SkipList.cpp
+        accuracy/SkipList.cpp
 )
 
 add_executable(disk_storage_tests
         ${SRC_FILES}
         ../src/Option.cpp
-        KVStore/DiskStorage.cpp
+        accuracy/DiskStorage.cpp
 )
 
 add_executable(kvstore_tests
         ${SRC_FILES}
-        KVStore/Option.cpp
-        KVStore/KVStore.cpp
+        accuracy/Option.cpp
+        accuracy/KVStore.cpp
 )
 
 target_link_libraries(sequence_number_tests gtest gtest_main)
