@@ -4,12 +4,14 @@
 #include <filesystem>
 #include <iostream>
 #include <utility>
+#include <algorithm>
 
 SSTable::SSTable(SSTableId id) : id(std::move(id)) {
     // TODO: BlockCnt 초기화 필요?
     SSTableDataLocation loc = loadAll();
     minKey = loc.keys[0];
     maxKey = loc.keys[entryCnt - 1];
+    minSeqNum = *min_element(loc.seqNums.begin(), loc.seqNums.end());
     for (uint64_t i = 0; i <= entryCnt; i++) {
         bloomfilter.insert(loc.keys[i]);
     }
@@ -70,6 +72,7 @@ SSTable::SSTable(const SkipList &mem, SSTableId id) : id(std::move(id)) {
 
     minKey = keys[0];
     maxKey = keys[entryCnt - 1];
+    minSeqNum = *min_element(seqNums.begin(), seqNums.end());
     size = dataBlockOffsets.back();
 
     save(keys, offsets, seqNums, dataBlockOffsets, blockSegment);
@@ -134,6 +137,7 @@ SSTable::SSTable(const std::vector<Entry> &entries, size_t &pos, const SSTableId
 
     minKey = keys[0];
     maxKey = keys[entryCnt - 1];
+    minSeqNum = *min_element(seqNums.begin(), seqNums.end());
     size = dataBlockOffsets.back();
 
     save(keys, offsets, seqNums, dataBlockOffsets, blockSegment);
@@ -260,6 +264,10 @@ uint64_t SSTable::getMinKey() const {
 
 uint64_t SSTable::getMaxKey() const {
     return maxKey;
+}
+
+uint64_t SSTable::getMinSeqNum() const {
+    return minSeqNum;
 }
 
 uint64_t SSTable::space() const {

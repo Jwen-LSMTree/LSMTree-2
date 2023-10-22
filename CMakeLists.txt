@@ -24,11 +24,6 @@ set(SRC_FILES
         ./src/Util.cpp
 )
 
-add_executable(correctness test/correctness.cpp ${SRC_FILES})
-add_executable(persistence test/persistence.cpp ${SRC_FILES})
-add_executable(latency test/latency.cpp ${SRC_FILES})
-add_executable(throughput test/throughput.cpp ${SRC_FILES})
-
 add_executable(latency_put test/latency/put.cpp ${SRC_FILES})
 add_executable(latency_get test/latency/get.cpp ${SRC_FILES})
 add_executable(latency_snapshot test/latency/snapshot.cpp ${SRC_FILES})

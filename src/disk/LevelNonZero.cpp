@@ -3,20 +3,19 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <algorithm>
 
 LevelNonZero::LevelNonZero(const string &dir) : dir(dir) {
     if (!filesystem::exists(filesystem::path(dir))) {
         filesystem::create_directories(filesystem::path(dir));
         size = 0;
         byteCnt = 0;
-        lastKey = 0;
         save();
         return;
     }
     ifstream ifs(dir + "/index", ios::binary);
     ifs.read((char *) &size, sizeof(uint64_t));
     ifs.read((char *) &byteCnt, sizeof(uint64_t));
-    ifs.read((char *) &lastKey, sizeof(uint64_t));
     for (uint64_t i = 0; i < size; i++) {
         uint64_t id;
         ifs.read((char *) &id, sizeof(uint64_t));
@@ -36,21 +35,26 @@ SearchResult LevelNonZero::search(uint64_t key, uint64_t seqNum) const {
 }
 
 vector<Entry> LevelNonZero::flush() {
+    uint64_t minSeqNum = numeric_limits<uint64_t>::max();
+    uint64_t sstIdx = -1;
+
+    int i = 0;
+    for (const SSTable &sst: ssts) {
+        if (sst.getMinSeqNum() < minSeqNum) {
+            minSeqNum = sst.getMinSeqNum();
+            sstIdx = i;
+        }
+        i++;
+    }
+
     auto itr = ssts.begin();
-    while (itr != ssts.end() && itr->getMaxKey() <= lastKey) {
-        itr++;
-    }
-    if (itr == ssts.end()) {
-        itr = ssts.begin();
-    }
+    advance(itr, sstIdx);
 
-    byteCnt -= itr->space();
-    lastKey = itr->getMaxKey();
     vector<Entry> entries = itr->load();
-
+    byteCnt -= itr->space();
     itr->remove();
     ssts.erase(itr);
-    --size;
+    size--;
     save();
 
     return entries;
@@ -97,7 +101,6 @@ void LevelNonZero::clear() {
     }
     size = 0;
     byteCnt = 0;
-    lastKey = 0;
     save();
 }
 
@@ -109,7 +112,6 @@ void LevelNonZero::save() const {
     ofstream ofs(dir + "/index", ios::binary);
     ofs.write((char *) &size, sizeof(uint64_t));
     ofs.write((char *) &byteCnt, sizeof(uint64_t));
-    ofs.write((char *) &lastKey, sizeof(uint64_t));
     for (const SSTable &sst: ssts) {
         uint64_t id = sst.getId();
         ofs.write((char *) &id, sizeof(uint64_t));
@@ -118,7 +120,7 @@ void LevelNonZero::save() const {
 }
 
 void LevelNonZero::print(uint64_t i) const {
-    cout << "=== LevelNonZero " << i << " === " << endl;
+    cout << "=== LevelNonZero " << i + 1 << " === " << endl;
     uint64_t j = 0;
     for (const SSTable &sst: ssts) {
         sst.print(j++);
