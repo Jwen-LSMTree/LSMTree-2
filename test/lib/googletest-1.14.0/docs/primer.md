@@ -113,7 +113,7 @@ However, you should use `ASSERT_*` if it doesn't make sense to continue when the
 assertion in question fails.
 
 Since a failed `ASSERT_*` returns from the current function immediately,
-possibly skipping clean-up code that comes after it, it may cause a space leak.
+possibly skipping clean-up code that comes after it, it may cause a totalBytes leak.
 Depending on the nature of the leak, it may or may not be worth fixing - so keep
 this in mind if you get a heap checker error in addition to assertion errors.
 

@@ -1,8 +1,10 @@
 #include "../include/Option.h"
 
-const uint64_t Option::SST_SPACE = (uint64_t) 512;
+const uint64_t Option::SST_SPACE = (uint64_t) 1024;
 
-const uint64_t Option::BLOCK_SPACE = (uint64_t) 128;
+const uint64_t Option::BLOCK_SPACE = (uint64_t) 1024;
+
+const uint64_t Option::ENTRY_COUNT_PER_DATA_BLOCK = 38;
 
 const uint64_t Option::LEVEL_NON_ZERO_NUM = 6;
 
