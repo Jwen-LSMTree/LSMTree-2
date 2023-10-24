@@ -14,11 +14,13 @@ using namespace std;
 
 class KVStore : public KVStoreAPI {
 private:
+
+
+public:
     SequenceNumber *sequenceNumber;
     SkipList mem;
     DiskStorage disk;
 
-public:
     explicit KVStore(const string &dir);
 
     ~KVStore();

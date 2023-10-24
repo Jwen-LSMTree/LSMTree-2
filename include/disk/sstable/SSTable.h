@@ -45,6 +45,8 @@ public:
 
     void print(uint64_t id) const;
 
+    BloomFilter bloomfilter;
+
 private:
     SSTableId id;
     uint64_t entryCnt;
@@ -67,7 +69,6 @@ private:
 
     string loadBlock(vector<uint64_t> dataBlockOffsets, uint64_t pos) const;
 
-    BloomFilter bloomfilter;
 };
 
 #endif
