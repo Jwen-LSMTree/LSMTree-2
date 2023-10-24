@@ -1,11 +1,11 @@
 #!/bin/bash
 
 N=5
-ENTRY_COUNT=(100000 500000 1000000 5000000 10000000)
+ENTRY_COUNT=(10000 50000 100000 500000 1000000)
 TEST_COUNT=5
 
 echo "[ latency_put ]"
-echo -e "TEST_COUNT=${TEST_COUNT}"
+echo -e "TEST_COUNT = ${TEST_COUNT}"
 
 for ((i = 0; i < N; i++)); do
   echo -e "\n"
