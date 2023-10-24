@@ -86,11 +86,19 @@ void LevelNonZero::merge(vector<Entry> &&lowerLevelEntries, uint64_t &id) {
     vector<Entry> entries = Util::compact({curLevelEntries, lowerLevelEntries});
 
     // save
-    size_t n = entries.size();
+    size_t entryCnt = entries.size();
     size_t pos = 0;
-    while (pos < n) {
-        byteCnt += ssts.emplace(itr, entries, pos, SSTableId(dir, id++))->space();
+    size_t i = 0;
+    while (true) {
+        vector<Entry> subEntries;
+        while (subEntries.size() < Option::ENTRY_COUNT_PER_DATA_BLOCK && i < entryCnt) {
+            subEntries.emplace_back(entries[i++]);
+        }
+        byteCnt += ssts.emplace(itr++, subEntries, pos, SSTableId(dir, id++))->space();
         size++;
+        if (i == entryCnt) {
+            break;
+        }
     }
     save();
 }

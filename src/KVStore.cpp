@@ -16,7 +16,8 @@ KVStore::~KVStore() {
 void KVStore::put(uint64_t key, const string &value) {
     uint64_t seqNum = sequenceNumber->getUpdatedSeqNum();
     mem.put(key, value, seqNum);
-    if (mem.space() > Option::SST_SPACE) {
+//    if (mem.space() > Option::SST_SPACE) {
+    if (mem.size() >= Option::ENTRY_COUNT_PER_DATA_BLOCK) {
         disk.flush(mem);
         mem.clear();
     }
