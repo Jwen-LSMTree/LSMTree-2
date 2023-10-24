@@ -12,7 +12,7 @@ public:
 
     explicit NoEntryFoundException(const char *message);
 
-    const char *what() const _NOEXCEPT override;
+    const char *what() const noexcept override;
 };
 
 
