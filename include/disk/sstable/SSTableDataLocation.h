@@ -1,6 +1,7 @@
 #ifndef SSTABLE_DATA_LOCATION_H
 #define SSTABLE_DATA_LOCATION_H
 
+#include <cstdint>
 #include <vector>
 
 using namespace std;
