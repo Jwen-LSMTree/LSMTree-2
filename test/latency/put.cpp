@@ -5,18 +5,25 @@
 
 using namespace std;
 
-const int TEST_COUNT = 3;
-const int ENTRY_COUNT = 1000000;
+int TEST_COUNT = 10;
+int ENTRY_COUNT = 100000;
 
 KVStore *store;
-uint64_t keys[ENTRY_COUNT];
-string values[ENTRY_COUNT];
+vector<uint64_t> keys;
+vector<string> values;
 
 void beforeEach();
 
 void afterEach();
 
-int main() {
+int main(int argc, char **argv) {
+    if (argc >= 2) {
+        ENTRY_COUNT = atoi(argv[1]);
+    }
+    if (argc >= 3) {
+        TEST_COUNT = atoi(argv[2]);
+    }
+
     auto totalTime = 0;
     for (int i = 0; i < TEST_COUNT; i++) {
         beforeEach();
@@ -26,8 +33,7 @@ int main() {
             store->put(keys[j], values[j]);
         }
         auto endTime = chrono::high_resolution_clock::now();
-
-        store->print();
+//        store->print();
 
         auto duration = chrono::duration_cast<chrono::milliseconds>(endTime - startTime).count();
         cout << "Elapsed time: " << duration << " milliseconds" << "\n" << endl;
@@ -43,6 +49,12 @@ void beforeEach() {
         filesystem::remove_all(filesystem::path("./data"));
     }
     store = new KVStore("./data");
+
+    keys.clear();
+    values.clear();
+    keys.resize(ENTRY_COUNT);
+    values.resize(ENTRY_COUNT);
+
     for (uint64_t i = 0; i < ENTRY_COUNT; ++i) {
         keys[i] = i;
         values[i] = "a";

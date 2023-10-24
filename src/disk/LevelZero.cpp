@@ -41,16 +41,29 @@ void LevelZero::flushMemTable(const SkipList &mem, uint64_t &id) {
 }
 
 vector<Entry> LevelZero::flush() {
-    vector<vector<Entry>> inputs;
+    uint64_t minSeqNum = numeric_limits<uint64_t>::max();
+    uint64_t sstIdx = -1;
+
+    int i = 0;
     for (const SSTable &sst: ssts) {
-        inputs.emplace_back(sst.load());
-        sst.remove();
+        if (sst.getMinSeqNum() < minSeqNum) {
+            minSeqNum = sst.getMinSeqNum();
+            sstIdx = i;
+        }
+        i++;
     }
-    size = 0;
-    byteCnt = 0;
-    ssts.clear();
+
+    auto itr = ssts.begin();
+    advance(itr, sstIdx);
+
+    vector<Entry> entries = itr->load();
+    byteCnt -= itr->space();
+    itr->remove();
+    ssts.erase(itr);
+    size--;
     save();
-    return Util::compact(inputs);
+
+    return entries;
 }
 
 void LevelZero::clear() {

@@ -5,7 +5,7 @@ You can find recipes for using gMock here. If you haven't yet, please read
 basics.
 
 {: .callout .note}
-**Note:** gMock lives in the `testing` name space. For readability, it is
+**Note:** gMock lives in the `testing` name totalBytes. For readability, it is
 recommended to write `using ::testing::Foo;` once in your file before using the
 name `Foo` defined by gMock. We omit such `using` statements in this section for
 brevity, but you should do it in your own code.

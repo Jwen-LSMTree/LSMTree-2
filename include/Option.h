@@ -6,6 +6,7 @@
 namespace Option {
     extern const uint64_t SST_SPACE;
     extern const uint64_t BLOCK_SPACE;
+    extern const uint64_t ENTRY_COUNT_PER_DATA_BLOCK;
     extern const uint64_t LEVEL_NON_ZERO_NUM;
     extern const uint64_t LEVEL_ZERO_SPACE;
     extern const uint64_t LEVEL_NON_ZERO_SPACES[];
