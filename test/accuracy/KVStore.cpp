@@ -89,3 +89,23 @@ TEST(KVStore, compaction) {
     cout << "\n3" << endl;
     store->print();
 }
+
+TEST(SequenceNumber, sequenceNumberFilter) {
+    if (filesystem::exists(filesystem::path("./data"))) {
+        filesystem::remove_all(filesystem::path("./data"));
+    }
+
+    // given
+    SkipList skipList = SkipList();
+    skipList.put(2, "b", 2);
+    skipList.put(3, "c", 3);
+    skipList.put(4, "a", 4);
+
+    cout << skipList.seqNumFilter.minSeqNum << endl;
+
+    auto ssTable = new SSTable(skipList, SSTableId("./data/1.sst",1));
+    ASSERT_FALSE(ssTable->seqNumFilter.isVisible(1));
+    ASSERT_TRUE(ssTable->seqNumFilter.isVisible(2));
+    ASSERT_TRUE(ssTable->seqNumFilter.isVisible(3));
+    ASSERT_TRUE(ssTable->seqNumFilter.isVisible(4));
+}

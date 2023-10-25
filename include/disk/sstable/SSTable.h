@@ -48,6 +48,8 @@ public:
 
     void setSeqNumFilter(const vector<uint64_t>& seqNums);
 
+    SequenceNumberFilter seqNumFilter;
+
 private:
     SSTableId id;
     uint64_t entryCnt;
@@ -72,7 +74,6 @@ private:
 
     BloomFilter bloomfilter;
 
-    SequenceNumberFilter seqNumFilter;
 };
 
 #endif
