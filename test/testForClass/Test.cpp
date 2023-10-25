@@ -38,7 +38,7 @@ TEST(KVStore, sequence) {
 }
 
 
-TEST(KVStore, put) {
+TEST(KVStore, put2) {
     if (filesystem::exists(filesystem::path("./data"))) {
         filesystem::remove_all(filesystem::path("./data"));
     }
@@ -47,11 +47,13 @@ TEST(KVStore, put) {
     auto store = new KVStore("./data");
     generateKVs();
 
-    for (int i = 1; i < 20; ++i) {
+    for (int i = 1; i < 38; ++i) {
         store->put(keys[i], values[i]);
     }
-    store->put(keys[20], "a");
+    ASSERT_EQ(store->mem.size(), 37);
 
+    store->put(keys[38], "a");
+    ASSERT_EQ(store->mem.size(), 0);
     store->print();
 }
 
@@ -170,5 +172,4 @@ TEST(KVStore,snapshot) {
     ASSERT_EQ(store->getFromSnapshot(1, 4), "b");
     ASSERT_EQ(store->getFromSnapshot(2, 5), "b");
     ASSERT_EQ(store->getFromSnapshot(3, 6), "b");
-
 }

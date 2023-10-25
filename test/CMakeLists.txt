@@ -40,7 +40,14 @@ add_executable(kvstore_tests
         accuracy/KVStore.cpp
 )
 
+add_executable(kvstore_tests2
+        ${SRC_FILES}
+        accuracy/Option.cpp
+        testForClass/Test.cpp
+)
+
 target_link_libraries(sequence_number_tests gtest gtest_main)
 target_link_libraries(skip_list_tests gtest gtest_main)
 target_link_libraries(disk_storage_tests gtest gtest_main)
 target_link_libraries(kvstore_tests gtest gtest_main)
+target_link_libraries(kvstore_tests2 gtest gtest_main)

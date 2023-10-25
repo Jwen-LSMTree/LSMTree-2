@@ -82,7 +82,7 @@ TEST(KVStore, compaction) {
     cout << "\n2" << endl;
     store->print();
 
-    // Disk Level NonZero에 3개의 SSTable이 들어가려다가 못들어가므로 compaction이 일어남
+    // Disk Level NonZero에 3개의 SSTable이 들어가려다가 못 들어가므로 compaction이 일어남
     for (int i = 19; i < 57; ++i) {
         store->put(keys[i], values[i]);
     }
