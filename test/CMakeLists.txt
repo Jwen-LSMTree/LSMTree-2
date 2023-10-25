@@ -32,7 +32,7 @@ add_executable(disk_storage_tests
         ${SRC_FILES}
         ../src/Option.cpp
         accuracy/DiskStorage.cpp
-)
+        testForClass/Test.cpp)
 
 add_executable(kvstore_tests
         ${SRC_FILES}
