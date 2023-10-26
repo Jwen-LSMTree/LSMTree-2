@@ -87,14 +87,14 @@ void LevelNonZero::merge(vector<Entry> &&lowerLevelEntries, uint64_t &id) {
 
     // save
     size_t entryCnt = entries.size();
-    size_t pos = 0;
     size_t i = 0;
     while (true) {
+        size_t pos = 0;
         vector<Entry> subEntries;
         while (subEntries.size() < Option::ENTRY_COUNT_PER_DATA_BLOCK && i < entryCnt) {
             subEntries.emplace_back(entries[i++]);
         }
-        byteCnt += ssts.emplace(itr++, subEntries, pos, SSTableId(dir, id++))->space();
+        byteCnt += ssts.emplace(itr, subEntries, pos, SSTableId(dir, id++))->space();
         size++;
         if (i == entryCnt) {
             break;
