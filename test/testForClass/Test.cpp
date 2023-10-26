@@ -57,7 +57,7 @@ TEST(KVStore, put2) {
     store->print();
 }
 
-TEST(KVStore, compaction) {
+TEST(KVStore, compaction2) {
     if (filesystem::exists(filesystem::path("./data"))) {
         filesystem::remove_all(filesystem::path("./data"));
     }
@@ -65,27 +65,33 @@ TEST(KVStore, compaction) {
     // given
     auto store = new KVStore("./data");
     generateKVs();
+    // 1. Disk Level 0 : SST 2개 저장 가능
+    // 2. Disk Level 1 : SST 4개 저장 가능
 
+    // Disk Level 0 : SST_1, SST_2
     for (int i = 1; i < 39; ++i) {
         store->put(keys[i], values[i]);
     }
-    store->put(keys[39], values[39]);
-
-    store->print();
-
-    // Disk Level NonZero에 2개의 SSTable
-    for (int i = 40; i < 77; ++i) {
+    for (int i = 1; i < 39; ++i) {
         store->put(keys[i], values[i]);
     }
-
+    cout << "\n1" << endl;
     store->print();
 
-
-    // Disk Level NonZero에 3개의 SSTable이 들어가려다가 못들어가므로 compaction이 일어남
-    for (int i = 19; i < 57; ++i) {
+    // Disk Level 0 : SST_2, SST_3
+    // Disk Level 1 : SST_1
+    for (int i = 1; i < 39; ++i) {
         store->put(keys[i], values[i]);
     }
+    cout << "\n2" << endl;
+    store->print();
 
+    // Disk Level 0 : SST_3, SST_4
+    // Disk Level 1 : SST_1과 SST_2를 merge 한 후 분할한 SST 2개
+    for (int i = 1; i < 39; ++i) {
+        store->put(keys[i], values[i]);
+    }
+    cout << "\n3" << endl;
     store->print();
 }
 

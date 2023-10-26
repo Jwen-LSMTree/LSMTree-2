@@ -58,34 +58,3 @@ TEST(KVStore, get) {
         ASSERT_EQ(store->get(keys[i]), values[i]);
     }
 }
-
-TEST(KVStore, compaction) {
-    if (filesystem::exists(filesystem::path("./data"))) {
-        filesystem::remove_all(filesystem::path("./data"));
-    }
-
-    // given
-    auto store = new KVStore("./data");
-    generateKVs();
-
-    for (int i = 1; i < 39; ++i) {
-        store->put(keys[i], values[i]);
-    }
-    store->put(keys[39], values[39]);
-    cout << "\n1" << endl;
-    store->print();
-
-    // Disk Level NonZero에 2개의 SSTable
-    for (int i = 40; i < 77; ++i) {
-        store->put(keys[i], values[i]);
-    }
-    cout << "\n2" << endl;
-    store->print();
-
-    // Disk Level NonZero에 3개의 SSTable이 들어가려다가 못 들어가므로 compaction이 일어남
-    for (int i = 19; i < 57; ++i) {
-        store->put(keys[i], values[i]);
-    }
-    cout << "\n3" << endl;
-    store->print();
-}
