@@ -68,8 +68,6 @@ SSTable::SSTable(const SkipList &mem, SSTableId id) : id(std::move(id)) {
         ++blockCnt;
     }
 
-    setSeqNumFilter(seqNums);
-
     keys.push_back(0);
     offsets.push_back(offset);
     seqNums.push_back(0);
