@@ -76,7 +76,8 @@ void beforeEach() {
         for (uint64_t j = 0; j < ENTRY_COUNT; ++j) {
             keys[seqNum] = seqNum;
             values[seqNum] = alphabets[i];
-            seqNums[seqNum] = ++seqNum;
+            seqNums[seqNum] = seqNum +1;
+            seqNum++;
         }
     }
 }
