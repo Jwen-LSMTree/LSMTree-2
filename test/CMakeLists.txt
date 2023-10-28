@@ -4,6 +4,9 @@ set(SRC_FILES
         ../src/bloom_filter/Bloomfilter.cpp
         ../src/sequence_number_filter/SequenceNumberFilter.cpp
         ../src/disk/sstable/SSTable.cpp
+        ../src/disk/sstable/SSTable2.cpp
+        ../src/disk/sstable/BlockLocation.cpp
+        ../src/disk/sstable/DataBlockLocation.cpp
         ../src/disk/sstable/SSTableDataLocation.cpp
         ../src/disk/sstable/SSTableId.cpp
         ../src/disk/DiskStorage.cpp
@@ -16,6 +19,7 @@ set(SRC_FILES
         ../src/KVStore.cpp
         ../src/SequenceNumber.cpp
         ../src/Util.cpp
+        accuracy/SSTable2.cpp
 )
 
 add_executable(sequence_number_tests
@@ -33,6 +37,7 @@ add_executable(disk_storage_tests
         ${SRC_FILES}
         ../src/Option.cpp
         accuracy/DiskStorage.cpp
+        accuracy/SSTable2.cpp
 )
 
 add_executable(kvstore_tests
