@@ -1,7 +1,3 @@
-//
-// Created by 김 정우 on 10/28/23.
-//
-
 #include "../../../include/disk/sstable/SSTable2.h"
 
 #include <fstream>
@@ -107,6 +103,7 @@ SSTable2::SSTable2(const SkipList &mem, SSTableId id) : id(std::move(id)) {
     minKey = keys[0][0];
     maxKey = keys[blockCnt - 1][keys[blockCnt - 1].size() - 1];
     setMinSeqNum(seqNums);
+    seqNumFilter.minSeqNum = minSeqNum;
     indexBlockAddress = dataBlockOffset;
     save(keys, seqNums, valueSizes, values, minKeys, dataBlockOffsets);
 }
@@ -143,6 +140,7 @@ SSTable2::SSTable2(const std::vector<Entry> &entries, size_t &pos, const SSTable
         string value = entry.value;
 
         bloomfilter.insert(key);
+        minSeqNum = min(minSeqNum, seqNum);
 
         // key, seqNum, valueSize, value
         block_keys.push_back(key);
@@ -196,7 +194,7 @@ SSTable2::SSTable2(const std::vector<Entry> &entries, size_t &pos, const SSTable
 
     minKey = keys[0][0];
     maxKey = keys[blockCnt - 1][keys[blockCnt - 1].size() - 1];
-    // TODO: 시퀀스 넘버 필터 만들어야함
+    seqNumFilter.minSeqNum = minSeqNum;
     setMinSeqNum(seqNums);
     indexBlockAddress = dataBlockOffset;
     save(keys, seqNums, valueSizes, values, minKeys, dataBlockOffsets);
@@ -229,13 +227,10 @@ void SSTable2::save(vector<vector<uint64_t>> keys,
 }
 
 SearchResult SSTable2::search(uint64_t key, uint64_t seqNum) const {
-    cout << "key: " << key << ", seqNum: " << seqNum << endl;
     if (!bloomfilter.hasKey(key)) {
-        cout << "bloomfilter에서 걸림" << endl;
         return false;
     }
     if (!seqNumFilter.isVisible(seqNum)) {
-        cout << "seqNumFilter에서 걸림" << endl;
         return false;
     }
     DataBlockLocation loc = loadDataBlockLocation();
