@@ -352,15 +352,6 @@ BlockLocation SSTable2::loadBlockLocation(uint64_t pos) const {
     return BlockLocation(keys, seqNums, valueSizes);
 }
 
-SSTableDataLocation SSTable2::loadAll() const {
-    vector<vector<uint64_t>> keys;
-    vector<vector<uint64_t>> seqNums;
-    vector<vector<uint64_t>> valueSizes;
-    vector<vector<string>> values;
-
-    ifstream ifs(id.name(), ios::binary);
-
-}
 
 vector<Entry> SSTable2::load() const {
     DataBlockLocation loc = loadDataBlockLocation();

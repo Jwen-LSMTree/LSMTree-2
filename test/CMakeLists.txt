@@ -19,7 +19,6 @@ set(SRC_FILES
         ../src/KVStore.cpp
         ../src/SequenceNumber.cpp
         ../src/Util.cpp
-        accuracy/SSTable2.cpp
 )
 
 add_executable(sequence_number_tests

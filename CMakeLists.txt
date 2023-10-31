@@ -11,6 +11,8 @@ set(SRC_FILES
         src/sequence_number_filter/SequenceNumberFilter.cpp
         ./src/disk/sstable/SSTable.cpp
         ./src/disk/sstable/SSTableDataLocation.cpp
+        ./src/disk/sstable/DataBlockLocation.cpp
+        ./src/disk/sstable/BlockLocation.cpp
         ./src/disk/sstable/SSTableId.cpp
         ./src/disk/DiskStorage.cpp
         ./src/disk/LevelNonZero.cpp

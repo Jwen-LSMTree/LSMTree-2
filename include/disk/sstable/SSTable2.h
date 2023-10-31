@@ -78,8 +78,6 @@ private:
 
     uint64_t blockSpace() const;
 
-    SSTableDataLocation loadAll() const;
-
     string loadBlock(vector<uint64_t> dataBlockOffsets, uint64_t pos) const;
 
     BloomFilter bloomfilter;
