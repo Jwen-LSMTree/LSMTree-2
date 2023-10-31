@@ -30,6 +30,7 @@ string KVStore::get(uint64_t key) {
     } catch (NoEntryFoundException &exception) {
         SearchResult result = disk.search(key, seqNum);
         if (result.success) {
+            cout<<"<disk search> key="<<key<<", value="<< result.value<<endl;
             return result.value;
         }
         throw NoEntryFoundException("no entry found in DISK");

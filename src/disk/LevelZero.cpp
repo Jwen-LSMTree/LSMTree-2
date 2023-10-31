@@ -45,17 +45,15 @@ vector<Entry> LevelZero::flush() {
     uint64_t sstIdx = -1;
 
     int i = 0;
-    for (const SSTable &sst: ssts) {
+    for (const SSTable2 &sst: ssts) {
         if (sst.getMinSeqNum() < minSeqNum) {
             minSeqNum = sst.getMinSeqNum();
             sstIdx = i;
         }
         i++;
     }
-
     auto itr = ssts.begin();
     advance(itr, sstIdx);
-
     vector<Entry> entries = itr->load();
     byteCnt -= itr->space();
     itr->remove();
@@ -83,7 +81,7 @@ void LevelZero::save() const {
     ofstream ofs(dir + "/index", ios::binary);
     ofs.write((char *) &size, sizeof(uint64_t));
     ofs.write((char *) &byteCnt, sizeof(uint64_t));
-    for (const SSTable &sst: ssts) {
+    for (const SSTable2 &sst: ssts) {
         uint64_t id = sst.getId();
         ofs.write((char *) &id, sizeof(uint64_t));
     }

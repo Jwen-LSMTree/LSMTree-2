@@ -11,8 +11,10 @@
 #include <algorithm>
 
 SSTable2::SSTable2(SSTableId id) : id(std::move(id)) {
-    ifstream in(id.name(), ios::binary);
-
+//    ifstream in(id.name(), ios::binary);
+//
+    // TODO : 파일 읽어들여서 loadAll 만들어야함?
+    cout<<"1번 생성자"<<endl;
 }
 
 SSTable2::SSTable2(const SkipList &mem, SSTableId id) : id(std::move(id)) {
@@ -105,8 +107,106 @@ SSTable2::SSTable2(const SkipList &mem, SSTableId id) : id(std::move(id)) {
 
     minKey = keys[0][0];
     maxKey = keys[blockCnt - 1][keys[blockCnt - 1].size() - 1];
-//    minSeqNum = *min_element(seqNums.begin(), seqNums.end());
+    setMinSeqNum(seqNums);
     indexBlockAddress = dataBlockOffset;
+    save(keys, seqNums, valueSizes, values, minKeys, dataBlockOffsets);
+
+
+}
+
+SSTable2::SSTable2(const std::vector<Entry> &entries, size_t &pos, const SSTableId &id) : id(id) {
+    blockCnt = 0;
+    minKey = UINT64_MAX;
+    maxKey = 0;
+    minSeqNum = UINT64_MAX;
+
+    vector<vector<uint64_t>> keys;
+    vector<vector<uint64_t>> seqNums;
+    vector<vector<uint64_t>> valueSizes;
+    vector<vector<string>> values;
+
+    vector<uint64_t> block_keys;
+    vector<uint64_t> block_seqNums;
+    vector<uint64_t> block_valueSizes;
+    vector<string> block_values;
+
+    vector<uint64_t> minKeys;
+    vector<uint64_t> dataBlockOffsets;
+
+    uint64_t blockSize = 0;
+    uint64_t dataBlockOffset = 0;
+    uint64_t entryInBlockCnt = 0;
+    uint64_t blockMinKey = UINT64_MAX;
+
+    size_t n = entries.size();
+    while (pos < n) {
+        Entry entry = entries[pos++];
+
+        uint64_t key = entry.key;
+        uint64_t seqNum = entry.seqNum;
+        string value = entry.value;
+
+        bloomfilter.insert(key);
+
+        // key, seqNum, valueSize, value
+        block_keys.push_back(key);
+        block_seqNums.push_back(seqNum);
+        block_valueSizes.push_back(entry.value.size());
+        block_values.push_back(value);
+
+        blockSize += 3 * sizeof(uint64_t);
+        // value
+        blockSize += entry.value.size();
+
+        ++entryInBlockCnt;
+
+        blockMinKey = min(blockMinKey, key);
+
+        if (blockSize >= Option::BLOCK_SPACE) {
+            // entryCnt
+            blockSize += sizeof(uint64_t);
+
+            dataBlockOffsets.push_back(dataBlockOffset);
+            minKeys.push_back(block_keys[0]);
+            keys.push_back(block_keys);
+            seqNums.push_back(block_seqNums);
+            valueSizes.push_back(block_valueSizes);
+            values.push_back(block_values);
+
+            dataBlockOffset += blockSize;
+
+            block_keys.clear();
+            block_seqNums.clear();
+            block_valueSizes.clear();
+            block_values.clear();
+
+            blockCnt++;
+            blockSize = 0;
+            entryInBlockCnt = 0;
+        }
+    }
+
+    if (entryInBlockCnt != 0) {
+        blockSize += sizeof(uint64_t);
+
+        dataBlockOffsets.push_back(dataBlockOffset);
+        minKeys.push_back(block_keys[0]);
+        keys.push_back(block_keys);
+        seqNums.push_back(block_seqNums);
+        valueSizes.push_back(block_valueSizes);
+        values.push_back(block_values);
+
+        dataBlockOffset += blockSize;
+        blockCnt++;
+    }
+
+    minKey = keys[0][0];
+    maxKey = keys[blockCnt - 1][keys[blockCnt - 1].size() - 1];
+    // TODO: 시퀀스 넘버 필터 만들어야함
+    setMinSeqNum(seqNums);
+    indexBlockAddress = dataBlockOffset;
+
+
     save(keys, seqNums, valueSizes, values, minKeys, dataBlockOffsets);
 }
 
@@ -120,7 +220,8 @@ void SSTable2::save(vector<vector<uint64_t>> keys,
 
     for (uint64_t i = 0; i < blockCnt; i++) {
         // entryCnt
-        out.write((char *) keys[i].size(), sizeof(uint64_t));
+        uint64_t keySize = keys[i].size();
+        out.write((char *) &keySize, sizeof(uint64_t));
         for (int j = 0; j < keys[i].size(); ++j) {
             out.write((char *) &keys[i][j], sizeof(uint64_t));
             out.write((char *) &seqNums[i][j], sizeof(uint64_t));
@@ -134,17 +235,6 @@ void SSTable2::save(vector<vector<uint64_t>> keys,
     }
     out.close();
 
-    ifstream in(id.name(), ios::binary);
-
-    uint64_t minKey;
-    in.read((char *) &minKey, sizeof(uint64_t));
-    cout << minKey << endl;
-
-    uint64_t Key;
-    in.read((char *) &Key, sizeof(uint64_t));
-    cout << Key << endl;
-
-    in.close();
 }
 
 SearchResult SSTable2::search(uint64_t key, uint64_t seqNum) const {
@@ -172,9 +262,9 @@ SearchResult SSTable2::search(uint64_t key, uint64_t seqNum) const {
             right = mid;
         }
     }
-    // mid가 찾을 위치
-    BlockLocation blockLocation = loadBlockLocation(loc.dataBlockOffsets[mid]);
 
+
+    BlockLocation blockLocation = loadBlockLocation(loc.dataBlockOffsets[mid]);
     left = 0;
     right = blockLocation.keys.size();
     while (right - left > 2) {
@@ -229,8 +319,7 @@ SearchResult SSTable2::filterBySeqNum(uint64_t target_key, uint64_t target_seqNu
 
 string SSTable2::loadValue(BlockLocation loc, uint64_t pos) const {
     string value;
-    uint64_t k = 0;
-
+    uint64_t k = sizeof(uint64_t);
     k += 3 * sizeof(uint64_t) * pos;
 
     for (uint64_t i = 0; i < pos; ++i) {
@@ -240,13 +329,14 @@ string SSTable2::loadValue(BlockLocation loc, uint64_t pos) const {
     ifstream in(id.name(), ios::binary);
     in.seekg(k + 3 * sizeof(uint64_t), ios::beg);
 
+
     char* buf = new char[loc.valueSizes[pos]];
     in.read(buf, loc.valueSizes[pos]);
     in.close();
 
     value.assign(buf, loc.valueSizes[pos]);
-
     return value;
+
 }
 
 BlockLocation SSTable2::loadBlockLocation(uint64_t pos) const {
@@ -270,6 +360,7 @@ BlockLocation SSTable2::loadBlockLocation(uint64_t pos) const {
         keys.push_back(key);
         seqNums.push_back(seqNum);
         valueSizes.push_back(valueSize);
+        in.seekg(valueSize, ios::cur);
     }
 
     in.close();
@@ -277,18 +368,52 @@ BlockLocation SSTable2::loadBlockLocation(uint64_t pos) const {
     return BlockLocation(keys, seqNums, valueSizes);
 }
 
+SSTableDataLocation SSTable2::loadAll() const {
+    vector<vector<uint64_t>> keys;
+    vector<vector<uint64_t>> seqNums;
+    vector<vector<uint64_t>> valueSizes;
+    vector<vector<string>> values;
+
+    ifstream ifs(id.name(), ios::binary);
+
+}
+
+vector<Entry> SSTable2::load() const {
+    DataBlockLocation loc = loadDataBlockLocation();
+    vector<Entry> entries;
+
+    ifstream in(id.name(), ios::binary);
+    uint64_t entryCnt;
+
+    for (uint64_t i = 0; i < loc.dataBlockOffsets.size(); ++i) {
+        in.seekg(loc.dataBlockOffsets[i], ios::beg);
+        in.read((char *) &entryCnt, sizeof(uint64_t));
+        for (uint64_t j = 0; j < entryCnt; j++) {
+            uint64_t key;
+            uint64_t seqNum;
+            uint64_t valueSize;
+            string value;
+            in.read((char *) &key, sizeof(uint64_t));
+            in.read((char *) &seqNum, sizeof(uint64_t));
+            in.read((char *) &valueSize, sizeof(uint64_t));
+            char* buf = new char[valueSize];
+            in.read(buf, valueSize);
+            value.assign(buf, valueSize);
+            entries.emplace_back(key, value, seqNum);
+        }
+    }
+
+
+    in.close();
+
+    return entries;
+}
+
 
 
 DataBlockLocation SSTable2::loadDataBlockLocation() const {
     ifstream in(id.name(), ios::binary);
-
-    uint64_t minKey;
-    in.read((char *) &minKey, sizeof(uint64_t));
-    cout << minKey << endl;
-
-    uint64_t Key;
-    in.read((char *) &Key, sizeof(uint64_t));
-    cout << Key << endl;
+    in.seekg(indexBlockAddress, ios::beg);
 
     vector<uint64_t> minKeys;
     vector<uint64_t> dataBlockOffsets;
@@ -302,7 +427,6 @@ DataBlockLocation SSTable2::loadDataBlockLocation() const {
         dataBlockOffsets.push_back(dataBlockOffset);
     }
     in.close();
-
 
     return DataBlockLocation(minKeys, dataBlockOffsets);
 }
@@ -338,3 +462,25 @@ uint64_t SSTable2::getMinSeqNum() const {
 uint64_t SSTable2::space() const {
     return indexSpace() + blockSpace();
 }
+
+void SSTable2::print(uint64_t i) const {
+    cout << "--- SSTable " << i << " ---" << endl;
+    cout<<"<<"<<id.name()<<">>"<<endl;
+    vector<Entry> entries = load();
+    for (const auto &entry: entries) {
+        cout << "key: " << entry.key << ", value: " << entry.value << ", seqNum: " << entry.seqNum << endl;
+    }
+    cout << "\n" << endl;
+}
+
+void SSTable2::setMinSeqNum(const vector<vector<uint64_t>> seqNums) {
+    for (const std::vector<uint64_t>& innerVector : seqNums) {
+        for (uint64_t value : innerVector) {
+            if (value < minSeqNum) {
+                minSeqNum = value;
+            }
+        }
+    }
+}
+
+// TODO : LoadAll, setSeqNumFilter

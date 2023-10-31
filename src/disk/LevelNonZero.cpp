@@ -24,8 +24,9 @@ LevelNonZero::LevelNonZero(const string &dir) : dir(dir) {
     ifs.close();
 }
 
+
 SearchResult LevelNonZero::search(uint64_t key, uint64_t seqNum) const {
-    for (const SSTable &sst: ssts) {
+    for (const SSTable2 &sst: ssts) {
         SearchResult result = sst.search(key, seqNum);
         if (result.success) {
             return result;
@@ -39,7 +40,7 @@ vector<Entry> LevelNonZero::flush() {
     uint64_t sstIdx = -1;
 
     int i = 0;
-    for (const SSTable &sst: ssts) {
+    for (const SSTable2 &sst: ssts) {
         if (sst.getMinSeqNum() < minSeqNum) {
             minSeqNum = sst.getMinSeqNum();
             sstIdx = i;
@@ -120,7 +121,7 @@ void LevelNonZero::save() const {
     ofstream ofs(dir + "/index", ios::binary);
     ofs.write((char *) &size, sizeof(uint64_t));
     ofs.write((char *) &byteCnt, sizeof(uint64_t));
-    for (const SSTable &sst: ssts) {
+    for (const SSTable2 &sst: ssts) {
         uint64_t id = sst.getId();
         ofs.write((char *) &id, sizeof(uint64_t));
     }
@@ -130,7 +131,7 @@ void LevelNonZero::save() const {
 void LevelNonZero::print(uint64_t i) const {
     cout << "=== LevelNonZero " << i + 1 << " === " << endl;
     uint64_t j = 0;
-    for (const SSTable &sst: ssts) {
+    for (const SSTable2 &sst: ssts) {
         sst.print(j++);
     }
 }

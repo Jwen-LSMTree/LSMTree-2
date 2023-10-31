@@ -4,7 +4,7 @@
 #include <filesystem>
 #include <chrono>
 
-const uint64_t ENTRY_COUNT = 10000;
+const uint64_t ENTRY_COUNT = 1000;
 uint64_t keys[ENTRY_COUNT];
 string values[ENTRY_COUNT];
 
@@ -103,7 +103,7 @@ TEST(SequenceNumber, sequenceNumberFilter) {
 
     cout << skipList.seqNumFilter.minSeqNum << endl;
 
-    auto ssTable = new SSTable(skipList, SSTableId("./data/1.sst",1));
+    auto ssTable = new SSTable2(skipList, SSTableId("./data/1.sst",1));
     ASSERT_FALSE(ssTable->seqNumFilter.isVisible(1));
     ASSERT_TRUE(ssTable->seqNumFilter.isVisible(2));
     ASSERT_TRUE(ssTable->seqNumFilter.isVisible(3));

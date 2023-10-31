@@ -88,6 +88,8 @@ private:
 
     BlockLocation loadBlockLocation(uint64_t pos) const;
 
+    void setMinSeqNum(const vector<vector<uint64_t>> seqNums);
+
 };
 
 #endif //LSMTREE_SSTABLE2_H
