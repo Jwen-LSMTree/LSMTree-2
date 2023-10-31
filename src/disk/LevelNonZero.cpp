@@ -92,8 +92,10 @@ void LevelNonZero::merge(vector<Entry> &&lowerLevelEntries, uint64_t &id) {
     size_t i = 0;
     while (true) {
         vector<Entry> subEntries;
-        while (subEntries.size() < Option::ENTRY_COUNT_PER_DATA_BLOCK && i < entryCnt) {
-            subEntries.emplace_back(entries[i++]);
+        uint64_t subEntriesSize = 0;
+        while (subEntriesSize < Option::SST_SPACE && i < entryCnt) {
+            subEntries.emplace_back(entries[i]);
+            subEntriesSize += 3 * sizeof(uint64_t) + entries[i++].value.size();
         }
         byteCnt += ssts.emplace(itr++, subEntries, pos, SSTableId(dir, id++))->space();
         size++;

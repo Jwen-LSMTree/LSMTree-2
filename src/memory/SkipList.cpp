@@ -40,7 +40,7 @@ string SkipList::get(uint64_t key, uint64_t seqNum) const {
     if (!bloomFilter.hasKey(key)) {
         throw NoEntryFoundException("no entry found in memory (filtered from BloomFilter)");
     }
-    if (!seqNumFilter.isVisible(seqNum)){
+    if (!seqNumFilter.isVisible(seqNum)) {
         throw NoEntryFoundException("no entry found in memory (filtered from SequenceNumberFilter");
     }
     try {
@@ -161,7 +161,7 @@ size_t SkipList::size() const {
 }
 
 uint64_t SkipList::space() const {
-    return (totalEntries * 3 + totalBytes / Option::BLOCK_SPACE * 1 + 6) * sizeof(uint64_t) + totalBytes;
+    return totalEntries * 3 * sizeof(uint64_t) + totalBytes;
 }
 
 bool SkipList::isEmpty() const {

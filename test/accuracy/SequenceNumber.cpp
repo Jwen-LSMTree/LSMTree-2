@@ -52,7 +52,6 @@ TEST(SequenceNumber, multi_threaded_seqNumTest) {
 void *read(void *threadId) {
     for (int i = 0; i < OPERATION_COUNT; ++i) {
         uint64_t seqNum = s->getSeqNum();
-        cout << "[read  | seqNum: " << seqNum << "]\n";
         usleep(1000);
     }
     return nullptr;
@@ -61,7 +60,6 @@ void *read(void *threadId) {
 void *write(void *threadId) {
     for (int i = 0; i < OPERATION_COUNT; ++i) {
         uint64_t seqNum = s->getUpdatedSeqNum();
-        cout << "[write | seqNum: " << seqNum << "]\n";
         usleep(1000);
     }
     return nullptr;

@@ -49,12 +49,13 @@ TEST(KVStore, get) {
     generateKVs();
 
     // when
-    for (int i = 0; i < ENTRY_COUNT; ++i) {
+    for (int i = 0; i < 38 * 3; ++i) {
         store->put(keys[i], values[i]);
     }
+    store->print();
 
     // then
-    for (int i = 0; i < ENTRY_COUNT; ++i) {
+    for (int i = 0; i < 38 * 3; ++i) {
         ASSERT_EQ(store->get(keys[i]), values[i]);
     }
 }
@@ -103,7 +104,7 @@ TEST(SequenceNumber, sequenceNumberFilter) {
 
     cout << skipList.seqNumFilter.minSeqNum << endl;
 
-    auto ssTable = new SSTable2(skipList, SSTableId("./data/1.sst",1));
+    auto ssTable = new SSTable2(skipList, SSTableId("./data/1.sst", 1));
     ASSERT_FALSE(ssTable->seqNumFilter.isVisible(1));
     ASSERT_TRUE(ssTable->seqNumFilter.isVisible(2));
     ASSERT_TRUE(ssTable->seqNumFilter.isVisible(3));

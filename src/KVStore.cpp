@@ -16,8 +16,7 @@ KVStore::~KVStore() {
 void KVStore::put(uint64_t key, const string &value) {
     uint64_t seqNum = sequenceNumber->getUpdatedSeqNum();
     mem.put(key, value, seqNum);
-//    if (mem.space() > Option::SST_SPACE) {
-    if (mem.size() >= Option::ENTRY_COUNT_PER_DATA_BLOCK) {
+    if (mem.space() >= Option::SST_SPACE) {
         disk.flush(mem);
         mem.clear();
     }
@@ -30,7 +29,7 @@ string KVStore::get(uint64_t key) {
     } catch (NoEntryFoundException &exception) {
         SearchResult result = disk.search(key, seqNum);
         if (result.success) {
-            cout<<"<disk search> key="<<key<<", value="<< result.value<<endl;
+            cout << "<disk search> key=" << key << ", value=" << result.value << endl;
             return result.value;
         }
         throw NoEntryFoundException("no entry found in DISK");
