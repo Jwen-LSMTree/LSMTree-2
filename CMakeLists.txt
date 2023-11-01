@@ -27,10 +27,12 @@ set(SRC_FILES
         ./src/Util.cpp
 )
 
-add_executable(latency_put test/latency/put.cpp ${SRC_FILES})
+add_executable(latency_put test/latency/put.cpp ${SRC_FILES}
+        src/disk/sstable/SSTable2.cpp)
 add_executable(latency_get test/latency/get.cpp ${SRC_FILES}
         src/disk/sstable/SSTable2.cpp)
-add_executable(latency_snapshot test/latency/snapshot.cpp ${SRC_FILES})
+add_executable(latency_snapshot test/latency/snapshot.cpp ${SRC_FILES}
+        src/disk/sstable/SSTable2.cpp)
 
 add_subdirectory(test)
 add_subdirectory(test/lib/googletest-1.14.0)
