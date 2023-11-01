@@ -52,10 +52,8 @@ vector<Entry> LevelZero::flush() {
         }
         i++;
     }
-
     auto itr = ssts.begin();
     advance(itr, sstIdx);
-
     vector<Entry> entries = itr->load();
     byteCnt -= itr->space();
     itr->remove();

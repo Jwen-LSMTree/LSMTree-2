@@ -5,8 +5,8 @@
 
 using namespace std;
 
-int TEST_COUNT = 10;
-int ENTRY_COUNT = 100000;
+int TEST_COUNT = 2;
+int ENTRY_COUNT = 1000000;
 int DUPLICATE_COUNT = 3;
 
 const string alphabets[7] = {"a", "b", "c", "d", "e", "f", "g"};
