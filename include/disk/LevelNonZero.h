@@ -1,7 +1,7 @@
 #ifndef LEVEL_NON_ZERO_H
 #define LEVEL_NON_ZERO_H
 
-#include "sstable/SSTable.h"
+#include "sstable/SSTable2.h"
 #include "SearchResult.h"
 #include "../Util.h"
 
@@ -32,7 +32,7 @@ private:
     string dir;
     uint64_t size;
     uint64_t byteCnt;
-    list<SSTable> ssts;
+    list<SSTable2> ssts;
 
     void save() const;
 };

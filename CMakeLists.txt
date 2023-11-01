@@ -8,8 +8,9 @@ add_compile_options(-O3)
 
 set(SRC_FILES
         ./src/bloom_filter/Bloomfilter.cpp
-        ./src/disk/sstable/SSTable.cpp
         ./src/disk/sstable/SSTableDataLocation.cpp
+        ./src/disk/sstable/DataBlockLocation.cpp
+        ./src/disk/sstable/BlockLocation.cpp
         ./src/disk/sstable/SSTableId.cpp
         ./src/disk/DiskStorage.cpp
         ./src/disk/LevelNonZero.cpp
@@ -22,11 +23,14 @@ set(SRC_FILES
         ./src/Option.cpp
         ./src/SequenceNumber.cpp
         ./src/Util.cpp
-)
+        )
 
-add_executable(latency_put test/latency/put.cpp ${SRC_FILES})
-add_executable(latency_get test/latency/get.cpp ${SRC_FILES})
-add_executable(latency_snapshot test/latency/snapshot.cpp ${SRC_FILES})
+add_executable(latency_put test/latency/put.cpp ${SRC_FILES}
+        src/disk/sstable/SSTable2.cpp)
+add_executable(latency_get test/latency/get.cpp ${SRC_FILES}
+        src/disk/sstable/SSTable2.cpp)
+add_executable(latency_snapshot test/latency/snapshot.cpp ${SRC_FILES}
+        src/disk/sstable/SSTable2.cpp)
 
 add_subdirectory(test)
 add_subdirectory(test/lib/googletest-1.14.0)

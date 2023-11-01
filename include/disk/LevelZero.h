@@ -1,7 +1,7 @@
 #ifndef LEVEL_ZERO_H
 #define LEVEL_ZERO_H
 
-#include "sstable/SSTable.h"
+#include "sstable/SSTable2.h"
 #include "sstable/SSTableId.h"
 #include "SearchResult.h"
 #include "../memory/SkipList.h"
@@ -34,7 +34,7 @@ private:
     string dir;
     uint64_t size;
     uint64_t byteCnt;
-    vector<SSTable> ssts;
+    vector<SSTable2> ssts;
 
     void save() const;
 };
