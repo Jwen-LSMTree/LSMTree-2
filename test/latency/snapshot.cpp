@@ -35,6 +35,7 @@ int main(int argc, char **argv) {
     }
 
     auto totalTime = 0;
+    auto totalLatency = 0;
     for (int i = 0; i < TEST_COUNT; i++) {
         beforeEach();
 
@@ -49,13 +50,19 @@ int main(int argc, char **argv) {
         }
         auto endTime = chrono::high_resolution_clock::now();
 
-        auto duration = chrono::duration_cast<chrono::milliseconds>(endTime - startTime).count();
-        cout << "Elapsed time: " << duration << " milliseconds" << "\n" << endl;
+        auto duration = chrono::duration_cast<chrono::nanoseconds>(endTime - startTime).count();
+        cout << "Elapsed time: " << duration << " nanoseconds" << endl;
         totalTime += duration;
+
+        auto latency = chrono::duration_cast<chrono::nanoseconds>(endTime - startTime).count() /
+                       (ENTRY_COUNT * DUPLICATE_COUNT);
+        cout << "Latency: " << latency << " nanoseconds" << "\n" << endl;
+        totalLatency += latency;
 
         afterEach();
     }
-    cout << "Average time: " << totalTime / TEST_COUNT << " milliseconds" << endl;
+    cout << "Average time: " << totalTime / TEST_COUNT << " nanoseconds" << endl;
+    cout << "Average latency: " << totalLatency / TEST_COUNT << " nanoseconds" << endl;
 }
 
 void beforeEach() {
@@ -76,7 +83,7 @@ void beforeEach() {
         for (uint64_t j = 0; j < ENTRY_COUNT; ++j) {
             keys[seqNum] = seqNum;
             values[seqNum] = alphabets[i];
-            seqNums[seqNum] = seqNum+1;
+            seqNums[seqNum] = seqNum + 1;
             seqNum++;
         }
     }
