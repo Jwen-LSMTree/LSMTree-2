@@ -15,11 +15,14 @@ SSTable::SSTable(SSTableId id) : id(std::move(id)) {
     for (uint64_t i = 0; i <= entryCnt; i++) {
         bloomfilter.insert(loc.keys[i]);
     }
+    setSeqNumFilter(loc.seqNums);
     size = loc.dataBlockOffsets.back();
 }
 
 SSTable::SSTable(const SkipList &mem, SSTableId id) : id(std::move(id)) {
     bloomfilter = mem.bloomFilter;
+    seqNumFilter = mem.seqNumFilter;
+
     entryCnt = mem.size();
     blockCnt = 0;
 
@@ -130,6 +133,8 @@ SSTable::SSTable(const std::vector<Entry> &entries, size_t &pos, const SSTableId
         ++blockCnt;
     }
 
+    setSeqNumFilter(seqNums);
+
     keys.push_back(0);
     seqNums.push_back(0);
     offsets.push_back(offset);
@@ -147,6 +152,9 @@ SearchResult SSTable::search(uint64_t key, uint64_t seqNum) const {
     // 현재는 무조건 Disk I/O
 
     if (!bloomfilter.hasKey(key)) {
+        return false;
+    }
+    if(!seqNumFilter.isVisible(seqNum)){
         return false;
     }
     SSTableDataLocation loc = loadAll();
@@ -331,4 +339,13 @@ void SSTable::print(uint64_t i) const {
         cout << "key: " << entry.key << ", value: " << entry.value << ", seqNum: " << entry.seqNum << endl;
     }
     cout << "\n" << endl;
+}
+
+void SSTable::setSeqNumFilter(const vector<uint64_t>& seqNums)
+{
+    for (size_t i = 0; i <= seqNums.size(); ++i) {
+        if (seqNums[i] < seqNumFilter.minSeqNum) {
+            seqNumFilter.minSeqNum = seqNums[i];
+        }
+    }
 }

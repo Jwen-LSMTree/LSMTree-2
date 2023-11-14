@@ -8,11 +8,14 @@
 
 SSTable2::SSTable2(SSTableId id) : id(std::move(id)) {
 //    ifstream in(id.name(), ios::binary);
+//
+    // TODO : 파일 읽어들여서 loadAll 만들어야함?
     cout << "1번 생성자" << endl;
 }
 
 SSTable2::SSTable2(const SkipList &mem, SSTableId id) : id(std::move(id)) {
     bloomfilter = mem.bloomFilter;
+    seqNumFilter = mem.seqNumFilter;
 
     entryCnt = mem.size();
     blockCnt = 0;
@@ -100,6 +103,7 @@ SSTable2::SSTable2(const SkipList &mem, SSTableId id) : id(std::move(id)) {
     minKey = keys[0][0];
     maxKey = keys[blockCnt - 1][keys[blockCnt - 1].size() - 1];
     setMinSeqNum(seqNums);
+    seqNumFilter.minSeqNum = minSeqNum;
     indexBlockAddress = dataBlockOffset;
     save(keys, seqNums, valueSizes, values, minKeys, dataBlockOffsets);
 }
@@ -190,6 +194,7 @@ SSTable2::SSTable2(const std::vector<Entry> &entries, size_t &pos, const SSTable
 
     minKey = keys[0][0];
     maxKey = keys[blockCnt - 1][keys[blockCnt - 1].size() - 1];
+    seqNumFilter.minSeqNum = minSeqNum;
     setMinSeqNum(seqNums);
     indexBlockAddress = dataBlockOffset;
     save(keys, seqNums, valueSizes, values, minKeys, dataBlockOffsets);
@@ -223,6 +228,9 @@ void SSTable2::save(vector<vector<uint64_t>> keys,
 
 SearchResult SSTable2::search(uint64_t key, uint64_t seqNum) const {
     if (!bloomfilter.hasKey(key)) {
+        return false;
+    }
+    if (!seqNumFilter.isVisible(seqNum)) {
         return false;
     }
     DataBlockLocation loc = loadDataBlockLocation();
@@ -447,3 +455,4 @@ void SSTable2::setMinSeqNum(const vector<vector<uint64_t>> seqNums) {
     }
 }
 
+// TODO : LoadAll, setSeqNumFilter

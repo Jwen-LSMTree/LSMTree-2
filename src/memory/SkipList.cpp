@@ -18,6 +18,7 @@ void SkipList::init() {
     totalBytes = 0;
     totalEntries = 0;
     bloomFilter = BloomFilter();
+    seqNumFilter = SequenceNumberFilter();
 }
 
 SkipList::~SkipList() {
@@ -39,6 +40,9 @@ string SkipList::get(uint64_t key, uint64_t seqNum) const {
     if (!bloomFilter.hasKey(key)) {
         throw NoEntryFoundException("no entry found in memory (filtered from BloomFilter)");
     }
+    if (!seqNumFilter.isVisible(seqNum)) {
+        throw NoEntryFoundException("no entry found in memory (filtered from SequenceNumberFilter");
+    }
     try {
         Node *node = getNodeBySeqNum(key, seqNum);
         return node->value;
@@ -50,6 +54,10 @@ string SkipList::get(uint64_t key, uint64_t seqNum) const {
 
 void SkipList::put(uint64_t key, const string &value, uint64_t seqNum) {
     bloomFilter.insert(key);
+
+    if (seqNum < seqNumFilter.minSeqNum) {
+        seqNumFilter.minSeqNum = seqNum;
+    }
 
     size_t height = 1;
     while (dist(random_engine) != 0) { // get random height
@@ -153,7 +161,7 @@ size_t SkipList::size() const {
 }
 
 uint64_t SkipList::space() const {
-    return (totalEntries * 3 + totalBytes / Option::BLOCK_SPACE * 1 + 6) * sizeof(uint64_t) + totalBytes;
+    return totalEntries * 3 * sizeof(uint64_t) + totalBytes;
 }
 
 bool SkipList::isEmpty() const {

@@ -8,6 +8,8 @@ add_compile_options(-O3)
 
 set(SRC_FILES
         ./src/bloom_filter/Bloomfilter.cpp
+        src/sequence_number_filter/SequenceNumberFilter.cpp
+        ./src/disk/sstable/SSTable.cpp
         ./src/disk/sstable/SSTableDataLocation.cpp
         ./src/disk/sstable/DataBlockLocation.cpp
         ./src/disk/sstable/BlockLocation.cpp
@@ -23,7 +25,7 @@ set(SRC_FILES
         ./src/Option.cpp
         ./src/SequenceNumber.cpp
         ./src/Util.cpp
-        )
+)
 
 add_executable(latency_put test/latency/put.cpp ${SRC_FILES}
         src/disk/sstable/SSTable2.cpp)

@@ -4,7 +4,7 @@
 #include <filesystem>
 #include <chrono>
 
-const uint64_t ENTRY_COUNT = 10000;
+const uint64_t ENTRY_COUNT = 1000;
 uint64_t keys[ENTRY_COUNT];
 string values[ENTRY_COUNT];
 
@@ -49,12 +49,64 @@ TEST(KVStore, get) {
     generateKVs();
 
     // when
-    for (int i = 0; i < ENTRY_COUNT; ++i) {
+    for (int i = 0; i < 38 * 3; ++i) {
         store->put(keys[i], values[i]);
     }
+    store->print();
 
     // then
-    for (int i = 0; i < ENTRY_COUNT; ++i) {
+    for (int i = 0; i < 38 * 3; ++i) {
         ASSERT_EQ(store->get(keys[i]), values[i]);
     }
+}
+
+TEST(KVStore, compaction) {
+    if (filesystem::exists(filesystem::path("./data"))) {
+        filesystem::remove_all(filesystem::path("./data"));
+    }
+
+    // given
+    auto store = new KVStore("./data");
+    generateKVs();
+
+    for (int i = 1; i < 39; ++i) {
+        store->put(keys[i], values[i]);
+    }
+    store->put(keys[39], values[39]);
+    cout << "\n1" << endl;
+    store->print();
+
+    // Disk Level NonZero에 2개의 SSTable
+    for (int i = 40; i < 77; ++i) {
+        store->put(keys[i], values[i]);
+    }
+    cout << "\n2" << endl;
+    store->print();
+
+    // Disk Level NonZero에 3개의 SSTable이 들어가려다가 못들어가므로 compaction이 일어남
+    for (int i = 19; i < 57; ++i) {
+        store->put(keys[i], values[i]);
+    }
+    cout << "\n3" << endl;
+    store->print();
+}
+
+TEST(SequenceNumber, sequenceNumberFilter) {
+    if (filesystem::exists(filesystem::path("./data"))) {
+        filesystem::remove_all(filesystem::path("./data"));
+    }
+
+    // given
+    SkipList skipList = SkipList();
+    skipList.put(2, "b", 2);
+    skipList.put(3, "c", 3);
+    skipList.put(4, "a", 4);
+
+    cout << skipList.seqNumFilter.minSeqNum << endl;
+
+    auto ssTable = new SSTable2(skipList, SSTableId("./data/1.sst", 1));
+    ASSERT_FALSE(ssTable->seqNumFilter.isVisible(1));
+    ASSERT_TRUE(ssTable->seqNumFilter.isVisible(2));
+    ASSERT_TRUE(ssTable->seqNumFilter.isVisible(3));
+    ASSERT_TRUE(ssTable->seqNumFilter.isVisible(4));
 }

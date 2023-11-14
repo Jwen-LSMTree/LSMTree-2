@@ -2,7 +2,7 @@
 
 const uint64_t Option::SST_SPACE = (uint64_t) 1024;
 
-const uint64_t Option::BLOCK_SPACE = (uint64_t) 1024;
+const uint64_t Option::BLOCK_SPACE = (uint64_t) 256;
 
 const uint64_t Option::ENTRY_COUNT_PER_DATA_BLOCK = 38;
 

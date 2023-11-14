@@ -6,6 +6,7 @@
 #define LSMTREE_SSTABLE2_H
 
 #include "../../bloom_filter/BloomFilter.h"
+#include "../../sequence_number_filter/SequenceNumberFilter.h"
 #include "DataBlockLocation.h"
 #include "SSTableDataLocation.h"
 #include "BlockLocation.h"
@@ -53,6 +54,7 @@ public:
 
     void setSeqNumFilter(const vector<uint64_t>& seqNums);
 
+    SequenceNumberFilter seqNumFilter;
 
 private:
     SSTableId id;
