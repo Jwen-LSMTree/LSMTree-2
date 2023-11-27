@@ -24,8 +24,8 @@ int main(int argc, char **argv) {
         TEST_COUNT = atoi(argv[2]);
     }
 
-    auto totalTime = 0;
-    auto totalLatency = 0;
+    uint64_t totalTime = 0;
+    uint64_t totalLatency = 0;
     for (int i = 0; i < TEST_COUNT; i++) {
         beforeEach();
 
@@ -46,7 +46,7 @@ int main(int argc, char **argv) {
 
         afterEach();
     }
-    cout << "Average time: " << totalTime / TEST_COUNT << " milliseconds" << endl;
+    cout << "Average time: " << totalTime / TEST_COUNT << " nanoseconds" << endl;
     cout << "Average latency: " << totalLatency / TEST_COUNT << " nanoseconds" << endl;
 }
 
