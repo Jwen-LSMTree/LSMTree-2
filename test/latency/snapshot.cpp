@@ -34,8 +34,8 @@ int main(int argc, char **argv) {
         TEST_COUNT = atoi(argv[3]);
     }
 
-    auto totalTime = 0;
-    auto totalLatency = 0;
+    uint64_t totalTime = 0;
+    uint64_t totalLatency = 0;
     for (int i = 0; i < TEST_COUNT; i++) {
         beforeEach();
 
